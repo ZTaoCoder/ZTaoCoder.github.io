@@ -1,11 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="utf-8">
-  
-  <title>张涛的博客</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="记录个人的成长">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>张涛的博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="">
+    <meta name="description" content="记录个人的成长">
 <meta property="og:type" content="website">
 <meta property="og:title" content="张涛的博客">
 <meta property="og:url" content="http://yoursite.com/index.html">
@@ -15,221 +31,367 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="张涛的博客">
 <meta name="twitter:description" content="记录个人的成长">
-  
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  <link rel="stylesheet" href="/css/style.css">
-  
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
 
 </head>
-</html>
+
 <body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">张涛的博客</a>
-      </h1>
-      
-        <h2 id="subtitle-wrap">
-          <a href="/" id="subtitle">个人博客</a>
-        </h2>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">张涛</h5>
+          <a href="mailto:634206017@qq.com" title="634206017@qq.com" class="mail">634206017@qq.com</a>
+        </hgroup>
       </div>
     </div>
-  </div>
-</header>
-      <div class="outer">
-        <section id="main">
-  
-    <article id="post-比较设计模式" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/11/18/比较设计模式/" class="article-date">
-  <time datetime="2018-11-18T08:07:39.000Z" itemprop="datePublished">2018-11-18</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/11/18/比较设计模式/">Design Pattern</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><em>一、创建类模式</em><br>     创建类模式一共包括 工厂模式、抽象工厂模式、建造者模式、原型模式、单例模式、</p>
-<p>1.1工厂模式VS建造者模式<br>       工厂模式注重的是整个对象的创建方法，而建造者模式注重的是部件构造的过程，旨在一步一步地精确创建出一个复杂的对象。举例：如果要创造出一个超人，如果使用工厂模式，直接产生的就是一个超人，而建造者模式则需要组装头、脚、手等部分。<br>1.2抽象工厂模式VS建造者模式<br>相对来说，抽象工厂模式比建造者模式的尺度要大，它关注产品整体，而建造者模式关注构建过程，因此见建造者模式可以很好地构建出一个崭新的产品，只要导演类能够提供具体的工艺流程。<br>1.3单例模式VS原型模式<br>单例模式要保持在内存中的对象只有一个，而原型模式要求通过复制的方式产生一个新的对象。<br><em>二、结构类模式</em><br>   结构类模式包括适配器模式、桥梁模式、·组合模式、装饰模式、门面模式、享元模式、和代理模式<br>   2.1代理模式VS装饰器模式<br>      装饰器模式就是代理模式一个特殊应用，两者的共同点是都具有相同的接口，不同点则是代理模式着重对代理过程的控制，而装饰器模式则是对类的功能进行加强或减弱，它着重类的功能变化。<br>   2.2 装饰器模式VS适配器<br>   他们两者都是包装作用，但是不同的是 装饰器模式包装的是自己的兄弟类，隶属于统一家族的对象，而适配器模式则修饰非血缘关系类，把一个非本家族的对象伪装成本家族的对象。</p>
-<p><em>三 行为类模式</em><br>   行为类模式包括责任链模式、命令模式、解释器模式、迭代器模式、中介者模式、备忘录模式、观察者模式、状态模式、策略模式、模板方法模式、访问者模式<br>3.1命令模式VS策略模式<br>命令模式多了一个接受者、策略模式的意图是封装算法、它认为算法已经是一个完成的不可拆分的原子业务，而命令模式则是对动作的解耦，把一个动作的执行分为了执行对象（接受者）执行命令（命令角色） 让两者相互独立而不相互影响。过程是生成一个命令，然后传递给调用者、让调用者去执行这个命令。<br>3.2策略模式VS状态模式<br>策略模式封装的是不同的算法，算法之间没有交互，以达到算法可以自由切换得目的，而状态模式封装的是不同的状态，以达到状态切换随之可以发生改变的目的、<br>3.3观察者模式VS责任链模式<br>他们中的主要区别有三点<br>1）链中的消息对象不同<br>责任链模式中基本上不改变消息对象的结构，虽然每个节点可以参与消费，但是不改变消息对象，而观察者模式中是允许改变的，<br>2）上下节点的关系不同<br> 在责任链模式中 上下节点是没有关系，都是接受同样的对象，所有传递的对象都是从链首传递过来。而触发链模式不同，它的上下级关系很亲密，链中的任何两个相邻节点都是一个牢固的独立团体<br>3）消息的分销渠道不同<br>在责任链中，一个消息从链首传递进来后，就开始沿着链条向链尾一定，方向是单一的，固定的，而观察者模式中，消息的传递时顺序是根据逻辑来确定的，而不是按照顺序进行传递的。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/18/比较设计模式/" data-id="cjomm0ofv00025wt6q4y77rxg" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Mysql" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/11/18/Mysql/" class="article-date">
-  <time datetime="2018-11-18T06:09:28.000Z" itemprop="datePublished">2018-11-18</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
+            <li class="waves-block waves-effect active">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/11/18/Mysql/">Mysql高性能</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.1.2执行与优化<br>Mysql会解析查询，并创建内部数据结构（解析树），然后对其进行各种优化，包括重写查询，决定表的读取顺序，以及选择合适的索引等，优化器并不关心表使用的什么存储引擎，如果你能够在解析查询之前在查询缓存中找到对应的查询，服务器就不必再执行查询解析、优化和执行这个过程。而直接返回结果。<br>1.2并发控制<br>&lt; !–more–&gt;<br>1.2.1读写锁<br>  读锁是共享的，相互不阻塞，多个客户可以在同一时间同时读取一个资源，。写锁则是排他的，一个写锁执行时会阻塞其实读锁和写锁。通常写锁优先级高于读锁。<br>1.2.2锁粒度<br>锁策略就是在锁的开销和数据的安全性之间寻求平衡。<br>表锁：锁定一张表，一个用户在对表进行写操作（插入、删除、更新），需要先获得写锁，这会阻塞其他用户读表的读写操作。只有没有写锁时，其他读取的用户才能获得读锁，读锁之间不相互阻塞，<br>行级锁<br>锁住一行，行级锁最大程度支持并发处理，行级锁只在存储引擎层实现。<br>1.3事务<br>事务就是一组原子性的操作，或者说是一个独立的工作单元，要么全部执行成功，要么全部执行失败。举例：银行转账的例子<br>事务ACID特性：原子性（atomicity）一致性（consistency）隔离性（isolation）持久性（durability）<br>原子性：一个事务必须被视为一个不可分割的单元，要么全部成功，要么全部失败，向原子一样，不可分割<br>一致性：数据库总是从一个状态转换到另外一个一致性的状态。<br>隔离性：一个事务所做的修改在最终提交之前，对其他事务是不可见的。有四个隔离级别<br>持久性：一旦事务提交，所做的修改就永久保存到数据库中，此时即使系统崩溃，修改的数据也不会丢失<br>1.3.1隔离级别<br>Read UNCOMMITTED（未提交读）<br>事务中的修改，即使没有修改，对其他事务也都是可见的。事务可以读取为提交的数据，也读称为脏读<br>Read COMMITTED（提交读）<br>一个事务开始时，只能看见已经提交的事务所做的修改，一个事务提交时，所做的任何修改对其他事务是不可见的<br>REPEATABLE Read（重复读）<br>解决了脏读问题，当使用可重复读隔离级别时，在事务执行期间会锁定该事务以任何方式引用的所有行。因此，如果在同一个事务中发出同一个SELECT语句两次或更多次，那么产生的结果数据集总是相同的。因此，使用可重复读隔离级别的事务可以多次检索同一行集，保证了在同一个事务中多次读取同样的结果是一致的，有可能产生幻读。在可重复读中，该sql第一次读取到数据后，就将这些数据加锁（悲观锁），其它事务无法修改这些数据，就可以实现可重复读了但这种方法却无法锁住insert的数据，所以当事务A先前读取了数据，或者修改了全部数据，事务B还是可以insert数据提交，这时事务A就会发现莫名其妙多了一条之前没有的数据，这就是幻读，不能通过行锁来避免，通过MVCC 解决了幻读的问题。Mysql默认事务隔离级别<br>SERIALIZABLE（可串行化）<br>最高隔离级别，通过强制事务串行执行，避免了幻读的问题，SERIALIZABLE会为每一行数据都加上所，所以可能导致大量的超时和锁征用问题。<br>1.3.2死锁<br>多个事务在同一资源上相互占用，并请求锁定对方占用的资源，从而恶性循环<br>举例：<br>两个事务<br>   A<br>  更新第一行<br>  更新第二行<br>  B<br>  更新第二行<br>更新第一行</p>
-<p>当都执行了第一条语句，更新了数据，同时锁定了改行数据，直接每个事务都尝试去执行第二条语句。发现改行被对方锁定了。<br>InnoDB 处理死锁的方法是，将持有最少行排他锁的事务进行回滚。<br>1.3.3事务日志<br>1.4多版本控制（MVCC）<br>MVCC是行级锁的一种变种，它很多情况下避免了加锁操作，因此开销更低，实现了非阻塞的读操作，写操作只锁定必要的行。典型的乐观并发控制。MVCC只在重复读和课串行化中两个隔离级别下工作，读操作应该不会使用这种操作，因为读本身都是数据共享的，应该是在进行数据修改时，才采用写操作update delete insert<br>如一个金融系统，当某个操作员读取用户的数据，并在读出的用户数据的基础上进行修改时（如更改用户帐户余额），如果采用悲观锁机制，也就意味着整个操作过 程中（从操作员读出数据、开始修改直至提交修改结果的全过程，甚至还包括操作 员中途去煮咖啡的时间），数据库记录始终处于加锁状态，可以想见，如果面对几百上千个并发，这样的情况将导致怎样的后果。<br>乐观锁机制在一定程度上解决了这个问题。总是认为不会产生并发问题，每次去取数据的时候总认为不会有其他线程对数据进行修改，因此不会上锁乐观锁，大多是基于数据版本 （ Version ）记录机制实现。何谓数据版本？即为数据增加一个版本标识，在基于数据库表的版本解决方案中，一般是通过为数据库表增加一个 “version” 字段来实现。<br>读取出数据时，将此版本号一同读出，之后更新时，对此版本号加一。此时，将提交数据的版本数据与数据库表对应记录的当前版本信息进行比对，如果提交的数据版本号大于数据库表当前版本号，则予以更新，否则认为是过期数据。<br>对于上面修改用户帐户信息的例子而言，假设数据库中帐户信息表中有一个 version 字段，当前值为 1 ；而当前帐户余额字段（ balance ）为 $100 。<br>1 操作员 A 此时将其读出（ version=1 ），并从其帐户余额中扣除 $50（ $100-$50 ）。<br>2 在操作员 A 操作的过程中，操作员B 也读入此用户信息（ version=1 ），并从其帐户余额中扣除 $20 （ $100-$20 ）。<br>3 操作员 A 完成了修改工作，将数据版本号加一（ version=2 ），连同帐户扣除后余额（ balance=$50 ），提交至数据库更新，此时由于提交数据版本大于数据库记录当前版本，数据被更新，数据库记录 version 更新为 2 。<br>4 操作员 B 完成了操作，也将版本号加一（ version=2 ）试图向数据库提交数据（ balance=$80 ），但此时比对数据库记录版本时发现，操作员 B 提交的数据版本号为 2 ，数据库记录当前版本也为 2 ，不满足 “ 提交版本必须大于记录当前版本才能执行更新 “ 的乐观锁策略，因此，操作员 B 的提交被驳回。<br>这样，就避免了操作员 B 用基于 version=1 的旧数据修改的结果覆盖操作员A 的操作结果的可能。<br>从上面的例子可以看出，乐观锁机制避免了长事务中的数据库加锁开销（操作员 A和操作员 B 操作过程中，都没有对数据库数据加锁），大大提升了大并发量下的系统整体性能表现。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/18/Mysql/" data-id="cjomm0ofj00005wt66bpj4kaq" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Mysql/">Mysql</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-
-</section>
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
         
-          <aside id="sidebar">
-  
-    <!-- Featured Tags -->
-
-  
-    <!-- Short About -->
-<section class="visible-md visible-lg">
-    <h5><a href="/about/">ABOUT ME</a></h5>
-    <div class="short-about">
-
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
         
-
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
         
-
-        <!-- SNS Link -->
-        <ul class="list-inline">
-            
-            
-            
-
-            
-
-            
-
-            
-            
-            
-            
-        </ul>
-    </div>
-</section>
-
-  
-    
-  <h5>RECENT POSTS
-  <div class="widget">
-    <ul>
-      
-        <li>
-          <a href="/2018/11/18/比较设计模式/">Design Pattern</a>
-        </li>
-      
-        <li>
-          <a href="/2018/11/18/Mysql/">Mysql高性能</a>
-        </li>
-      
-    </ul>
-  </div>
-</h5>
-  
-    <!-- Friends Blog -->
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">2</span></li></ul>
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/yscoder" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://www.weibo.com/ysweb" target="_blank">
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/custom">
+                <i class="icon icon-lg icon-link"></i>
+                测试
+              </a>
+            </li>
+        
+      </ul>
     </div>
   </div>
-
-
-  
 </aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">张涛的博客</div>
         
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2018 张涛<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="検索">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
     </div>
-  </div>
-</footer>
+</header>
+<header class="content-header index-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">张涛的博客</h1>
+        <h5 class="subtitle">
+            
+                
+            
+        </h5>
     </div>
-    <nav id="mobile-nav">
-  
-</nav>
+
     
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+</header>
+
+<div class="container body-wrap">
+
+    <ul class="post-list">
+    
+        <li class="post-list-item fade">
+            <article id="post-比较设计模式" class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2018-11-18 16:07:39" datetime="2018-11-18T08:07:39.000Z" itemprop="datePublished">2018-11-18</time>
+
+        
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2018/11/18/比较设计模式/">Design Pattern</a>
+    </h3>
+  
 
 
 
-<script src="/js/script.js"></script>
 
-  </div>
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        一、创建类模式     创建类模式一共包括 工厂模式、抽象工厂模式、建造者模式、原型模式、单例模式、
+1.1工厂模式VS建造者模式       工厂模式注重的是整个对象的创建方法，而建造者模式注重的是部件构造的过程，旨在一步一步地精确创建出一个复杂的对象。举例：如果要创造出一个超人，如果使用工厂模式，直接产生的就是一个超人，而建造者模式则需要组装头、脚、手等部分。1.2抽象工厂模式VS建造者...
+    
+
+        <a href="/2018/11/18/比较设计模式/" class="post-more waves-effect waves-button">
+            続きを読む…
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-Mysql" class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2018-11-18 14:09:28" datetime="2018-11-18T06:09:28.000Z" itemprop="datePublished">2018-11-18</time>
+
+        
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2018/11/18/Mysql/">Mysql高性能</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        1.1.2执行与优化Mysql会解析查询，并创建内部数据结构（解析树），然后对其进行各种优化，包括重写查询，决定表的读取顺序，以及选择合适的索引等，优化器并不关心表使用的什么存储引擎，如果你能够在解析查询之前在查询缓存中找到对应的查询，服务器就不必再执行查询解析、优化和执行这个过程。而直接返回结果。1.2并发控制&lt; !–more–&gt;1.2.1读写锁  读锁是共享的，相互不阻塞，多...
+    
+
+        <a href="/2018/11/18/Mysql/" class="post-more waves-effect waves-button">
+            続きを読む…
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Mysql/">Mysql</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+    </ul>
+
+    
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>このブログの内容物は<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ja">クリエイティブ・コモンズ 表示 - 非営利 - 継承 4.0 国際ライセンスの下に提供されています</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>张涛 &copy; 2015 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/&title=张涛的博客&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/&title=张涛的博客&source=记录个人的成长" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=张涛的博客&url=http://yoursite.com/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
 </body>
 </html>
