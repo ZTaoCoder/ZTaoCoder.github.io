@@ -3,23 +3,23 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>Design Pattern | 张涛的博客</title>
+  <title>设计模式在Tomcat中的应用 | 张涛的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
     <meta name="keywords" content="ZhangTao,ZhangTao's Blog">
   
-  <meta name="description" content="比较设计模式之间的不同">
-<meta name="keywords" content="设计模式">
+  <meta name="description" content="1.命令设计模式在Tomcat中命令模式在Connector和Container组件之间有体现，Tomcat作为一个应用服务器，会接受到很多请求。 Connector作为抽象请求者，HttpConnector作为具体请求者，HttpProcessor作为命令，Container作为命令的具体接受者，Container作为具体的接受者，客户端就是应用服务器Server组建了，Server首先创建命令">
+<meta name="keywords" content="设计模式,Tomcat">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Design Pattern">
-<meta property="og:url" content="https://ztaocoder.github.io/2018/11/18/比较设计模式/index.html">
+<meta property="og:title" content="设计模式在Tomcat中的应用">
+<meta property="og:url" content="https://ztaocoder.github.io/2018/11/19/设计模式在Tomcat中的应用/index.html">
 <meta property="og:site_name" content="张涛的博客">
-<meta property="og:description" content="比较设计模式之间的不同">
+<meta property="og:description" content="1.命令设计模式在Tomcat中命令模式在Connector和Container组件之间有体现，Tomcat作为一个应用服务器，会接受到很多请求。 Connector作为抽象请求者，HttpConnector作为具体请求者，HttpProcessor作为命令，Container作为命令的具体接受者，Container作为具体的接受者，客户端就是应用服务器Server组建了，Server首先创建命令">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-11-19T01:29:38.192Z">
+<meta property="og:updated_time" content="2018-11-19T01:22:03.115Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Design Pattern">
-<meta name="twitter:description" content="比较设计模式之间的不同">
+<meta name="twitter:title" content="设计模式在Tomcat中的应用">
+<meta name="twitter:description" content="1.命令设计模式在Tomcat中命令模式在Connector和Container组件之间有体现，Tomcat作为一个应用服务器，会接受到很多请求。 Connector作为抽象请求者，HttpConnector作为具体请求者，HttpProcessor作为命令，Container作为命令的具体接受者，Container作为具体的接受者，客户端就是应用服务器Server组建了，Server首先创建命令">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -110,20 +110,20 @@
     </div>
 </header>
       <div class="outer">
-        <section id="main" class="body-wrap"><article id="post-比较设计模式" class="article article-type-post" itemscope="" itemprop="blogPost">
+        <section id="main" class="body-wrap"><article id="post-设计模式在Tomcat中的应用" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="post-title" itemprop="name">
-      Design Pattern
+      设计模式在Tomcat中的应用
     </h1>
     <div class="post-title-bar">
       <ul>
           
         <li>
-          <i class="fa fa-calendar"></i>  2018-11-18
+          <i class="fa fa-calendar"></i>  2018-11-19
         </li>
         <li>
           <i class="fa fa-eye"></i>
@@ -139,25 +139,12 @@
     <div class="article-entry post-content" itemprop="articleBody">
       
             
-            <p>#一、创建类模式#<br>     创建类模式一共包括 工厂模式、抽象工厂模式、建造者模式、原型模式、单例模式、</p>
-<p>  ##1.1工厂模式VS建造者模式##<br>       工厂模式注重的是整个对象的创建方法，而建造者模式注重的是部件构造的过程，旨在一步一步地精确创建出一个复杂的对象。举例：如果要创造出一个超人，如果使用工厂模式，直接产生的就是一个超人，而建造者模式则需要组装头、脚、手等部分。</p>
-<p>  ##1.2抽象工厂模式VS建造者模式##<br>相对来说，抽象工厂模式比建造者模式的尺度要大，它关注产品整体，而建造者模式关注构建过程，因此见建造者模式可以很好地构建出一个崭新的产品，只要导演类能够提供具体的工艺流程。</p>
-<p>  ##1.3单例模式VS原型模式##<br>单例模式要保持在内存中的对象只有一个，而原型模式要求通过复制的方式产生一个新的对象。</p>
-<p>#二、结构类模式#<br>   结构类模式包括适配器模式、桥梁模式、·组合模式、装饰模式、门面模式、享元模式、和代理模式</p>
-<p>   ##2.1代理模式VS装饰器模式##<br>   装饰器模式就是代理模式一个特殊应用，两者的共同点是都具有相同的接口，不同点则是代理模式着重对代理过程的控制，而装饰器模式则是对类的功能进行加强或减弱，它着重类的功能变化。</p>
-<p>   ##2.2 装饰器模式VS适配器##<br>   他们两者都是包装作用，但是不同的是 装饰器模式包装的是自己的兄弟类，隶属于统一家族的对象，而适配器模式则修饰非血缘关系类，把一个非本家族的对象伪装成本家族的对象。</p>
-<p>#三 行为类模式#<br>   行为类模式包括责任链模式、命令模式、解释器模式、迭代器模式、中介者模式、备忘录模式、观察者模式、状态模式、策略模式、模板方法模式、访问者模式</p>
-<p>  ##3.1命令模式VS策略模式##<br>命令模式多了一个接受者、策略模式的意图是封装算法、它认为算法已经是一个完成的不可拆分的原子业务，而命令模式则是对动作的解耦，把一个动作的执行分为了执行对象（接受者）执行命令（命令角色） 让两者相互独立而不相互影响。过程是生成一个命令，然后传递给调用者、让调用者去执行这个命令。</p>
-<p>  ##3.2策略模式VS状态模式##<br>策略模式封装的是不同的算法，算法之间没有交互，以达到算法可以自由切换得目的，而状态模式封装的是不同的状态，以达到状态切换随之可以发生改变的目的、</p>
-<p>  ##3.3观察者模式VS责任链模式##<br>他们中的主要区别有三点</p>
-<p>###1）链中的消息对象不同###<br>责任链模式中基本上不改变消息对象的结构，虽然每个节点可以参与消费，但是不改变消息对象，而观察者模式中是允许改变的，</p>
-<p>###2）上下节点的关系不同###<br> 在责任链模式中 上下节点是没有关系，都是接受同样的对象，所有传递的对象都是从链首传递过来。而触发链模式不同，它的上下级关系很亲密，链中的任何两个相邻节点都是一个牢固的独立团体</p>
-<p>###3）消息的分销渠道不同###<br>在责任链中，一个消息从链首传递进来后，就开始沿着链条向链尾一定，方向是单一的，固定的，而观察者模式中，消息的传递时顺序是根据逻辑来确定的，而不是按照顺序进行传递的。</p>
+            <p><strong>1.命令设计模式</strong><br>在Tomcat中命令模式在Connector和Container组件之间有体现，Tomcat作为一个应用服务器，会接受到很多请求。 Connector作为抽象请求者，HttpConnector作为具体请求者，HttpProcessor作为命令，Container作为命令的具体接受者，Container作为具体的接受者，客户端就是应用服务器Server组建了，Server首先创建命令的请求者对象HttpConnector（Invoker），然后创建命令HttpProcessor对象（Command），再把命令对象交给请求者去求情接受者(Receive)ContainerBase容器来处理，命令最终是被Tomcat的Container执行的。<br><strong>2.责任链设计模式</strong><br>在tomcat中这种设计模式几乎被完整地使用了，tomcat的容器设计就是责任链模式，从Engine到Host在到Context一直到Wrapper都通过一个传递链请求。不过从容器的责任链觉得类结构图看出，对应的责任链角色中，Container扮演抽象处理者角色，具体处理这有SrandardEngine等自容器扮演，不过这里引用了PipLine和Value接口，他们扩展了这个脸的功能<br><strong>3.观察者模式</strong><br>才tomcat中观察者模式也有多处使用，控制组件生命周期的Lifecycle，还有对Servlet实例的创建，Session的管理，Container等都是同样的原理在Lifecysle的管擦着模式结构图中LifecycleListeneer代表的是抽象观察者，它定义了一个lifecycleEvent方法，这个方法就是被观察者变化时执行的方法，ServletcycleListener代表的是具体的观察者，它实现了lifecycleEvent方法，Lifecycle代表的是被观察者，StandardServer是具体是实现，另外还有两个类LifecycleSupport和LifecycleEvent，它们作为辅助类空占了观察者功能</p>
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2018年11月19日 09:29</p>
-        <p>原始链接： <a class="post-url" href="/2018/11/18/比较设计模式/" title="Design Pattern">https://ztaocoder.github.io/2018/11/18/比较设计模式/</a></p>
+        <p>最后更新： 2018年11月19日 09:22</p>
+        <p>原始链接： <a class="post-url" href="/2018/11/19/设计模式在Tomcat中的应用/" title="设计模式在Tomcat中的应用">https://ztaocoder.github.io/2018/11/19/设计模式在Tomcat中的应用/</a></p>
         <footer>
             <a href="https://ztaocoder.github.io">
                 <img src="/images/logo.png" alt="张涛">
@@ -214,7 +201,7 @@
     <div class="post-share-list" id="share-list">
         <ul class="share-icons">
           <li>
-            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://ztaocoder.github.io/2018/11/18/比较设计模式/&title=《Design Pattern》 — 张涛的博客&pic=https://ztaocoder.github.ioimages/logo.png" data-title="微博">
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://ztaocoder.github.io/2018/11/19/设计模式在Tomcat中的应用/&title=《设计模式在Tomcat中的应用》 — 张涛的博客&pic=https://ztaocoder.github.ioimages/logo.png" data-title="微博">
               <i class="fa fa-weibo"></i>
             </a>
           </li>
@@ -224,22 +211,22 @@
             </a>
           </li>
           <li>
-            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://ztaocoder.github.io/2018/11/18/比较设计模式/&title=《Design Pattern》 — 张涛的博客&source=记录个人的成长" data-title="QQ">
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://ztaocoder.github.io/2018/11/19/设计模式在Tomcat中的应用/&title=《设计模式在Tomcat中的应用》 — 张涛的博客&source=记录个人的成长" data-title="QQ">
               <i class="fa fa-qq"></i>
             </a>
           </li>
           <li>
-            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://ztaocoder.github.io/2018/11/18/比较设计模式/" data-title="Facebook">
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://ztaocoder.github.io/2018/11/19/设计模式在Tomcat中的应用/" data-title="Facebook">
               <i class="fa fa-facebook"></i>
             </a>
           </li>
           <li>
-            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Design Pattern》 — 张涛的博客&url=https://ztaocoder.github.io/2018/11/18/比较设计模式/&via=https://ztaocoder.github.io" data-title="Twitter">
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《设计模式在Tomcat中的应用》 — 张涛的博客&url=https://ztaocoder.github.io/2018/11/19/设计模式在Tomcat中的应用/&via=https://ztaocoder.github.io" data-title="Twitter">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
           <li>
-            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://ztaocoder.github.io/2018/11/18/比较设计模式/" data-title="Google+">
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://ztaocoder.github.io/2018/11/19/设计模式在Tomcat中的应用/" data-title="Google+">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -249,7 +236,7 @@
 <div class="post-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;" id="wxShare-close">×</a>
     <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://ztaocoder.github.io/2018/11/18/比较设计模式/" alt="微信分享二维码">
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://ztaocoder.github.io/2018/11/19/设计模式在Tomcat中的应用/" alt="微信分享二维码">
 </div>
 
 <div class="mask"></div>
@@ -263,6 +250,8 @@
       
     <a href="/tags/设计模式/" class="color5">设计模式</a>
       
+    <a href="/tags/Tomcat/" class="color2">Tomcat</a>
+      
   </li>
 
         </ul>
@@ -275,19 +264,9 @@
 
 <nav id="article-nav">
   
-    <a href="/2018/11/19/设计模式在Tomcat中的应用/" id="article-nav-newer" class="article-nav-link-wrap">
-
-      <span class="article-nav-title">
-        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
-        
-          设计模式在Tomcat中的应用
-        
-      </span>
-    </a>
   
-  
-    <a href="/2018/11/18/Mysql/" id="article-nav-older" class="article-nav-link-wrap">
-      <span class="article-nav-title">Mysql高性能（-）</span>
+    <a href="/2018/11/18/比较设计模式/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">Design Pattern</span>
       <i class="fa fa-hand-o-right" aria-hidden="true"></i>
     </a>
   
