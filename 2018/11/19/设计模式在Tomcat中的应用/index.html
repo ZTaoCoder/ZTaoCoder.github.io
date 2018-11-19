@@ -8,18 +8,18 @@
   
     <meta name="keywords" content="ZhangTao,ZhangTao's Blog">
   
-  <meta name="description" content="1.命令设计模式  在Tomcat中命令模式在Connector和Container组件之间有体现，Tomcat作为一个应用服务器，会接受到很多请求。 Connector作为抽象请求者，HttpConnector作为具体请求者，HttpProcessor作为命令，Container作为命令的具体接受者，Container作为具体的接受者，客户端就是应用服务器Server组建了，Server首先创建">
+  <meta name="description" content="1.命令设计模式&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 在Tomcat中命令模式在Connector和Container组件之间有体现，Tomcat作为一个应用服务器，会接受到很多请求。 Connector作为抽象请求者，HttpConnector作为具体请求者，HttpProcessor作为命令，Container作为命令的具体接受者，Container作为具体">
 <meta name="keywords" content="设计模式,Tomcat">
 <meta property="og:type" content="article">
 <meta property="og:title" content="设计模式在Tomcat中的应用">
 <meta property="og:url" content="https://ztaocoder.github.io/2018/11/19/设计模式在Tomcat中的应用/index.html">
 <meta property="og:site_name" content="张涛的博客">
-<meta property="og:description" content="1.命令设计模式  在Tomcat中命令模式在Connector和Container组件之间有体现，Tomcat作为一个应用服务器，会接受到很多请求。 Connector作为抽象请求者，HttpConnector作为具体请求者，HttpProcessor作为命令，Container作为命令的具体接受者，Container作为具体的接受者，客户端就是应用服务器Server组建了，Server首先创建">
+<meta property="og:description" content="1.命令设计模式&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 在Tomcat中命令模式在Connector和Container组件之间有体现，Tomcat作为一个应用服务器，会接受到很多请求。 Connector作为抽象请求者，HttpConnector作为具体请求者，HttpProcessor作为命令，Container作为命令的具体接受者，Container作为具体">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-11-19T12:48:24.357Z">
+<meta property="og:updated_time" content="2018-11-19T13:19:25.889Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="设计模式在Tomcat中的应用">
-<meta name="twitter:description" content="1.命令设计模式  在Tomcat中命令模式在Connector和Container组件之间有体现，Tomcat作为一个应用服务器，会接受到很多请求。 Connector作为抽象请求者，HttpConnector作为具体请求者，HttpProcessor作为命令，Container作为命令的具体接受者，Container作为具体的接受者，客户端就是应用服务器Server组建了，Server首先创建">
+<meta name="twitter:description" content="1.命令设计模式&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 在Tomcat中命令模式在Connector和Container组件之间有体现，Tomcat作为一个应用服务器，会接受到很多请求。 Connector作为抽象请求者，HttpConnector作为具体请求者，HttpProcessor作为命令，Container作为命令的具体接受者，Container作为具体">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -139,11 +139,11 @@
     <div class="article-entry post-content" itemprop="articleBody">
       
             
-            <p><strong>1.命令设计模式</strong><br>  在Tomcat中命令模式在Connector和Container组件之间有体现，Tomcat作为一个应用服务器，会接受到很多请求。 Connector作为抽象请求者，HttpConnector作为具体请求者，HttpProcessor作为命令，Container作为命令的具体接受者，Container作为具体的接受者，客户端就是应用服务器Server组建了，Server首先创建命令的请求者对象HttpConnector（Invoker），然后创建命令HttpProcessor对象（Command），再把命令对象交给请求者去求情接受者(Receive)ContainerBase容器来处理，命令最终是被Tomcat的Container执行的。<br><strong>2.责任链设计模式</strong><br>  在tomcat中这种设计模式几乎被完整地使用了，tomcat的容器设计就是责任链模式，从Engine到Host在到Context一直到Wrapper都通过一个传递链请求。不过从容器的责任链觉得类结构图看出，对应的责任链角色中，Container扮演抽象处理者角色，具体处理这有SrandardEngine等自容器扮演，不过这里引用了PipLine和Value接口，他们扩展了这个脸的功能<br><strong>3.观察者模式</strong><br>  才tomcat中观察者模式也有多处使用，控制组件生命周期的Lifecycle，还有对Servlet实例的创建，Session的管理，Container等都是同样的原理在Lifecysle的管擦着模式结构图中LifecycleListeneer代表的是抽象观察者，它定义了一个lifecycleEvent方法，这个方法就是被观察者变化时执行的方法，ServletcycleListener代表的是具体的观察者，它实现了lifecycleEvent方法，Lifecycle代表的是被观察者，StandardServer是具体是实现，另外还有两个类LifecycleSupport和LifecycleEvent，它们作为辅助类空占了观察者功能</p>
+            <p><strong>1.命令设计模式</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 在Tomcat中命令模式在Connector和Container组件之间有体现，Tomcat作为一个应用服务器，会接受到很多请求。 Connector作为抽象请求者，HttpConnector作为具体请求者，HttpProcessor作为命令，Container作为命令的具体接受者，Container作为具体的接受者，客户端就是应用服务器Server组建了，Server首先创建命令的请求者对象HttpConnector（Invoker），然后创建命令HttpProcessor对象（Command），再把命令对象交给请求者去求情接受者(Receive)ContainerBase容器来处理，命令最终是被Tomcat的Container执行的。<br><strong>2.责任链设计模式</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 在tomcat中这种设计模式几乎被完整地使用了，tomcat的容器设计就是责任链模式，从Engine到Host在到Context一直到Wrapper都通过一个传递链请求。不过从容器的责任链觉得类结构图看出，对应的责任链角色中，Container扮演抽象处理者角色，具体处理这有SrandardEngine等自容器扮演，不过这里引用了PipLine和Value接口，他们扩展了这个脸的功能<br><strong>3.观察者模式</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;才tomcat中观察者模式也有多处使用，控制组件生命周期的Lifecycle，还有对Servlet实例的创建，Session的管理，Container等都是同样的原理在Lifecysle的管擦着模式结构图中LifecycleListeneer代表的是抽象观察者，它定义了一个lifecycleEvent方法，这个方法就是被观察者变化时执行的方法，ServletcycleListener代表的是具体的观察者，它实现了lifecycleEvent方法，Lifecycle代表的是被观察者，StandardServer是具体是实现，另外还有两个类LifecycleSupport和LifecycleEvent，它们作为辅助类空占了观察者功能</p>
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2018年11月19日 20:48</p>
+        <p>最后更新： 2018年11月19日 21:19</p>
         <p>原始链接： <a class="post-url" href="/2018/11/19/设计模式在Tomcat中的应用/" title="设计模式在Tomcat中的应用">https://ztaocoder.github.io/2018/11/19/设计模式在Tomcat中的应用/</a></p>
         <footer>
             <a href="https://ztaocoder.github.io">
@@ -264,12 +264,12 @@
 
 <nav id="article-nav">
   
-    <a href="/2018/11/19/1/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2018/11/19/Mysql高性能（二）/" id="article-nav-newer" class="article-nav-link-wrap">
 
       <span class="article-nav-title">
         <i class="fa fa-hand-o-left" aria-hidden="true"></i>
         
-          1
+          Mysql高性能（二）
         
       </span>
     </a>
@@ -341,7 +341,7 @@
             
         </div>
         <div id="sidebar-menu-box-tags">
-            <a href="/tags/Mysql/" style="font-size: 10px;">Mysql</a> <a href="/tags/Tomcat/" style="font-size: 10px;">Tomcat</a> <a href="/tags/设计模式/" style="font-size: 20px;">设计模式</a>
+            <a href="/tags/Mysql/" style="font-size: 20px;">Mysql</a> <a href="/tags/Tomcat/" style="font-size: 10px;">Tomcat</a> <a href="/tags/设计模式/" style="font-size: 20px;">设计模式</a>
         </div>
     </div>
     <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
@@ -374,7 +374,7 @@
     <div class="mobile-header-tag-container">
         <span class="title">Tags</span>
         <div id="mobile-header-container-tags">
-            <a href="/tags/Mysql/" style="font-size: 10px;">Mysql</a> <a href="/tags/Tomcat/" style="font-size: 10px;">Tomcat</a> <a href="/tags/设计模式/" style="font-size: 20px;">设计模式</a>
+            <a href="/tags/Mysql/" style="font-size: 20px;">Mysql</a> <a href="/tags/Tomcat/" style="font-size: 10px;">Tomcat</a> <a href="/tags/设计模式/" style="font-size: 20px;">设计模式</a>
         </div>
     </div>
 </div>
