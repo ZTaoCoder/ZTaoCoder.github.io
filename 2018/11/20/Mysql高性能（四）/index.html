@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="张涛的博客">
 <meta property="og:description" content="查询性能优化">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-11-20T04:02:20.263Z">
+<meta property="og:updated_time" content="2018-11-22T09:04:10.976Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Mysql高性能（四）">
 <meta name="twitter:description" content="查询性能优化">
@@ -139,17 +139,48 @@
     <div class="article-entry post-content" itemprop="articleBody">
       
             
-            <h2 id="nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-第六章-查询性能优化"><a href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-第六章-查询性能优化" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;第六章 查询性能优化"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;第六章 查询性能优化</h2><p><strong>提高性能的三个方法</strong>：<br>1、设计好的库表结构<br>2、建立最好的索引<br>3、合理的设计查询</p>
-<p>###6.1查询速度为什么会变慢<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如果把查询当作是一个任务，那么他由一系列子任务组成，在完成这些任务的时候，查询会在不同的地方花费时间。花费的时间主要在：网络、CPU计算、生成统计信息、执行计划、锁等待等操作，<br> <strong> 查询变慢的主要原因是：</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.不必要的额外操作<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.某些操作被额外地重复很多次<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.某些操作执行的速度太慢了</p>
-<h3 id="6-2慢查询基础：优化数据访问"><a href="#6-2慢查询基础：优化数据访问" class="headerlink" title="6.2慢查询基础：优化数据访问"></a>6.2慢查询基础：优化数据访问</h3><p>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;查询性能低下最基本的原因是访问的数据太多，因此减少访问的数据量的方式进行优化<br>  可以通过下面两个步骤进行分析：<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  1.确定应用程序是否在检索大量超过需求的数据<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  2.确认Mysql服务器是否在分析大量超过需要的数据行</p>
-<h4 id="6-2-1是否想数据库请求了不需要的数据"><a href="#6-2-1是否想数据库请求了不需要的数据" class="headerlink" title="6.2.1是否想数据库请求了不需要的数据"></a>6.2.1是否想数据库请求了不需要的数据</h4><p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.查询了不需要的记录<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 比如：使用Select语句查询了大量的结果，然后获取了前面的N行后关闭数据集。实际上Mysql会查出全部的结果集。最好的方式就是在这样的查询后面加上LIMIT<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2.多表关联时返回全部列<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3.总是取出全部列<br>  比如使用Select*查询了全部列，但实际上并不需要全部的数据，因为取出全部列，会增加消耗<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4.查询重复相同的记录</p>
-<h4 id="6-2-2-Mysql是否在扫描额外的记录"><a href="#6-2-2-Mysql是否在扫描额外的记录" class="headerlink" title="6.2.2 Mysql是否在扫描额外的记录"></a>6.2.2 Mysql是否在扫描额外的记录</h4><p>   如果方法查询扫描大量的行但只返回少数的行可以使用如下技巧<br>   1.使用覆盖索引，把所有需要用的列都放到索引中<br>   2.改变表的结构。例如使用单独的汇总表<br>   3.重写这个复杂的查询</p>
-<h3 id="6-3-重构查询的方式"><a href="#6-3-重构查询的方式" class="headerlink" title="6.3 重构查询的方式"></a>6.3 重构查询的方式</h3><p>   思路：<br>   1.设计查询的时候是否需要价格一个复杂的查询分为简单的查询<br>   2.切分查询，将大的查询分为小查询<br>   3.分解关联查询。分解关联查询后，缓存的效率更高。减少了锁的竞争。减少冗余记录的查询</p>
-<h4 id="6-4-查询执行的基础"><a href="#6-4-查询执行的基础" class="headerlink" title="6.4 查询执行的基础"></a>6.4 查询执行的基础</h4><p><strong>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;当Mysql发送了一个请求的时候，Mysql到底做了些什么 </strong><br><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.客户端发送了一条查询给服务器</strong><br><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2.服务器先检查查询缓存，如果命中了缓存，则立刻返回存储在缓存中的结果。否则进入下一阶段</strong><br><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3.服务器进入sql解析，预处理，再由优化器生成对应的执行计划。</strong><br><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4.Mysql根据优化器生成的执行计划，调用存储引擎的API来执行查询</strong><br><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5.将结果返回给客户端</strong><br><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;语法的解析器和预处理</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Mysql解析器将查询语句进行解析主要生成一颗解析树，验证是否使用了错误的关键字，或者验证引号是否前后匹配，预处理则是根据Mysql规则进行进一步检查解析数是否合法。比如：检查数据表和数据列是否存在，还会解析别名，看是否有歧义，下一步预处理器会进行验证权限。<br><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;查询优化器</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  通常一条查询可以很多种执行计划，最终都返回相同的结果，优化器的作用就是选择最好的执行计划，<br><strong> 优化策略可以简单的分为两种：静态优化，动态优化，</strong><br>    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 静态优化指的是直接对解析数进行分析，并完成优化。静态优化不依赖于特别的数值，如where条件中带入的一些常熟<br>     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;动态优化指的是和查询的上下文有关，也可能和很多其他因素有关，例如where条件中的取值，索引中的对应的数据行数，这需要在每次查询的时候都重新评估。<br><strong>Mysql能够处理的优化类型</strong><br>     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.重新定义关联表的顺序<br>     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.将外连接转化为内连接<br>     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.使用等价变换规则，使用等价来简化并规范表达式<br>    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4.优化COUNT（）MIN（）MAX（），查找最小值，只需要B-TREE索引最左端的记录，同理最大值，最后的一条记录<br>    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5.预估并转化为常熟表达式<br>    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 6.覆盖索引扫描，当索引中的列包含所有查询的列的时候，Mysql就可以使用索引返回需要的数据<br>     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7.子查询优化，将子查询转化为一种效率更高的方式<br>    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 8.提前终止查询，在方式已经满足需求的时候终止查询，例如LIMIT语句<br>    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 9.等值传播，两个列的值通过等式关联，Mysql能够将其中一个猎德where条件传递到另一个列上<br>    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 10。列表IN()的比较，IN()等同于多个OR条件的子句，这两者是完全等价的，但是在Mysql中这单是不成立的。mysql将IN（）列表进行排序，通过二分查找的方式确定列表中的值是否满足。<br>    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Mysql如何进行关联查询<br>     Mysql是将一系列的单个查询结构放到一个临时表中，然后在重新读出临时表数据来完成UNION查询<br>     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;查询执行引擎<br>     Mysql是根据这个执行计划来完成整个查询，这里的执行计划是一个数据结构，而不是和很多其他关系型数据库哪样会生成字节码</p>
+            <h2 id="nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-查询性能优化"><a href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-查询性能优化" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 查询性能优化"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 查询性能优化</h2><p><strong>提高性能的三个方法</strong>：<br>1、设计好的库表结构<br>2、建立最好的索引<br>3、合理的设计查询</p>
+<h3 id="1、查询的基础"><a href="#1、查询的基础" class="headerlink" title="1、查询的基础"></a>1、查询的基础</h3><p><strong>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;当Mysql发送了一个请求的时候，Mysql到底做了些什么 </strong><br><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.客户端发送了一条查询给服务器</strong><br><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2.服务器先检查查询缓存，如果命中了缓存，则立刻返回存储在缓存中的结果。否则进入下一阶段</strong><br><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3.服务器进入sql解析，预处理，再由优化器生成对应的执行计划。</strong><br><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4.Mysql根据优化器生成的执行计划，调用存储引擎的API来执行查询</strong><br><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5.将结果返回给客户端</strong><br><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;语法的解析器和预处理</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Mysql解析器将查询语句进行解析主要生成一颗解析树，验证是否使用了错误的关键字，或者验证引号是否前后匹配，预处理则是根据Mysql规则进行进一步检查解析数是否合法。比如：检查数据表和数据列是否存在，还会解析别名，看是否有歧义，下一步预处理器会进行验证权限。<br><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;查询优化器</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  通常一条查询可以很多种执行计划，最终都返回相同的结果，优化器的作用就是选择最好的执行计划，Mysql生成的执行计划是一颗指令树，然后通过存储引擎执行完成这课指令树并返回结果，最终的执行计划包好了重构查询的全部信息。<br><strong>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;优化策略可以简单的分为两种：静态优化，动态优化，</strong><br>    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 静态优化指的是直接对解析数进行分析，并完成优化。静态优化不依赖于特别的数值，如where条件中带入的一些常熟<br>     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;动态优化指的是和查询的上下文有关，也可能和很多其他因素有关，例如where条件中的取值，索引中的对应的数据行数，这需要在每次查询的时候都重新评估。</p>
+<p>###2、查询速度为什么会变慢<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如果把查询当作是一个任务，那么他由一系列子任务组成，在完成这些任务的时候，查询会在不同的地方花费时间。花费的时间主要在：网络、CPU计算、生成统计信息、执行计划、锁等待等操作，<br> <strong> 查询变慢的主要原因是：</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.不必要的额外操作，查询了不需要的记录比如：使用Select语句查询了大量的结果，然后获取了前面的N行后关闭数据集。实际上Mysql会查出全部的结果集。最好的方式就是在这样的查询后面加上LIMIT<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.某些操作被额外地重复很多次，多表关联时返回全部列<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.某些操作执行的速度太慢了，总是取出全部列</p>
+<h3 id="3、慢查询基础：优化数据访问"><a href="#3、慢查询基础：优化数据访问" class="headerlink" title="3、慢查询基础：优化数据访问"></a>3、慢查询基础：优化数据访问</h3><p>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;查询性能低下最基本的原因是访问的数据太多，因此减少访问的数据量的方式进行优化<br>  可以通过下面两个步骤进行分析：<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  1.确定应用程序是否在检索大量超过需求的数据<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  2.确认Mysql服务器是否在分析大量超过需要的数据行</p>
+<h3 id="4、重构查询的方式"><a href="#4、重构查询的方式" class="headerlink" title="4、重构查询的方式"></a>4、重构查询的方式</h3><p>   思路：<br>   1.设计查询的时候是否需要价格一个复杂的查询分为简单的查询<br>   2.切分查询，将大的查询分为小查询<br>   3.分解关联查询。分解关联查询后，缓存的效率更高。减少了锁的竞争。减少冗余记录的查询</p>
+<h4 id="5、Mysql能够处理的优化类型"><a href="#5、Mysql能够处理的优化类型" class="headerlink" title="5、Mysql能够处理的优化类型"></a>5、Mysql能够处理的优化类型</h4><p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.重新定义关联表的顺序<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.将外连接转化为内连接<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.使用等价变换规则，使用等价来简化并规范表达式<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4.优化COUNT（）MIN（）MAX（），查找最小值，只需要B-TREE索引最左端的记录，同理最大值，最后的一条记录<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5.预估并转化为常熟表达式<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 6.覆盖索引扫描，当索引中的列包含所有查询的列的时候，Mysql就可以使用索引返回需要的数据<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7.子查询优化，将子查询转化为一种效率更高的方式<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 8.提前终止查询，在方式已经满足需求的时候终止查询，例如LIMIT语句<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 9.等值传播，两个列的值通过等式关联，Mysql能够将其中一个猎德where条件传递到另一个列上<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 10。列表IN()的比较，IN()等同于多个OR条件的子句，这两者是完全等价的，但是在Mysql中这单是不成立的。mysql将IN（）列表进行排序，通过二分查找的方式确定列表中的值是否满足。</p>
+<h4 id="6、Mysql优化特定的查询类型"><a href="#6、Mysql优化特定的查询类型" class="headerlink" title="6、Mysql优化特定的查询类型"></a>6、Mysql优化特定的查询类型</h4><p>   <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 6.1优化COUNT()查询 </strong></p>
+<ul>
+<li>1.简答的优化。可以使用MyISAM 在COUNT（*）全表非常快的这个特性，来加速一些特定条件的COUNT（）的查询。</li>
+<li>2.使用近似值。有些业务场景并不需要完成精确的COUNT值，此时就可以用近似值来代替。</li>
+<li>3.更复杂的优化。在Mysql层面上还能做的就只有覆盖索引了。</li>
+</ul>
+<p><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 6.2优化关联查询 </strong></p>
+<ul>
+<li>1.确保ON或者USING上局上的列有索引</li>
+<li>2.确保任何的GROUP BY 和ORDER BY中的表达式只涉及到一个表中的列，这样Mysql就可能使用索引来优化这个过程</li>
+</ul>
+<p><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 6.3优化关联查询 </strong></p>
+<ul>
+<li>1.子查询优化建议就是尽可能使用关联查询代替</li>
+</ul>
+<p><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 6.4优化GROUP BY 和DISTINECT </strong></p>
+<ul>
+<li>1.在Mysql中，当无法使用索引的时候，GROUP BY使用两种策略来完成，使用临时表或者文件排序来做分组。如果排序时没有通过ORGER BY子句显示地指定排序列，当查询使用GROUP BY子句的时候，结果集自动按照分组的字段进行排序，如果不关心结果集的顺序，而这种默认排序又导致了需要文件排序，则可以使用ORDER BY NULL,让Mysql不再进行文件排序。</li>
+<li>2.如果需要对关联查询做分组，并且是按照查找表中的某个列进行分组，那么通常采用查找表的标识列分株的效率回比其他列高。</li>
+</ul>
+<p><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 6.5优化LIMIT分页 </strong></p>
+<ul>
+<li>1.在系统进行分页操作，我们通常会使用LIMIT加上偏移量的办法实现，同时加上ORDER BY 子句。当偏移量非常大时，最简单的放方法就是尽可能地使用覆盖索引，而不是查询所有的列。</li>
+</ul>
+<p><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 6.6优化SQL_CALC_FOUND_ROWS</strong></p>
+<ul>
+<li>1.在LIMIT语句中加上SQL_CALC_FOUND_ROWS提示，就可以获得去掉LIMIT以后满足条件的行数，因此可以作为分页的总数</li>
+</ul>
+<p><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 6.7优化UNION查询</strong></p>
+<ul>
+<li>1.Mysql总是创建并填充临时表的方式来执行UNION查询。在实际应用中，除非确实需要服务器消除重复的行，否则就一定要使用UNION ALL，</li>
+</ul>
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2018年11月20日 12:02</p>
+        <p>最后更新： 2018年11月22日 17:04</p>
         <p>原始链接： <a class="post-url" href="/2018/11/20/Mysql高性能（四）/" title="Mysql高性能（四）">https://ztaocoder.github.io/2018/11/20/Mysql高性能（四）/</a></p>
         <footer>
             <a href="https://ztaocoder.github.io">
@@ -267,7 +298,7 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-第六章-查询性能优化"><span class="post-toc-text">                  第六章 查询性能优化</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#6-2慢查询基础：优化数据访问"><span class="post-toc-text">6.2慢查询基础：优化数据访问</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#6-2-1是否想数据库请求了不需要的数据"><span class="post-toc-text">6.2.1是否想数据库请求了不需要的数据</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#6-2-2-Mysql是否在扫描额外的记录"><span class="post-toc-text">6.2.2 Mysql是否在扫描额外的记录</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#6-3-重构查询的方式"><span class="post-toc-text">6.3 重构查询的方式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#6-4-查询执行的基础"><span class="post-toc-text">6.4 查询执行的基础</span></a></li></ol></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-查询性能优化"><span class="post-toc-text">                   查询性能优化</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1、查询的基础"><span class="post-toc-text">1、查询的基础</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3、慢查询基础：优化数据访问"><span class="post-toc-text">3、慢查询基础：优化数据访问</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4、重构查询的方式"><span class="post-toc-text">4、重构查询的方式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#5、Mysql能够处理的优化类型"><span class="post-toc-text">5、Mysql能够处理的优化类型</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#6、Mysql优化特定的查询类型"><span class="post-toc-text">6、Mysql优化特定的查询类型</span></a></li></ol></li></ol></li></ol>
         </nav>
     </aside>
     
