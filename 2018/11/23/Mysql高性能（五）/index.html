@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>1 | 张涛的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="ZhangTao,ZhangTao's Blog">
+  
+  <meta name="description" content="Mysql高级特性">
+<meta name="keywords" content="Mysql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="1">
+<meta property="og:url" content="https://ztaocoder.github.io/2018/11/23/Mysql高性能（五）/index.html">
+<meta property="og:site_name" content="张涛的博客">
+<meta property="og:description" content="Mysql高级特性">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-11-23T11:20:03.920Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="1">
+<meta name="twitter:description" content="Mysql高级特性">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">ZhangTao&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a href="/">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        ZhangTao&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        一个专注 Java 开发的技术博客
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="ZhangTao" target="_blank" href="//ztaocoder.github.io/">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//github.com/ZTaoCoder">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="//weibo.com">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="//twitter.com">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-Mysql高性能（五）" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      1
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2018-11-23
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h2 id="nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-Mysql高级特性"><a href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-Mysql高级特性" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     Mysql高级特性"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     Mysql高级特性</h2><h3 id="1、分区表"><a href="#1、分区表" class="headerlink" title="1、分区表"></a>1、分区表</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;分区表是一个独立的逻辑表，但是底层是是由多个物理子表组成。实现分区的代码实际上是一组底层表的句柄对象的封装。对分区表的请求，都会通过句柄对象转化成对存储引擎的接口调用。</p>
+<h4 id="nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-1分区表的应用场景"><a href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-1分区表的应用场景" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.1分区表的应用场景"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.1分区表的应用场景</h4><ul>
+<li>1.表非常大的时候以至于无法全部放在内存中，或者只在表的最后部分有热点数据，其它均是历史数据，</li>
+<li>2.分区表的数据更容易维护，还可以对整个分区记性优化、检查、修复等操作</li>
+<li>3.还可以备份和恢复独立的分区，</li>
+<li>4.分区表的数据可以分布在不同的物理设备上</li>
+</ul>
+<h4 id="nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-2分区表的限制"><a href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-2分区表的限制" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.2分区表的限制"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.2分区表的限制</h4><ul>
+<li>1.一个表最多只有1024个分区</li>
+<li>2.分区表达式必须是整数，或者是返回整数的表达式。</li>
+<li>3.如果分区字段中有主键或者唯一索引的列，那么所有主键列和唯一索引都必须包含进来。</li>
+<li>4.分区表中无法使用外键约束</li>
+<li>5.所有的分区都必须使用相同的存储引擎，</li>
+</ul>
+<h4 id="nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-3分区什么情况下会出现问题"><a href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-3分区什么情况下会出现问题" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.3分区什么情况下会出现问题"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.3分区什么情况下会出现问题</h4><ul>
+<li>1.NULL值会使分区过滤无效。Mysql会检查两个分区，而不是一个，出现非法值时，会返回NULL值并存放在第一个分区，因此可以创建一个无用的第一个分区。这样在插入表的数据都是有效时，检查第一个分区的代价就会很小。</li>
+<li>2.分区列和索引列不匹配。应该避免建立和分区列不匹配的索引，除非查询中还同时包含了可以过来分区的条件</li>
+<li>3.选择分区的成本可能很高。随着分区的增长，成本会越来越高<br>4.打开并所以所有底层表的成本可能很高。当访问分区表的时候，Mysql需要打开并锁住所有的底层表，这是分区表的；拎一个开销</li>
+<li>5.维护分区的成本可能很高。</li>
+</ul>
+<h3 id="2-视图"><a href="#2-视图" class="headerlink" title="2.视图"></a>2.视图</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;视图本身是一个虚拟表，不存放任何数据，在使用SQL语句访问视图的时候，它返回的数据是Mysql从其他表中生成的，不能对视图创建触发器和索引，也不能使用DROP TABLE命令删除视图。如果视图中包含了GROUPBY、UNION、聚合函数，以及其他一些特殊情况，就不能被更行了。任何通过视图更新的行，都必须符合视图本身的WHERE条件定义，</p>
+<p><strong> 视图对性能的影响：</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mysql中某些情况下视图也可能帮助提神性能，例如：在重构Schema的时候，可以使用视图，使得在修改视图底层表的结构，应用代码还可能继续不报错的运行。但是如果打算用视图来提升性能，需要做详细的测试</p>
+<h3 id="3、外键约束"><a href="#3、外键约束" class="headerlink" title="3、外键约束"></a>3、外键约束</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;InnoDB是目前Mysql中唯一支持外键的内置存储引擎，使用外键通常都要求每次在修改数据时都要在另外一张表中多执行一次查找操作</p>
+<p><strong>外键约束对性能的影响：</strong></p>
+<ul>
+<li>1.如果想确保两个相关的表始终有一致的数据，那么使用外键比在应用程序中检查一致性的性能要高得多，此外，外键在相关数据的删除和更新上，也比应用程序维护要高效。不过，外键维护操作是逐行进行的，所以这些更新会比批量删除和更新要慢些，</li>
+<li>2.如果只是使用外键做约束，那通常在应用程序中实现该约束会更好，外键会带来很大的额外消耗。</li>
+</ul>
+<h3 id="4、存储过程和函数"><a href="#4、存储过程和函数" class="headerlink" title="4、存储过程和函数"></a>4、存储过程和函数</h3><p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存储过程对mysql性能的影响 </strong></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存储过程要快很多，它无须网络的通信开销，解析开销，和优化器的开销，因此对于某些操作饿，存储过程比其他实现要快的多。因此希望存储过程越小越小</p>
+<h3 id="5、触发器"><a href="#5、触发器" class="headerlink" title="5、触发器"></a>5、触发器</h3><p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;触发器对mysql性能的影响: </strong></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;触发器是在SQL语句执行前后触发，它可以读取或者改变触发SQL语句所影响的数据。触发器可以减少客户端和服务器之间的通信，所以触发器可以简化应用逻辑，还可以提高性能使用，尤其是实现一些约束，系统维护任务，以及更新反范式数据的时候</p>
+<p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;使用触发器注意的事项 </strong></p>
+<ul>
+<li>1.对每一个表的每一个事件，最多只能定义一个触发器。</li>
+<li>2.触发器是针对一条记录的，而不是整个SQL语句，如果变更的数据库非常大的话，效率会很低。</li>
+<li>3.触发器可能导致死锁和缩等待。</li>
+<li>4.在innodb表上的触发器是在同一事务中完成的，所以他们执行的操作是原子行的，原操作和同时失败或者成功</li>
+</ul>
+<h3 id="6、绑定变量"><a href="#6、绑定变量" class="headerlink" title="6、绑定变量"></a>6、绑定变量</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;当创建一个绑定变量的sql，客户端向服务器发送一个sql语句的原型，服务端收到这个sql语句框架后，解析并存储这个sql语句的部分执行计划，返回给客户端一个sql语句处理句柄，以后每次执行这次查询，客户端都指定使用这个句柄。绑定变量的sql，使用问号标记可以接受参数的位置，当真正需要执行具体查询的时候，则使用具体指代替这些问号。</p>
+<h4 id="nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-6-1-绑定变量对性能的mysql性能的影响"><a href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-6-1-绑定变量对性能的mysql性能的影响" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6.1 绑定变量对性能的mysql性能的影响"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6.1 绑定变量对性能的mysql性能的影响</h4><ul>
+<li>1.服务器只需要解析一次sql语句</li>
+<li>2.服务器端某些优化器只需要执行一次，因为它会缓存一部分的执行计划</li>
+<li>3.mysql在存储参数的时候，直接将其存放在缓存中，不再需要在内存中多次复制。</li>
+<li>4.仅仅是参数而不是整个查询语句需要发送到服务端，所以网络开销更小。</li>
+</ul>
+<h4 id="nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-6-2-绑定变量的限制"><a href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-6-2-绑定变量的限制" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 6.2 绑定变量的限制"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 6.2 绑定变量的限制</h4><ul>
+<li>1.绑定变量是会话级别的，所以连接之间不能共用绑定变量，同样地，一旦连接断开，则原来的句柄也不能在使用了</li>
+<li>2.如果只是执行一次sql，那么使用绑定变量方式无疑比直接执行多了一次额外的准备阶段消耗，而且还需要一次额外的网络开销</li>
+<li>3.如果总是忘记释放绑定变量资源，那么服务器端很可能容易发生资源泄漏。</li>
+</ul>
+<h4 id="nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-6-3-三种绑定变量的不同"><a href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-6-3-三种绑定变量的不同" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6.3 三种绑定变量的不同"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6.3 三种绑定变量的不同</h4><ul>
+<li>1.客户端绑定变量。客户端的驱动程序接受一个带参数的sql，再将制定的值带入其中，然后将完整的查询发送给服务器端</li>
+<li>2.服务器端的绑定变量客户端使用特殊的二进制协议将将带参数的字符串发送到服务器端，然后使用二进制协议将具体的参数值发送给服务器端并执行</li>
+<li>3.sql接口的绑定变量客户端先发送一个带参数的字符串到服务器端，这类似于使用prepare的sql语句，然后发送设置参数的sql，最后使用execute来执行sql。所有的这些使用普通的文本传输协议。</li>
+</ul>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2018年11月23日 19:20</p>
+        <p>原始链接： <a class="post-url" href="/2018/11/23/Mysql高性能（五）/" title="1">https://ztaocoder.github.io/2018/11/23/Mysql高性能（五）/</a></p>
+        <footer>
+            <a href="https://ztaocoder.github.io">
+                <img src="/images/logo.png" alt="张涛">
+                张涛
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://ztaocoder.github.io/2018/11/23/Mysql高性能（五）/&title=《1》 — 张涛的博客&pic=https://ztaocoder.github.ioimages/logo.png" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://ztaocoder.github.io/2018/11/23/Mysql高性能（五）/&title=《1》 — 张涛的博客&source=记录个人的成长" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://ztaocoder.github.io/2018/11/23/Mysql高性能（五）/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《1》 — 张涛的博客&url=https://ztaocoder.github.io/2018/11/23/Mysql高性能（五）/&via=https://ztaocoder.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://ztaocoder.github.io/2018/11/23/Mysql高性能（五）/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://ztaocoder.github.io/2018/11/23/Mysql高性能（五）/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/Mysql/" class="color1">Mysql</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-Mysql高级特性"><span class="post-toc-text">                    Mysql高级特性</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1、分区表"><span class="post-toc-text">1、分区表</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-1分区表的应用场景"><span class="post-toc-text">      1.1分区表的应用场景</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-2分区表的限制"><span class="post-toc-text">       1.2分区表的限制</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-3分区什么情况下会出现问题"><span class="post-toc-text">      1.3分区什么情况下会出现问题</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-视图"><span class="post-toc-text">2.视图</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3、外键约束"><span class="post-toc-text">3、外键约束</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4、存储过程和函数"><span class="post-toc-text">4、存储过程和函数</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5、触发器"><span class="post-toc-text">5、触发器</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#6、绑定变量"><span class="post-toc-text">6、绑定变量</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-6-1-绑定变量对性能的mysql性能的影响"><span class="post-toc-text">      6.1 绑定变量对性能的mysql性能的影响</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-6-2-绑定变量的限制"><span class="post-toc-text">       6.2 绑定变量的限制</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-6-3-三种绑定变量的不同"><span class="post-toc-text">      6.3 三种绑定变量的不同</span></a></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+  
+    <a href="/2018/11/20/Mysql高性能（四）/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">Mysql高性能（四）</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2018 张涛<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://ztaocoder.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/Mysql/" style="font-size: 20px;">Mysql</a> <a href="/tags/Tomcat/" style="font-size: 10px;">Tomcat</a> <a href="/tags/设计模式/" style="font-size: 15px;">设计模式</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="/">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/Mysql/" style="font-size: 20px;">Mysql</a> <a href="/tags/Tomcat/" style="font-size: 10px;">Tomcat</a> <a href="/tags/设计模式/" style="font-size: 15px;">设计模式</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>
