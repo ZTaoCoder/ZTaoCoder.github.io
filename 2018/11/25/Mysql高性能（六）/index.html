@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>Mysql高性能（六） | 张涛的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="ZhangTao,ZhangTao's Blog">
+  
+  <meta name="description" content="Mysql查询缓存">
+<meta name="keywords" content="Mysql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mysql高性能（六）">
+<meta property="og:url" content="https://ztaocoder.github.io/2018/11/25/Mysql高性能（六）/index.html">
+<meta property="og:site_name" content="张涛的博客">
+<meta property="og:description" content="Mysql查询缓存">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-11-25T04:04:56.660Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mysql高性能（六）">
+<meta name="twitter:description" content="Mysql查询缓存">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">ZhangTao&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a href="/">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        ZhangTao&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        一个专注 Java 开发的技术博客
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="ZhangTao" target="_blank" href="//ztaocoder.github.io/">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//github.com/ZTaoCoder">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="//weibo.com">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="//twitter.com">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-Mysql高性能（六）" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      Mysql高性能（六）
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2018-11-25
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h2 id="nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-查询缓存"><a href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-查询缓存" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;       查询缓存"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;       查询缓存</h2><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mysql查询缓存保存了查询返回的完整结果，当查询命中缓存时，Mysql会立刻返回结果，跳过了解析，优化和执行阶段。查询缓存系统会跟踪查询中涉及的每个表，当这些表发生变化，那么和这个表相关的所有缓存数据都将失效。缓存可能是影响性能的因素，因此应该判断打开缓存是否有好处</p>
+<h3 id="1、Mysql如何命中缓存"><a href="#1、Mysql如何命中缓存" class="headerlink" title="1、Mysql如何命中缓存"></a>1、Mysql如何命中缓存</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;缓存存放在一个引用表，通过哈希值引用，哈希值存放了查询本身，当前要查询的数据库，客户端协议等信息。在判断是否命中时，mysql不会解析，“正规化”和参数化语句，而是直接使用SQL和客户端发送过来的其他原始信息，任何字符上的不同，例如空格，注释， 都不会命中缓存。<br>  <strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;有那些因素不会命中缓存：</strong></p>
+<ul>
+<li>1.有不确定的数据时，例如包含NOW()和CURRENT_DATA()的查询不会</li>
+<li>2.包含自定义函数、存储过程、用户变量、临时表、子查询，都不会被缓存。</li>
+<li>3.mysql库中的系统表、任何包含列级别权限的表、都不会被缓存。</li>
+<li>4.数据修改都不造成缓存失效。</li>
+</ul>
+<h3 id="2、缓存带来的性能损耗"><a href="#2、缓存带来的性能损耗" class="headerlink" title="2、缓存带来的性能损耗"></a>2、缓存带来的性能损耗</h3><ul>
+<li>1.读查询之前必须先检查是否命中缓存</li>
+<li>2.当读查询执行完后，判断缓存是否有这个查询，会将其结果存入缓存</li>
+<li>3.当表更改时，对应表的缓存将失效，如果查询缓存很大或者碎片很多，将带来很大的系统消耗</li>
+<li>4.如果缓存中存放了大量的查询结果，哪买缓存失效操作可能使整个系统僵死一会儿</li>
+<li>5.对于一个事务来说，只有当事务提交后，查询才能被缓存，如果长时间运行事务，缓存的命中率将大大降低。</li>
+</ul>
+<h3 id="3、缓存对Mysql性能的提升"><a href="#3、缓存对Mysql性能的提升" class="headerlink" title="3、缓存对Mysql性能的提升"></a>3、缓存对Mysql性能的提升</h3><ul>
+<li>1.对于那些需要消耗大量资源的查询来说是非常适合缓存的，例如：汇总计算，多表JOIN后还需要作排序和分页。不过需要注意，表的更新操作要远小于查询操作才行。</li>
+<li>2.名字带来的性能提升大于缓存失效的消耗，并且查询缓存并没有成为系统的瓶颈。</li>
+</ul>
+<h3 id="4、Mysql如何分配缓存"><a href="#4、Mysql如何分配缓存" class="headerlink" title="4、Mysql如何分配缓存"></a>4、Mysql如何分配缓存</h3><p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在Mysql启动时，它先初始化查询缓存需要的内存，由Mysql自己管理，这个内存池是一个完整的空闲快。当有查询需要缓存时，Mysql先分配一块数据块用于存储结果，这个数据块的参数必须要大于query_cahca_min_res_unit。此时是无法知道查询的结果到底有多大的，所有要选择一个尽可能小的内存块，将其结果存入其中。如果数据块用完，但仍有数据需要存储，Mysql会申请一块新的数据块，也尽可能小，继续存储数据。</p>
+<h3 id="5缓存的配置和维护"><a href="#5缓存的配置和维护" class="headerlink" title="5缓存的配置和维护"></a>5缓存的配置和维护</h3><pre><code>参数设置
+ query_cache_type
+      是否打开缓存，有三个参数OFF、ON、Demand。demand表示只有在查询中明确写明SQL_CACHE的语句才会放入缓存。
+ query_cache_size
+     查询缓存使用的内存总空间。但是为字节，必须是1024的整数倍
+ query_cahca_min_res_unit
+     查询缓存中分配内存块时的最小单位
+ query_cache_limit
+     Mysql能够缓存的最大查询结果。如果查询结果超过了这个值，则不会被缓存
+ query_cache_wlock_invalidata
+    如果这个数据表被其他的连接锁住，是否仍然从查询缓存中返回结果。
+ FLUSH QUERY CACHE 
+    会将所有的查询缓存重新排序，并将所有的空闲空间聚集到一块区域上。
+ RESET QUEYR CACHE 
+    清空缓存
+</code></pre><p>   <strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如何减少碎片</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;选择合适的query_cahca_min_res_unit，。设置太小，浪费空间小，但会频繁的申请内存操作设置太大，那么碎片会很多。这个值应该根据查询结果的平均大小来设置。</p>
+<p> ###6、InnoDB的查询缓存 ###<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 在InnoDB的MVCC架构下，当某些修改不影响其他事务读取一致的数据时，是可以使用缓存的。但是这样实现起来会复杂，InnoDB做了一个简化，让所有有加锁操作的事务都不使用任何缓存，这个限制并不是必须的。</p>
+<h3 id="7、如果通过缓存来提升Mysql性能"><a href="#7、如果通过缓存来提升Mysql性能" class="headerlink" title="7、如果通过缓存来提升Mysql性能"></a>7、如果通过缓存来提升Mysql性能</h3><ul>
+<li>1.对于写密集型的应用来说，直接禁用查询缓存可能会提高性能。</li>
+<li>2.对于那些需要消耗大量资源的查询来说是非常适合缓存的。例如：汇总计算，多表JOIN后还需要作排序和分页。</li>
+<li>3.可以将query_cache_type值设计为demand，手动控制是否使用缓存。</li>
+</ul>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2018年11月25日 12:04</p>
+        <p>原始链接： <a class="post-url" href="/2018/11/25/Mysql高性能（六）/" title="Mysql高性能（六）">https://ztaocoder.github.io/2018/11/25/Mysql高性能（六）/</a></p>
+        <footer>
+            <a href="https://ztaocoder.github.io">
+                <img src="/images/logo.png" alt="张涛">
+                张涛
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://ztaocoder.github.io/2018/11/25/Mysql高性能（六）/&title=《Mysql高性能（六）》 — 张涛的博客&pic=https://ztaocoder.github.ioimages/logo.png" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://ztaocoder.github.io/2018/11/25/Mysql高性能（六）/&title=《Mysql高性能（六）》 — 张涛的博客&source=记录个人的成长" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://ztaocoder.github.io/2018/11/25/Mysql高性能（六）/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Mysql高性能（六）》 — 张涛的博客&url=https://ztaocoder.github.io/2018/11/25/Mysql高性能（六）/&via=https://ztaocoder.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://ztaocoder.github.io/2018/11/25/Mysql高性能（六）/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://ztaocoder.github.io/2018/11/25/Mysql高性能（六）/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/Mysql/" class="color1">Mysql</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-查询缓存"><span class="post-toc-text">                           查询缓存</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1、Mysql如何命中缓存"><span class="post-toc-text">1、Mysql如何命中缓存</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2、缓存带来的性能损耗"><span class="post-toc-text">2、缓存带来的性能损耗</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3、缓存对Mysql性能的提升"><span class="post-toc-text">3、缓存对Mysql性能的提升</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4、Mysql如何分配缓存"><span class="post-toc-text">4、Mysql如何分配缓存</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5缓存的配置和维护"><span class="post-toc-text">5缓存的配置和维护</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#7、如果通过缓存来提升Mysql性能"><span class="post-toc-text">7、如果通过缓存来提升Mysql性能</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+  
+    <a href="/2018/11/23/Mysql高性能（五）/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">Mysql高性能（五）</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2018 张涛<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://ztaocoder.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/Mysql/" style="font-size: 20px;">Mysql</a> <a href="/tags/Tomcat/" style="font-size: 10px;">Tomcat</a> <a href="/tags/设计模式/" style="font-size: 15px;">设计模式</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="/">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/Mysql/" style="font-size: 20px;">Mysql</a> <a href="/tags/Tomcat/" style="font-size: 10px;">Tomcat</a> <a href="/tags/设计模式/" style="font-size: 15px;">设计模式</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>
