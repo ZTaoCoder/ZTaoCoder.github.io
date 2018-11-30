@@ -3,23 +3,27 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>Mysql高性能（六） | 张涛的博客</title>
+  <title>Redis中的数据结构 | 张涛的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
     <meta name="keywords" content="ZhangTao,ZhangTao's Blog">
   
-  <meta name="description" content="Mysql查询缓存">
-<meta name="keywords" content="Mysql">
+  <meta name="description" content="Redis中的数据结构">
+<meta name="keywords" content="Redis">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Mysql高性能（六）">
-<meta property="og:url" content="https://ztaocoder.github.io/2018/11/25/Mysql高性能（六）/index.html">
+<meta property="og:title" content="Redis中的数据结构">
+<meta property="og:url" content="https://ztaocoder.github.io/2018/11/30/Redis中的数据结构/index.html">
 <meta property="og:site_name" content="张涛的博客">
-<meta property="og:description" content="Mysql查询缓存">
+<meta property="og:description" content="Redis中的数据结构">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-11-25T06:15:31.382Z">
+<meta property="og:image" content="https://ztaocoder.github.io/2018/11/30/Redis中的数据结构/images/sds.png">
+<meta property="og:image" content="https://ztaocoder.github.io/2018/11/30/Redis中的数据结构/images/list.png">
+<meta property="og:image" content="https://ztaocoder.github.io/2018/11/30/Redis中的数据结构/images/hash.png">
+<meta property="og:updated_time" content="2018-11-30T11:11:39.429Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Mysql高性能（六）">
-<meta name="twitter:description" content="Mysql查询缓存">
+<meta name="twitter:title" content="Redis中的数据结构">
+<meta name="twitter:description" content="Redis中的数据结构">
+<meta name="twitter:image" content="https://ztaocoder.github.io/2018/11/30/Redis中的数据结构/images/sds.png">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -110,20 +114,20 @@
     </div>
 </header>
       <div class="outer">
-        <section id="main" class="body-wrap"><article id="post-Mysql高性能（六）" class="article article-type-post" itemscope="" itemprop="blogPost">
+        <section id="main" class="body-wrap"><article id="post-Redis中的数据结构" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="post-title" itemprop="name">
-      Mysql高性能（六）
+      Redis中的数据结构
     </h1>
     <div class="post-title-bar">
       <ul>
           
         <li>
-          <i class="fa fa-calendar"></i>  2018-11-25
+          <i class="fa fa-calendar"></i>  2018-11-30
         </li>
         <li>
           <i class="fa fa-eye"></i>
@@ -139,53 +143,64 @@
     <div class="article-entry post-content" itemprop="articleBody">
       
             
-            <h2 id="nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-查询缓存"><a href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-查询缓存" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;       查询缓存"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;       查询缓存</h2><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mysql查询缓存保存了查询返回的完整结果，当查询命中缓存时，Mysql会立刻返回结果，跳过了解析，优化和执行阶段。查询缓存系统会跟踪查询中涉及的每个表，当这些表发生变化，那么和这个表相关的所有缓存数据都将失效。缓存可能是影响性能的因素，因此应该判断打开缓存是否有好处</p>
-<h3 id="1、Mysql如何命中缓存"><a href="#1、Mysql如何命中缓存" class="headerlink" title="1、Mysql如何命中缓存"></a>1、Mysql如何命中缓存</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;缓存存放在一个引用表，通过哈希值引用，哈希值存放了查询本身，当前要查询的数据库，客户端协议等信息。在判断是否命中时，mysql不会解析，“正规化”和参数化语句，而是直接使用SQL和客户端发送过来的其他原始信息，任何字符上的不同，例如空格，注释， 都不会命中缓存。<br>  <strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;有那些因素不会命中缓存：</strong></p>
+            <h2 id="nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-Redis中的数据结构"><a href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-Redis中的数据结构" class="headerlink" title="&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Redis中的数据结构"></a>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Redis中的数据结构</h2><h3 id="一、简单动态字符串（simple-dynamic-string）"><a href="#一、简单动态字符串（simple-dynamic-string）" class="headerlink" title="一、简单动态字符串（simple dynamic string）"></a>一、简单动态字符串（simple dynamic string）</h3><h4 id="1、SDS作用："><a href="#1、SDS作用：" class="headerlink" title="1、SDS作用："></a>1、SDS作用：</h4><ul>
+<li>1.键值对的键是一个字符串对象</li>
+<li>2.键值对的值是有可能是一个字符串对象</li>
+<li>3.用作缓冲区</li>
+</ul>
+<p>####2、SDS定义####<br><img src="/2018/11/30/Redis中的数据结构/images/sds.png" alt="SDS"></p>
+<p>free属性的值为0，表示这个SDS没有分配为使用的空间<br>len属性的值为5，表示这个SDS保存了一个五字节长的字符串<br>buf属性是一个char数组，保存了Redis的五个字符</p>
+<h3 id="3-与C字符串对比的优势"><a href="#3-与C字符串对比的优势" class="headerlink" title="3.与C字符串对比的优势"></a>3.与C字符串对比的优势</h3><ul>
+<li><p>1.常识复杂度获得字符串长度</p>
+</li>
+<li><p>2.杜绝缓冲区溢出。SDS在进行修改时，会先检查SDS的空间是否满足修改所需的要求，如果不满足，则自动扩展至执行修改所需的大小</p>
+</li>
+<li><p>3.减少修改字符串时带来的内存重分配次数</p>
+</li>
+<li>4.二进制安全<br>SDS的API都是二进制安全的，所有SDS API都会以二进制的方式处理SDS存放在buf数组里的数据，程序不会对其中的数据做任何限制、过滤、或者假设，数据在写入时是什么样的，它被读出来就是什么样。</li>
+<li>5.兼容了部分C字符串函数</li>
+</ul>
+<h3 id="4-空间分配与释放"><a href="#4-空间分配与释放" class="headerlink" title="4.空间分配与释放"></a>4.空间分配与释放</h3><p>  <strong> 4.1 空间预分配</strong></p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;如果对SDS进行修改之后，SDS的长度将小于1MB，那么程序分配和len属性同样大小的未使用空间。举例:修改之后SDS的len将变为13，那么会分配13字节的未使用空间，一共就是13+13+1=27字节。如果SDS的长度大于等于1MB，那么程序分配1MB的空间为使用的空间，举例：修改之后，SDS的len将变为30，那么会分配1MB为使用的空间，一共就是30Mb+1MB+1byte。</p>
+<p><strong>4.2惰性空间释放</strong><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;当SDS的API需要缩短SDS保存字符串时，程序并不立即使用内存重分配来回收缩短后多出来的字节，而是使用free将这些字节数量记录下来。SDS也提供了API,让我们可以在有需要时，真正的释放SDS的未使用空间</p>
+<h3 id="二、链表"><a href="#二、链表" class="headerlink" title="二、链表"></a>二、链表</h3><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;当一个列表建包含了数量较多的元素，又或者列表中包含的元素都是比较长的字符串时，Redis就会使用链表作为列表建的底层实现。除了链表键外，发布和订阅、慢查询、监视器功能也用到了链表。<br> typedef struct ListNode {<br>   struct listNode *prev；前置节点</p>
+<p>   struct listNode *next；后置节点</p>
+<p>   void  *value；节点的值<br>}</p>
+<p>typedef struct List {</p>
+<p>   ListNode *head；//表头节点</p>
+<p>   ListNode *tail；//表尾节点</p>
+<p>  Unsigned long len；//链表所包含的节点数量</p>
+<p>  Void dup（）；//节点值复制函数</p>
+<p>Void free（）//节点值释放函数</p>
+<p>Void match（）；//节点值对比函数<br>}</p>
+<p>一个list结构与三个listNode构成</p>
+<p><img src="/2018/11/30/Redis中的数据结构/images/list.png" alt="LIST"></p>
+<h3 id="三、字典"><a href="#三、字典" class="headerlink" title="三、字典"></a>三、字典</h3><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Redis的字段使用哈希表作为底层实现，一个哈希表里面可以用多个哈希表节点<br>哈希表结构</p>
+<p>typedef struct dictht {<br>  Dictentry **table；<br>  Unsigned long size；<br>  Unsigned long sizemask；<br>  Unsigned long used；<br>}<br>节点结构</p>
+<p>typedef struct dictEntry{</p>
+<p>  Void *key；</p>
+<p>  Union {</p>
+<p>  Void *val；</p>
+<p>Uint64_T u64；</p>
+<p>Int64_T S64； </p>
+<p>}v;<br>  Struct dictEntry *next</p>
+<p>}</p>
+<p><strong> Redis中的字典有dict结构表示 </strong></p>
+<p>Typedef struct dict {</p>
+<p>  DictType *type//类型特性的函数</p>
+<p>  Void *private//私有数据</p>
+<p> Dictht ht[2];//哈希表</p>
+<p> Int rehashindex//rehash索引，扩展和搜索哈希表<br>}<br>Redis普通状态下的字典<br><img src="/2018/11/30/Redis中的数据结构/images/hash.png" alt="HASH"></p>
+<p> <strong> 哈希表的扩展与收缩:</strong></p>
 <ul>
-<li>1.有不确定的数据时，例如包含NOW()和CURRENT_DATA()的查询不会</li>
-<li>2.包含自定义函数、存储过程、用户变量、临时表、子查询，都不会被缓存。</li>
-<li>3.mysql库中的系统表、任何包含列级别权限的表、都不会被缓存。</li>
-<li>4.数据修改都不造成缓存失效。</li>
-</ul>
-<h3 id="2、缓存带来的性能损耗"><a href="#2、缓存带来的性能损耗" class="headerlink" title="2、缓存带来的性能损耗"></a>2、缓存带来的性能损耗</h3><ul>
-<li>1.读查询之前必须先检查是否命中缓存</li>
-<li>2.当读查询执行完后，判断缓存是否有这个查询，会将其结果存入缓存</li>
-<li>3.当表更改时，对应表的缓存将失效，如果查询缓存很大或者碎片很多，将带来很大的系统消耗</li>
-<li>4.如果缓存中存放了大量的查询结果，哪买缓存失效操作可能使整个系统僵死一会儿</li>
-<li>5.对于一个事务来说，只有当事务提交后，查询才能被缓存，如果长时间运行事务，缓存的命中率将大大降低。</li>
-</ul>
-<h3 id="3、缓存对Mysql性能的提升"><a href="#3、缓存对Mysql性能的提升" class="headerlink" title="3、缓存对Mysql性能的提升"></a>3、缓存对Mysql性能的提升</h3><ul>
-<li>1.对于那些需要消耗大量资源的查询来说是非常适合缓存的，例如：汇总计算，多表JOIN后还需要作排序和分页。不过需要注意，表的更新操作要远小于查询操作才行。</li>
-<li>2.名字带来的性能提升大于缓存失效的消耗，并且查询缓存并没有成为系统的瓶颈。</li>
-</ul>
-<h3 id="4、Mysql如何分配缓存"><a href="#4、Mysql如何分配缓存" class="headerlink" title="4、Mysql如何分配缓存"></a>4、Mysql如何分配缓存</h3><p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在Mysql启动时，它先初始化查询缓存需要的内存，由Mysql自己管理，这个内存池是一个完整的空闲快。当有查询需要缓存时，Mysql先分配一块数据块用于存储结果，这个数据块的参数必须要大于query_cahca_min_res_unit。此时是无法知道查询的结果到底有多大的，所有要选择一个尽可能小的内存块，将其结果存入其中。如果数据块用完，但仍有数据需要存储，Mysql会申请一块新的数据块，也尽可能小，继续存储数据。</p>
-<h3 id="5、缓存的配置和维护"><a href="#5、缓存的配置和维护" class="headerlink" title="5、缓存的配置和维护"></a>5、缓存的配置和维护</h3><pre><code>参数设置
- query_cache_type
-      是否打开缓存，有三个参数OFF、ON、Demand。demand表示只有在查询中明确写明SQL_CACHE的语句才会放入缓存。
- query_cache_size
-     查询缓存使用的内存总空间。但是为字节，必须是1024的整数倍
- query_cahca_min_res_unit
-     查询缓存中分配内存块时的最小单位
- query_cache_limit
-     Mysql能够缓存的最大查询结果。如果查询结果超过了这个值，则不会被缓存
- query_cache_wlock_invalidata
-    如果这个数据表被其他的连接锁住，是否仍然从查询缓存中返回结果。
- FLUSH QUERY CACHE 
-    会将所有的查询缓存重新排序，并将所有的空闲空间聚集到一块区域上。
- RESET QUEYR CACHE 
-    清空缓存
-</code></pre><p>   <strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如何减少碎片</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;选择合适的query_cahca_min_res_unit，。设置太小，浪费空间小，但会频繁的申请内存操作设置太大，那么碎片会很多。这个值应该根据查询结果的平均大小来设置。</p>
-<h3 id="6、InnoDB的查询缓存"><a href="#6、InnoDB的查询缓存" class="headerlink" title="6、InnoDB的查询缓存"></a>6、InnoDB的查询缓存</h3><p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 在InnoDB的MVCC架构下，当某些修改不影响其他事务读取一致的数据时，是可以使用缓存的。但是这样实现起来会复杂，InnoDB做了一个简化，让所有有加锁操作的事务都不使用任何缓存，这个限制并不是必须的。</p>
-<h3 id="7、如果通过缓存来提升Mysql性能"><a href="#7、如果通过缓存来提升Mysql性能" class="headerlink" title="7、如果通过缓存来提升Mysql性能"></a>7、如果通过缓存来提升Mysql性能</h3><ul>
-<li>1.对于写密集型的应用来说，直接禁用查询缓存可能会提高性能。</li>
-<li>2.对于那些需要消耗大量资源的查询来说是非常适合缓存的。例如：汇总计算，多表JOIN后还需要作排序和分页。</li>
-<li>3.可以将query_cache_type值设计为demand，手动控制是否使用缓存。</li>
+<li>1.服务器目前没有在执行BGSAVE命令或者BGREWRITAOP命令，并且哈希表的负载因子大于等于1,进行扩展。</li>
+<li>2.服务器目前没有在执行BGSAVE命令或者BGREWRITAOP命令，并且哈希表的负载因子大于等于5，进行扩展。<br>负载因子的计算公式<br>负载因子=哈希表已保存节点数量/哈希表的大小<br>当哈希表的负载因子小于0.1时，程序自动开始对哈希表进行收缩操作。</li>
 </ul>
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2018年11月25日 14:15</p>
-        <p>原始链接： <a class="post-url" href="/2018/11/25/Mysql高性能（六）/" title="Mysql高性能（六）">https://ztaocoder.github.io/2018/11/25/Mysql高性能（六）/</a></p>
+        <p>最后更新： 2018年11月30日 19:11</p>
+        <p>原始链接： <a class="post-url" href="/2018/11/30/Redis中的数据结构/" title="Redis中的数据结构">https://ztaocoder.github.io/2018/11/30/Redis中的数据结构/</a></p>
         <footer>
             <a href="https://ztaocoder.github.io">
                 <img src="/images/logo.png" alt="张涛">
@@ -242,7 +257,7 @@
     <div class="post-share-list" id="share-list">
         <ul class="share-icons">
           <li>
-            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://ztaocoder.github.io/2018/11/25/Mysql高性能（六）/&title=《Mysql高性能（六）》 — 张涛的博客&pic=https://ztaocoder.github.ioimages/logo.png" data-title="微博">
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://ztaocoder.github.io/2018/11/30/Redis中的数据结构/&title=《Redis中的数据结构》 — 张涛的博客&pic=https://ztaocoder.github.ioimages/logo.png" data-title="微博">
               <i class="fa fa-weibo"></i>
             </a>
           </li>
@@ -252,22 +267,22 @@
             </a>
           </li>
           <li>
-            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://ztaocoder.github.io/2018/11/25/Mysql高性能（六）/&title=《Mysql高性能（六）》 — 张涛的博客&source=记录个人的成长" data-title="QQ">
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://ztaocoder.github.io/2018/11/30/Redis中的数据结构/&title=《Redis中的数据结构》 — 张涛的博客&source=记录个人的成长" data-title="QQ">
               <i class="fa fa-qq"></i>
             </a>
           </li>
           <li>
-            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://ztaocoder.github.io/2018/11/25/Mysql高性能（六）/" data-title="Facebook">
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://ztaocoder.github.io/2018/11/30/Redis中的数据结构/" data-title="Facebook">
               <i class="fa fa-facebook"></i>
             </a>
           </li>
           <li>
-            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Mysql高性能（六）》 — 张涛的博客&url=https://ztaocoder.github.io/2018/11/25/Mysql高性能（六）/&via=https://ztaocoder.github.io" data-title="Twitter">
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Redis中的数据结构》 — 张涛的博客&url=https://ztaocoder.github.io/2018/11/30/Redis中的数据结构/&via=https://ztaocoder.github.io" data-title="Twitter">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
           <li>
-            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://ztaocoder.github.io/2018/11/25/Mysql高性能（六）/" data-title="Google+">
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://ztaocoder.github.io/2018/11/30/Redis中的数据结构/" data-title="Google+">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -277,7 +292,7 @@
 <div class="post-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;" id="wxShare-close">×</a>
     <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://ztaocoder.github.io/2018/11/25/Mysql高性能（六）/" alt="微信分享二维码">
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://ztaocoder.github.io/2018/11/30/Redis中的数据结构/" alt="微信分享二维码">
 </div>
 
 <div class="mask"></div>
@@ -289,7 +304,7 @@
   <li class="article-footer-tags">
     <i class="fa fa-tags"></i>
       
-    <a href="/tags/Mysql/" class="color1">Mysql</a>
+    <a href="/tags/Redis/" class="color1">Redis</a>
       
   </li>
 
@@ -302,26 +317,16 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-查询缓存"><span class="post-toc-text">                           查询缓存</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1、Mysql如何命中缓存"><span class="post-toc-text">1、Mysql如何命中缓存</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2、缓存带来的性能损耗"><span class="post-toc-text">2、缓存带来的性能损耗</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3、缓存对Mysql性能的提升"><span class="post-toc-text">3、缓存对Mysql性能的提升</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4、Mysql如何分配缓存"><span class="post-toc-text">4、Mysql如何分配缓存</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5、缓存的配置和维护"><span class="post-toc-text">5、缓存的配置和维护</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#6、InnoDB的查询缓存"><span class="post-toc-text">6、InnoDB的查询缓存</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#7、如果通过缓存来提升Mysql性能"><span class="post-toc-text">7、如果通过缓存来提升Mysql性能</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-Redis中的数据结构"><span class="post-toc-text">                       Redis中的数据结构</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#一、简单动态字符串（simple-dynamic-string）"><span class="post-toc-text">一、简单动态字符串（simple dynamic string）</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1、SDS作用："><span class="post-toc-text">1、SDS作用：</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-与C字符串对比的优势"><span class="post-toc-text">3.与C字符串对比的优势</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-空间分配与释放"><span class="post-toc-text">4.空间分配与释放</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#二、链表"><span class="post-toc-text">二、链表</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#三、字典"><span class="post-toc-text">三、字典</span></a></li></ol></li></ol>
         </nav>
     </aside>
     
 
 <nav id="article-nav">
   
-    <a href="/2018/11/25/SSM框架整合/" id="article-nav-newer" class="article-nav-link-wrap">
-
-      <span class="article-nav-title">
-        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
-        
-          SSM框架整合
-        
-      </span>
-    </a>
   
-  
-    <a href="/2018/11/23/Mysql高性能（五）/" id="article-nav-older" class="article-nav-link-wrap">
-      <span class="article-nav-title">Mysql高性能（五）</span>
+    <a href="/2018/11/30/Redis中的对象/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">Redis中的对象</span>
       <i class="fa fa-hand-o-right" aria-hidden="true"></i>
     </a>
   
