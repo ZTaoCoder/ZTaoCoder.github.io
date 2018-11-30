@@ -16,14 +16,14 @@
 <meta property="og:site_name" content="张涛的博客">
 <meta property="og:description" content="Redis中的数据结构">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://ztaocoder.github.io/2018/11/30/Redis中的数据结构/images/sds.png">
-<meta property="og:image" content="https://ztaocoder.github.io/2018/11/30/Redis中的数据结构/images/list.png">
-<meta property="og:image" content="https://ztaocoder.github.io/2018/11/30/Redis中的数据结构/images/hash.png">
-<meta property="og:updated_time" content="2018-11-30T11:11:39.429Z">
+<meta property="og:image" content="https://ztaocoder.github.io/2018/11/30/Redis中的数据结构/sds.png">
+<meta property="og:image" content="https://ztaocoder.github.io/2018/11/30/Redis中的数据结构/list.png">
+<meta property="og:image" content="https://ztaocoder.github.io/2018/11/30/Redis中的数据结构/hash.png">
+<meta property="og:updated_time" content="2018-11-30T11:15:42.124Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redis中的数据结构">
 <meta name="twitter:description" content="Redis中的数据结构">
-<meta name="twitter:image" content="https://ztaocoder.github.io/2018/11/30/Redis中的数据结构/images/sds.png">
+<meta name="twitter:image" content="https://ztaocoder.github.io/2018/11/30/Redis中的数据结构/sds.png">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -148,7 +148,7 @@
 <li>2.键值对的值是有可能是一个字符串对象</li>
 <li>3.用作缓冲区</li>
 </ul>
-<p>####2、SDS定义####<br><img src="/2018/11/30/Redis中的数据结构/images/sds.png" alt="SDS"></p>
+<p>####2、SDS定义####<br><img src="/2018/11/30/Redis中的数据结构/sds.png" alt="SDS"></p>
 <p>free属性的值为0，表示这个SDS没有分配为使用的空间<br>len属性的值为5，表示这个SDS保存了一个五字节长的字符串<br>buf属性是一个char数组，保存了Redis的五个字符</p>
 <h3 id="3-与C字符串对比的优势"><a href="#3-与C字符串对比的优势" class="headerlink" title="3.与C字符串对比的优势"></a>3.与C字符串对比的优势</h3><ul>
 <li><p>1.常识复杂度获得字符串长度</p>
@@ -174,7 +174,7 @@
 <p>Void free（）//节点值释放函数</p>
 <p>Void match（）；//节点值对比函数<br>}</p>
 <p>一个list结构与三个listNode构成</p>
-<p><img src="/2018/11/30/Redis中的数据结构/images/list.png" alt="LIST"></p>
+<p><img src="/2018/11/30/Redis中的数据结构/list.png" alt="LIST"></p>
 <h3 id="三、字典"><a href="#三、字典" class="headerlink" title="三、字典"></a>三、字典</h3><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Redis的字段使用哈希表作为底层实现，一个哈希表里面可以用多个哈希表节点<br>哈希表结构</p>
 <p>typedef struct dictht {<br>  Dictentry **table；<br>  Unsigned long size；<br>  Unsigned long sizemask；<br>  Unsigned long used；<br>}<br>节点结构</p>
 <p>typedef struct dictEntry{</p>
@@ -190,7 +190,7 @@
 <p>  DictType *type//类型特性的函数</p>
 <p>  Void *private//私有数据</p>
 <p> Dictht ht[2];//哈希表</p>
-<p> Int rehashindex//rehash索引，扩展和搜索哈希表<br>}<br>Redis普通状态下的字典<br><img src="/2018/11/30/Redis中的数据结构/images/hash.png" alt="HASH"></p>
+<p> Int rehashindex//rehash索引，扩展和搜索哈希表<br>}<br>Redis普通状态下的字典<br><img src="/2018/11/30/Redis中的数据结构/hash.png" alt="HASH"></p>
 <p> <strong> 哈希表的扩展与收缩:</strong></p>
 <ul>
 <li>1.服务器目前没有在执行BGSAVE命令或者BGREWRITAOP命令，并且哈希表的负载因子大于等于1,进行扩展。</li>
@@ -199,7 +199,7 @@
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2018年11月30日 19:11</p>
+        <p>最后更新： 2018年11月30日 19:15</p>
         <p>原始链接： <a class="post-url" href="/2018/11/30/Redis中的数据结构/" title="Redis中的数据结构">https://ztaocoder.github.io/2018/11/30/Redis中的数据结构/</a></p>
         <footer>
             <a href="https://ztaocoder.github.io">
