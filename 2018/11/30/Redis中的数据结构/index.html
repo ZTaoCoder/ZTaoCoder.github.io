@@ -22,7 +22,7 @@
 <meta property="og:image" content="https://ztaocoder.github.io/2018/11/30/Redis中的数据结构/skiplist.png">
 <meta property="og:image" content="https://ztaocoder.github.io/2018/11/30/Redis中的数据结构/intset.png">
 <meta property="og:image" content="https://ztaocoder.github.io/2018/11/30/Redis中的数据结构/ziplist.png">
-<meta property="og:updated_time" content="2018-11-30T12:19:05.908Z">
+<meta property="og:updated_time" content="2018-11-30T13:17:57.633Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redis中的数据结构">
 <meta name="twitter:description" content="Redis中的数据结构">
@@ -151,8 +151,10 @@
 <li>2.键值对的值是有可能是一个字符串对象</li>
 <li>3.用作缓冲区</li>
 </ul>
-<p>####2、SDS定义####<br>    struct sdshdr{</p>
-<pre><code>int len；//记录buf数组中已使用字节的数量
+<p>####2、SDS定义####</p>
+<pre><code>struct sdshdr{
+
+int len；//记录buf数组中已使用字节的数量
 
 int free；//记录buf数值中为使用的字节的数量
 
@@ -307,7 +309,7 @@ typedef struct dict {
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2018年11月30日 20:19</p>
+        <p>最后更新： 2018年11月30日 21:17</p>
         <p>原始链接： <a class="post-url" href="/2018/11/30/Redis中的数据结构/" title="Redis中的数据结构">https://ztaocoder.github.io/2018/11/30/Redis中的数据结构/</a></p>
         <footer>
             <a href="https://ztaocoder.github.io">
