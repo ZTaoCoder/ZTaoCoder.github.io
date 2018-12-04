@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>Redis中的数据库 | 张涛的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="ZhangTao,ZhangTao's Blog">
+  
+  <meta name="description" content="Redis中的数据库">
+<meta name="keywords" content="Redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis中的数据库">
+<meta property="og:url" content="https://ztaocoder.github.io/2018/12/04/Redis中的数据库/index.html">
+<meta property="og:site_name" content="张涛的博客">
+<meta property="og:description" content="Redis中的数据库">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://ztaocoder.github.io/2018/12/04/Redis中的数据库/redisServer.png">
+<meta property="og:image" content="https://ztaocoder.github.io/2018/12/04/Redis中的数据库/redisDb.png">
+<meta property="og:image" content="https://ztaocoder.github.io/2018/12/04/Redis中的数据库/expire.png">
+<meta property="og:image" content="https://ztaocoder.github.io/2018/12/04/Redis中的数据库/get.png">
+<meta property="og:updated_time" content="2018-12-04T04:34:30.204Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Redis中的数据库">
+<meta name="twitter:description" content="Redis中的数据库">
+<meta name="twitter:image" content="https://ztaocoder.github.io/2018/12/04/Redis中的数据库/redisServer.png">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">ZhangTao&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a href="/">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        ZhangTao&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        一个专注 Java 开发的技术博客
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="ZhangTao" target="_blank" href="//ztaocoder.github.io/">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//github.com/ZTaoCoder">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="//weibo.com">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="//twitter.com">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-Redis中的数据库" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      Redis中的数据库
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2018-12-04
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h2 id="nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-Redis中的数据库"><a href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-Redis中的数据库" class="headerlink" title="&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Redis中的数据库"></a>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Redis中的数据库</h2><h3 id="1-服务器中的数据库"><a href="#1-服务器中的数据库" class="headerlink" title="1.服务器中的数据库"></a>1.服务器中的数据库</h3><p>Redis服务器将所有的数据库都保存在服务器状态redisServer结构中</p>
+<pre><code>struct redisServer{
+...
+redisDb *db; //一个数据保存着服务器所有数据库
+int dbnum; //服务器的数据库数量
+ ...
+}
+</code></pre><h3 id="2-切换数据库"><a href="#2-切换数据库" class="headerlink" title="2.切换数据库"></a>2.切换数据库</h3><p> &nbsp; &nbsp; &nbsp; &nbsp;Redis客户端的目标数据库是0号数据库，但客户端可以通过执行SELECT 命令来切换数据库，客户端状态redisClient结构的db属性记录了客户端当前的目标数据库</p>
+<pre><code>typedef struct redisClient{
+  ....
+  redis *db; //记录客户端当前正在使用的数据库
+  ....
+}redisClient
+</code></pre><p> 如下图：<br> <img src="/2018/12/04/Redis中的数据库/redisServer.png" alt="redisServer"><br> &nbsp; &nbsp; &nbsp; &nbsp;切换数据库就是讲db中的指针指向服务器中的不同数据库<br> &nbsp; &nbsp; &nbsp; &nbsp;<strong> 注意 </strong>:为了避免对数据库误操作，当执行与数据库相关的命令时，最好执行SELECT命令，显示的切换到指定的数据库。</p>
+<h3 id="3-数据库的空间"><a href="#3-数据库的空间" class="headerlink" title="3.数据库的空间"></a>3.数据库的空间</h3><p> &nbsp; &nbsp; &nbsp; &nbsp;Redis是一个键值对数据库服务器，数据库中的所有键值对保存在redisDb的结构的dict字典中，这个字典称为键空间。键空间的键也就是数据库的键，每个键都是一个字符串对象，键空间的值也就是数据库的值，这个值可以是五种对象。</p>
+<pre><code>typedef struct redisDb{
+
+  dict *dict //数据库键空间，保存着数据库中所有键值对
+
+ }
+</code></pre><p>&nbsp; &nbsp; &nbsp; &nbsp;<strong>例如：</strong><br>&nbsp; &nbsp; &nbsp; &nbsp;SET message “hello world”</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;RPUSH alphabet “a” “b” “c”</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp;那么他的键空间就表示如下：<br> <img src="/2018/12/04/Redis中的数据库/redisDb.png" alt="redisDb"></p>
+<h4 id="nbsp-nbsp-3-1键的添加、删除、更新和取值"><a href="#nbsp-nbsp-3-1键的添加、删除、更新和取值" class="headerlink" title="&nbsp; &nbsp; 3.1键的添加、删除、更新和取值"></a>&nbsp; &nbsp; 3.1键的添加、删除、更新和取值</h4><p> &nbsp; &nbsp; &nbsp; &nbsp;添加新建就是在dict中添加一个键值对，删除键则在dict中删除一个键值对,更新就是就dict的键进行值的更新，取值就是根据键取得键所对应的对象。除此之外，还有很多命令，例如:FULSHDB都是对键空间进行操作来实现的</p>
+<h3 id="4-设置键的生存时间与过期时间"><a href="#4-设置键的生存时间与过期时间" class="headerlink" title="4.设置键的生存时间与过期时间"></a>4.设置键的生存时间与过期时间</h3><p>&nbsp; &nbsp; &nbsp; &nbsp;  EXPIRE<key> <ttl>:将键的生成时间设置为ttl秒<br>&nbsp; &nbsp; &nbsp; &nbsp;  PEXPIRE<key> <ttl>:将键的生成时间设置为ttl毫秒<br>&nbsp; &nbsp; &nbsp; &nbsp;  EXPIREAT<key> <ttl>:将键的过期时间设置为timestamp所指定的秒数时间戳<br>&nbsp; &nbsp; &nbsp; &nbsp;  PEXPIREAT<key> <ttl>:将键的过期时间设置为timestamp所指定的毫秒数时间戳</ttl></key></ttl></key></ttl></key></ttl></key></p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp; redisDb结构的expires字典保存了数据库中所有键的时间，我们称这个字典为过期字典</p>
+<pre><code>  typedef struct redisDb{
+    dict *expires;
+}
+</code></pre><p>如下图<br> <img src="/2018/12/04/Redis中的数据库/expire.png" alt="expire"></p>
+<h3 id="5-过期键的删除策略"><a href="#5-过期键的删除策略" class="headerlink" title="5.过期键的删除策略"></a>5.过期键的删除策略</h3><p>&nbsp; &nbsp; &nbsp; &nbsp;在Redis中，采取了定期删除与惰性删除两种删除策略进行配合使用，是的CPU和避免浪费空间之间取得平衡</p>
+<ul>
+<li>1.定期删除：每隔一段时间，程序就对数据库进行一次检查，删除里面过期的键。</li>
+<li><p>2.惰性删除：放任键过期不管，每次从键空间取得键时，都检查取得的键是否过期，如果过期的话就进行删除。</p>
+<p><strong> 定期删除的优缺点 </strong></p>
+<pre><code>1.定时删除占用太多CPU时间，影响服务器的响应时间与吞吐量。
+2.定时删除有效的减少了因为过期键而带来的内存浪费
+</code></pre><p><strong> 惰性删除的优缺点 </strong></p>
+<pre><code>1.对于CPU是友好的，因为只有程序在取键时才对键进行过期检查，保证删除过期键只有非做不可的情况下才进行
+2.对于内存是最不有好的，因为一个键已经过期，而这个键仍然保存在数据库中占据了内存。不删除内存就不会释放。
+</code></pre><p> 读取数据库的Redis命令在执行之前都会调用expireIfNeeded函数对键进行检查<br> 举个例子：get命令的执行过程<br>  <img src="/2018/12/04/Redis中的数据库/get.png" alt="GET"></p>
+</li>
+</ul>
+<h3 id="6-AOF、RDB和复制功能对过期键的处理"><a href="#6-AOF、RDB和复制功能对过期键的处理" class="headerlink" title="6.AOF、RDB和复制功能对过期键的处理"></a>6.AOF、RDB和复制功能对过期键的处理</h3><h4 id="6-1生成RDB文件"><a href="#6-1生成RDB文件" class="headerlink" title="6.1生成RDB文件"></a>6.1生成RDB文件</h4><p>&nbsp; &nbsp; &nbsp; &nbsp;在执行SAVE和GBSAVE命令创建一个新的RGB文件时，程序会对过期键检查，已过期的键不会保存到新创建的RDB文件中。</p>
+<h4 id="6-2载入RGB文件"><a href="#6-2载入RGB文件" class="headerlink" title="6.2载入RGB文件"></a>6.2载入RGB文件</h4><ul>
+<li>1.如果服务器以主服务器模式运行，在载入RDB文件时，程序会对过期键检查，已过期的键不会载入到数据库中。</li>
+<li>2.如果服务器以从服务器模式运行，在载入RDB文件时，文件中保存的所有键不存是否过期都会载入到数据库中。不过，主服务器进行</li>
+<li>3.数据同步时，从服务器的数据库就会被清空。过期键对载入RDB文件的从服务器也不会造成影响。</li>
+</ul>
+<h4 id="6-3AOF文件写入"><a href="#6-3AOF文件写入" class="headerlink" title="6.3AOF文件写入"></a>6.3AOF文件写入</h4><p>&nbsp; &nbsp; &nbsp; &nbsp;数据库中某个键已经过期，但它还没有被删除，那么AOF文件不会因为这个过期键产生任何影响，当这个过期键被删除时，程序命令，来显式地记录该键已被删除。</p>
+<h4 id="6-4AOF重写"><a href="#6-4AOF重写" class="headerlink" title="6.4AOF重写"></a>6.4AOF重写</h4><p>与生成RGB文件时类型，在执行AOF重写过程时，程序会对数据库中的键进行检查，已过期的键不会保存到重写后的AOF中。</p>
+<h2 id="6-5复制"><a href="#6-5复制" class="headerlink" title="6.5复制"></a>6.5复制</h2><p> 在服务器运行在复制模式下，从服务器的过期键删除动作有服务器控制。</p>
+<ul>
+<li>1.当主服务器删除一个过期键时，会显示地向所有服务器发送一个DEL命令。告知从服务器删除这个过期键。</li>
+<li>2.从服务在执行命令时，碰到过期键时，也不会将过期键删除。而是像对未过期的键一样处理。</li>
+<li>3.从服务器只有接到主服务器发来的DEL命令之后，才会删除过期键。</li>
+</ul>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2018年12月04日 12:34</p>
+        <p>原始链接： <a class="post-url" href="/2018/12/04/Redis中的数据库/" title="Redis中的数据库">https://ztaocoder.github.io/2018/12/04/Redis中的数据库/</a></p>
+        <footer>
+            <a href="https://ztaocoder.github.io">
+                <img src="/images/logo.png" alt="张涛">
+                张涛
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://ztaocoder.github.io/2018/12/04/Redis中的数据库/&title=《Redis中的数据库》 — 张涛的博客&pic=https://ztaocoder.github.ioimages/logo.png" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://ztaocoder.github.io/2018/12/04/Redis中的数据库/&title=《Redis中的数据库》 — 张涛的博客&source=记录个人的成长" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://ztaocoder.github.io/2018/12/04/Redis中的数据库/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Redis中的数据库》 — 张涛的博客&url=https://ztaocoder.github.io/2018/12/04/Redis中的数据库/&via=https://ztaocoder.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://ztaocoder.github.io/2018/12/04/Redis中的数据库/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://ztaocoder.github.io/2018/12/04/Redis中的数据库/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/Redis/" class="color1">Redis</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-Redis中的数据库"><span class="post-toc-text">                       Redis中的数据库</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-服务器中的数据库"><span class="post-toc-text">1.服务器中的数据库</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-切换数据库"><span class="post-toc-text">2.切换数据库</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-数据库的空间"><span class="post-toc-text">3.数据库的空间</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#nbsp-nbsp-3-1键的添加、删除、更新和取值"><span class="post-toc-text">    3.1键的添加、删除、更新和取值</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-设置键的生存时间与过期时间"><span class="post-toc-text">4.设置键的生存时间与过期时间</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-过期键的删除策略"><span class="post-toc-text">5.过期键的删除策略</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#6-AOF、RDB和复制功能对过期键的处理"><span class="post-toc-text">6.AOF、RDB和复制功能对过期键的处理</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#6-1生成RDB文件"><span class="post-toc-text">6.1生成RDB文件</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#6-2载入RGB文件"><span class="post-toc-text">6.2载入RGB文件</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#6-3AOF文件写入"><span class="post-toc-text">6.3AOF文件写入</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#6-4AOF重写"><span class="post-toc-text">6.4AOF重写</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#6-5复制"><span class="post-toc-text">6.5复制</span></a></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+  
+    <a href="/2018/11/30/Redis中的数据结构/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">Redis中的数据结构</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2018 张涛<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://ztaocoder.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/Mysql/" style="font-size: 20px;">Mysql</a> <a href="/tags/Redis/" style="font-size: 16.67px;">Redis</a> <a href="/tags/SSM/" style="font-size: 10px;">SSM</a> <a href="/tags/Tomcat/" style="font-size: 10px;">Tomcat</a> <a href="/tags/设计模式/" style="font-size: 13.33px;">设计模式</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="/">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/Mysql/" style="font-size: 20px;">Mysql</a> <a href="/tags/Redis/" style="font-size: 16.67px;">Redis</a> <a href="/tags/SSM/" style="font-size: 10px;">SSM</a> <a href="/tags/Tomcat/" style="font-size: 10px;">Tomcat</a> <a href="/tags/设计模式/" style="font-size: 13.33px;">设计模式</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>
