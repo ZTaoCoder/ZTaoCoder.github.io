@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="张涛的博客">
 <meta property="og:description" content="RDB持久化和AOF持久化">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-12-16T03:17:06.664Z">
+<meta property="og:updated_time" content="2018-12-16T03:20:51.217Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RDB持久化和AOF持久化">
 <meta name="twitter:description" content="RDB持久化和AOF持久化">
@@ -141,9 +141,9 @@
             
             <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Redis是内存数据库，它将自己的数据状态存储在内存里面，所以如果不想办法将存储在内存中的数据库状态保存到磁盘上，那么一旦服务器进程退出。服务器中的数据库状态也会消失。</p>
 <h3 id="一、RDB持久化"><a href="#一、RDB持久化" class="headerlink" title="一、RDB持久化"></a>一、RDB持久化</h3><p> &nbsp;&nbsp;&nbsp;&nbsp; RDB持久化可以手动设置，也可以根据服务器的设置定期执行，RDB持久化生成的文件是一个经过压缩的二进制文件。</p>
-<p>  ####1.1RDB文件的创建与载入####<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Redis有两个命令可以用于生成RDB文件<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SAVE：会阻塞Redis服务器进程，知道RDB文件创建完成为止。<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BGSAVE：会派生出一个子进程，然后有子进程负责创建RDB文件，服务器进程继续处理请求。</p>
+<h4 id="1-1RDB文件的创建与载入"><a href="#1-1RDB文件的创建与载入" class="headerlink" title="1.1RDB文件的创建与载入"></a>1.1RDB文件的创建与载入</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Redis有两个命令可以用于生成RDB文件<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SAVE：会阻塞Redis服务器进程，知道RDB文件创建完成为止。<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BGSAVE：会派生出一个子进程，然后有子进程负责创建RDB文件，服务器进程继续处理请求。</p>
 <p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注意：</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如果服务器开启了AOF持久化功能，那么服务器会优先使用AOF文件来还原数据库，只有在AOF持久化功能关闭的时候，才回使用RDB文件来还原数据库。</p>
-<p>####1.2自动间隔保存####<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;服务器提供以下配置，如果一个条件被满足，服务器就会执行BGSAVE命令</p>
+<h4 id="1-2自动间隔保存"><a href="#1-2自动间隔保存" class="headerlink" title="1.2自动间隔保存"></a>1.2自动间隔保存</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;服务器提供以下配置，如果一个条件被满足，服务器就会执行BGSAVE命令</p>
 <pre><code>save  900 1     （服务器在900秒之内，读数据库进行了至少1次修改）
 save  300 10    （服务器在300秒之内，读数据库进行了至少10次修改）
 save  60  10000 （服务器在60秒之内，读数据库进行了至少10000次修改）
@@ -157,8 +157,7 @@ save  60  10000 （服务器在60秒之内，读数据库进行了至少10000次
    time_t lastsave; // 上一次执行保存的时间
 
 }
-</code></pre><p> ####1.3 RDB文件结构###</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RDB文件结构如下：</p>
+</code></pre><h4 id="1-3-RDB文件结构"><a href="#1-3-RDB文件结构" class="headerlink" title="1.3 RDB文件结构"></a>1.3 RDB文件结构</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RDB文件结构如下：</p>
 <table>
 <thead>
 <tr>
@@ -180,7 +179,7 @@ save  60  10000 （服务器在60秒之内，读数据库进行了至少10000次
 <p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;databases:</strong> 包含零个或多个数据库，以及每个数据库中的键值对数据。</p>
 <p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EOF:</strong> 标志着RDB文件正文内容介绍，数据库中的所有键值对加载完毕。</p>
 <p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;check_sum:</strong> 是一个8字节长的无符号整数，保存着一个校验和，这个校验和是根据REDIS db_version databases EOF四个部分的内容计算所得的，服务器在载入RDB文件时，会将载入数据所计算出的校验和和check_sum所记录的校验和进行对比，来确定载入数据是否出错或者损坏。</p>
-<p>####1.3.1databases部分####<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;一个databases部分可以保存任意多个非空数据库，结构如下图:</p>
+<h4 id="1-3-1databases部分"><a href="#1-3-1databases部分" class="headerlink" title="1.3.1databases部分"></a>1.3.1databases部分</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;一个databases部分可以保存任意多个非空数据库，结构如下图:</p>
 <table>
 <thead>
 <tr>
@@ -216,7 +215,7 @@ save  60  10000 （服务器在60秒之内，读数据库进行了至少10000次
 <p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SELECTDB： </strong>为一个字节，告诉程序接下来要读入的将是一个数据库。</p>
 <p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;db_number: </strong> 保存着数据库的一个号码，当程序读入db_number部分之后，服务器会调用select命令，将数据载入到正确的数据库。</p>
 <p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key_value_pairs: </strong> 保存了数据库中的所有键值对，如果带有过期时间也会和键值对保存在一起，根据键值对的类型、数量、内容和过期时间，key_value_pairs的长对会有所不同。</p>
-<p>####1.3.2 key_value_pairs部分 ####<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 不带有过期键的key_value_pairs的结构如下：</p>
+<h3 id="1-3-2-key-value-pairs部分"><a href="#1-3-2-key-value-pairs部分" class="headerlink" title="#1.3.2 key_value_pairs部分"></a>#1.3.2 key_value_pairs部分</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 不带有过期键的key_value_pairs的结构如下：</p>
 <table>
 <thead>
 <tr>
@@ -255,8 +254,7 @@ save  60  10000 （服务器在60秒之内，读数据库进行了至少10000次
 <p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TYPE:</strong>长度为一字节，记录了value的类型。</p>
 <p> <strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key:</strong> 总是一个字符串对象</p>
 <p> <strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value:</strong> 根据类型的不对，长对也会不一样。</p>
-<p> ###1.4 分析RDB文件 ###</p>
-<p>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我们以一个集合键来分析：</p>
+<h3 id="1-4-分析RDB文件"><a href="#1-4-分析RDB文件" class="headerlink" title="1.4 分析RDB文件"></a>1.4 分析RDB文件</h3><p>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我们以一个集合键来分析：</p>
 <pre><code>执行了SADD LANG &quot;C&quot; &quot;JAVA&quot; &quot;RUBY&quot;命令后使用BGSAVE命令生成的RDB文件如下：
 
 0000000  R E D I S 0 0 6 376 /0 002 004 L A N 
@@ -278,7 +276,7 @@ REDIS : RDB文件标志。
 </code></pre>
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2018年12月16日 11:17</p>
+        <p>最后更新： 2018年12月16日 11:20</p>
         <p>原始链接： <a class="post-url" href="/2018/12/16/RDB持久化和AOF持久化/" title="RDB持久化和AOF持久化">https://ztaocoder.github.io/2018/12/16/RDB持久化和AOF持久化/</a></p>
         <footer>
             <a href="https://ztaocoder.github.io">
@@ -396,7 +394,7 @@ REDIS : RDB文件标志。
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#一、RDB持久化"><span class="post-toc-text">一、RDB持久化</span></a></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#一、RDB持久化"><span class="post-toc-text">一、RDB持久化</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-1RDB文件的创建与载入"><span class="post-toc-text">1.1RDB文件的创建与载入</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-2自动间隔保存"><span class="post-toc-text">1.2自动间隔保存</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-3-RDB文件结构"><span class="post-toc-text">1.3 RDB文件结构</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-3-1databases部分"><span class="post-toc-text">1.3.1databases部分</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-3-2-key-value-pairs部分"><span class="post-toc-text">#1.3.2 key_value_pairs部分</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-4-分析RDB文件"><span class="post-toc-text">1.4 分析RDB文件</span></a></li></ol>
         </nav>
     </aside>
     
