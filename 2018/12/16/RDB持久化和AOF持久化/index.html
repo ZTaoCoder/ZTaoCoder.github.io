@@ -3,23 +3,23 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>设计模式在Tomcat中的应用 | 张涛的博客</title>
+  <title>RDB持久化和AOF持久化 | 张涛的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
     <meta name="keywords" content="ZhangTao,ZhangTao's Blog">
   
-  <meta name="description" content="1.命令设计模式&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 在Tomcat中命令模式在Connector和Container组件之间有体现，Tomcat作为一个应用服务器，会接受到很多请求。 Connector作为抽象请求者，HttpConnector作为具体请求者，HttpProcessor作为命令，Container作为命令的具体接受者，Container作为具体">
-<meta name="keywords" content="设计模式,Tomcat">
+  <meta name="description" content="RDB持久化和AOF持久化">
+<meta name="keywords" content="Redis">
 <meta property="og:type" content="article">
-<meta property="og:title" content="设计模式在Tomcat中的应用">
-<meta property="og:url" content="https://ztaocoder.github.io/2018/11/19/设计模式在Tomcat中的应用/index.html">
+<meta property="og:title" content="RDB持久化和AOF持久化">
+<meta property="og:url" content="https://ztaocoder.github.io/2018/12/16/RDB持久化和AOF持久化/index.html">
 <meta property="og:site_name" content="张涛的博客">
-<meta property="og:description" content="1.命令设计模式&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 在Tomcat中命令模式在Connector和Container组件之间有体现，Tomcat作为一个应用服务器，会接受到很多请求。 Connector作为抽象请求者，HttpConnector作为具体请求者，HttpProcessor作为命令，Container作为命令的具体接受者，Container作为具体">
+<meta property="og:description" content="RDB持久化和AOF持久化">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-11-19T13:19:25.889Z">
+<meta property="og:updated_time" content="2018-12-16T03:17:06.664Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="设计模式在Tomcat中的应用">
-<meta name="twitter:description" content="1.命令设计模式&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 在Tomcat中命令模式在Connector和Container组件之间有体现，Tomcat作为一个应用服务器，会接受到很多请求。 Connector作为抽象请求者，HttpConnector作为具体请求者，HttpProcessor作为命令，Container作为命令的具体接受者，Container作为具体">
+<meta name="twitter:title" content="RDB持久化和AOF持久化">
+<meta name="twitter:description" content="RDB持久化和AOF持久化">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -110,20 +110,20 @@
     </div>
 </header>
       <div class="outer">
-        <section id="main" class="body-wrap"><article id="post-设计模式在Tomcat中的应用" class="article article-type-post" itemscope="" itemprop="blogPost">
+        <section id="main" class="body-wrap"><article id="post-RDB持久化和AOF持久化" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="post-title" itemprop="name">
-      设计模式在Tomcat中的应用
+      RDB持久化和AOF持久化
     </h1>
     <div class="post-title-bar">
       <ul>
           
         <li>
-          <i class="fa fa-calendar"></i>  2018-11-19
+          <i class="fa fa-calendar"></i>  2018-12-16
         </li>
         <li>
           <i class="fa fa-eye"></i>
@@ -139,12 +139,147 @@
     <div class="article-entry post-content" itemprop="articleBody">
       
             
-            <p><strong>1.命令设计模式</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 在Tomcat中命令模式在Connector和Container组件之间有体现，Tomcat作为一个应用服务器，会接受到很多请求。 Connector作为抽象请求者，HttpConnector作为具体请求者，HttpProcessor作为命令，Container作为命令的具体接受者，Container作为具体的接受者，客户端就是应用服务器Server组建了，Server首先创建命令的请求者对象HttpConnector（Invoker），然后创建命令HttpProcessor对象（Command），再把命令对象交给请求者去求情接受者(Receive)ContainerBase容器来处理，命令最终是被Tomcat的Container执行的。<br><strong>2.责任链设计模式</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 在tomcat中这种设计模式几乎被完整地使用了，tomcat的容器设计就是责任链模式，从Engine到Host在到Context一直到Wrapper都通过一个传递链请求。不过从容器的责任链觉得类结构图看出，对应的责任链角色中，Container扮演抽象处理者角色，具体处理这有SrandardEngine等自容器扮演，不过这里引用了PipLine和Value接口，他们扩展了这个脸的功能<br><strong>3.观察者模式</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;才tomcat中观察者模式也有多处使用，控制组件生命周期的Lifecycle，还有对Servlet实例的创建，Session的管理，Container等都是同样的原理在Lifecysle的管擦着模式结构图中LifecycleListeneer代表的是抽象观察者，它定义了一个lifecycleEvent方法，这个方法就是被观察者变化时执行的方法，ServletcycleListener代表的是具体的观察者，它实现了lifecycleEvent方法，Lifecycle代表的是被观察者，StandardServer是具体是实现，另外还有两个类LifecycleSupport和LifecycleEvent，它们作为辅助类空占了观察者功能</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Redis是内存数据库，它将自己的数据状态存储在内存里面，所以如果不想办法将存储在内存中的数据库状态保存到磁盘上，那么一旦服务器进程退出。服务器中的数据库状态也会消失。</p>
+<h3 id="一、RDB持久化"><a href="#一、RDB持久化" class="headerlink" title="一、RDB持久化"></a>一、RDB持久化</h3><p> &nbsp;&nbsp;&nbsp;&nbsp; RDB持久化可以手动设置，也可以根据服务器的设置定期执行，RDB持久化生成的文件是一个经过压缩的二进制文件。</p>
+<p>  ####1.1RDB文件的创建与载入####<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Redis有两个命令可以用于生成RDB文件<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SAVE：会阻塞Redis服务器进程，知道RDB文件创建完成为止。<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BGSAVE：会派生出一个子进程，然后有子进程负责创建RDB文件，服务器进程继续处理请求。</p>
+<p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注意：</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如果服务器开启了AOF持久化功能，那么服务器会优先使用AOF文件来还原数据库，只有在AOF持久化功能关闭的时候，才回使用RDB文件来还原数据库。</p>
+<p>####1.2自动间隔保存####<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;服务器提供以下配置，如果一个条件被满足，服务器就会执行BGSAVE命令</p>
+<pre><code>save  900 1     （服务器在900秒之内，读数据库进行了至少1次修改）
+save  300 10    （服务器在300秒之内，读数据库进行了至少10次修改）
+save  60  10000 （服务器在60秒之内，读数据库进行了至少10000次修改）
+</code></pre><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 这些状态将保存在struct redisServer结构中</p>
+<pre><code>struct redisServer{
 
+   struct saveparam *saveparam；//保存了条件的数组
+
+   long long dirty //修改计数器，记录修改次数
+
+   time_t lastsave; // 上一次执行保存的时间
+
+}
+</code></pre><p> ####1.3 RDB文件结构###</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RDB文件结构如下：</p>
+<table>
+<thead>
+<tr>
+<th>REDIS</th>
+<th>db_version</th>
+<th>databases</th>
+<th>EOF</th>
+<th>check_sum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;REDIS：</strong>RDB文件的最开头是REDIS部分，保存了”REDIS”五个字符，用于在载入文件时快速检查所载入文化是否为RDB文件。</p>
+<p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;db_version:</strong> 长度为四字节，是一个整数，记录了RGB文件的版本号。</p>
+<p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;databases:</strong> 包含零个或多个数据库，以及每个数据库中的键值对数据。</p>
+<p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EOF:</strong> 标志着RDB文件正文内容介绍，数据库中的所有键值对加载完毕。</p>
+<p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;check_sum:</strong> 是一个8字节长的无符号整数，保存着一个校验和，这个校验和是根据REDIS db_version databases EOF四个部分的内容计算所得的，服务器在载入RDB文件时，会将载入数据所计算出的校验和和check_sum所记录的校验和进行对比，来确定载入数据是否出错或者损坏。</p>
+<p>####1.3.1databases部分####<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;一个databases部分可以保存任意多个非空数据库，结构如下图:</p>
+<table>
+<thead>
+<tr>
+<th>REDIS</th>
+<th>db_version</th>
+<th>databases1</th>
+<th>database2</th>
+<th>EOF</th>
+<th>check_sum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;每个database 由三个部分组成，结构如下图：</p>
+<table>
+<thead>
+<tr>
+<th>SELECTDB</th>
+<th>db_number</th>
+<th>key_value_pairs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SELECTDB： </strong>为一个字节，告诉程序接下来要读入的将是一个数据库。</p>
+<p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;db_number: </strong> 保存着数据库的一个号码，当程序读入db_number部分之后，服务器会调用select命令，将数据载入到正确的数据库。</p>
+<p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key_value_pairs: </strong> 保存了数据库中的所有键值对，如果带有过期时间也会和键值对保存在一起，根据键值对的类型、数量、内容和过期时间，key_value_pairs的长对会有所不同。</p>
+<p>####1.3.2 key_value_pairs部分 ####<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 不带有过期键的key_value_pairs的结构如下：</p>
+<table>
+<thead>
+<tr>
+<th>TYPE</th>
+<th>key</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TYPE:</strong>长度为一字节，记录了value的类型。</p>
+<p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key:</strong> 总是一个字符串对象</p>
+<p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value:</strong> 根据类型的不对，长对也会不一样。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;带有过期键的key_value_pairs的结构如下：</p>
+<table>
+<thead>
+<tr>
+<th>EXPIRETIME_MS</th>
+<th>ms</th>
+<th>TYPE</th>
+<th>keyvalue</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p> <strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EXPIRETIME_MS:</strong> 告诉程序接下来要读入的将是一个已毫秒为单位的过期时间</p>
+<p> <strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ms:</strong> 8字节长的带符号整数，记录一个以毫秒为单位的UNIX时间戳。</p>
+<p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TYPE:</strong>长度为一字节，记录了value的类型。</p>
+<p> <strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key:</strong> 总是一个字符串对象</p>
+<p> <strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value:</strong> 根据类型的不对，长对也会不一样。</p>
+<p> ###1.4 分析RDB文件 ###</p>
+<p>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我们以一个集合键来分析：</p>
+<pre><code>执行了SADD LANG &quot;C&quot; &quot;JAVA&quot; &quot;RUBY&quot;命令后使用BGSAVE命令生成的RDB文件如下：
+
+0000000  R E D I S 0 0 6 376 /0 002 004 L A N 
+0000020  G 003 004 R U B Y 004 J A V A 001 C 377 202
+0000040  312 r 352 346 305 * 023
+0000047
+
+RDB文化各部分的意义：
+REDIS : RDB文件标志。
+006: 版本号
+376 /0: 376代表SELECTDB常量，切换到0号数据库。
+002 004 L A N G：002表示这是一个哈希表编码的集合键，004 表示键的长度，LANG表示键的名字。
+003 :表示这个集合包含三个元素
+004 R U B Y：集合第一个元素，长度为4
+004 J A V A: 集合第二个元素，长度为4
+001 C:集合第三个元素，长度为1
+377：代表EOF常量，表示数据库键值对读取结束。
+202 312 r 352 346 305 * 023:代表校验和。
+</code></pre>
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2018年11月19日 21:19</p>
-        <p>原始链接： <a class="post-url" href="/2018/11/19/设计模式在Tomcat中的应用/" title="设计模式在Tomcat中的应用">https://ztaocoder.github.io/2018/11/19/设计模式在Tomcat中的应用/</a></p>
+        <p>最后更新： 2018年12月16日 11:17</p>
+        <p>原始链接： <a class="post-url" href="/2018/12/16/RDB持久化和AOF持久化/" title="RDB持久化和AOF持久化">https://ztaocoder.github.io/2018/12/16/RDB持久化和AOF持久化/</a></p>
         <footer>
             <a href="https://ztaocoder.github.io">
                 <img src="/images/logo.png" alt="张涛">
@@ -201,7 +336,7 @@
     <div class="post-share-list" id="share-list">
         <ul class="share-icons">
           <li>
-            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://ztaocoder.github.io/2018/11/19/设计模式在Tomcat中的应用/&title=《设计模式在Tomcat中的应用》 — 张涛的博客&pic=https://ztaocoder.github.ioimages/logo.png" data-title="微博">
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://ztaocoder.github.io/2018/12/16/RDB持久化和AOF持久化/&title=《RDB持久化和AOF持久化》 — 张涛的博客&pic=https://ztaocoder.github.ioimages/logo.png" data-title="微博">
               <i class="fa fa-weibo"></i>
             </a>
           </li>
@@ -211,22 +346,22 @@
             </a>
           </li>
           <li>
-            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://ztaocoder.github.io/2018/11/19/设计模式在Tomcat中的应用/&title=《设计模式在Tomcat中的应用》 — 张涛的博客&source=记录个人的成长" data-title="QQ">
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://ztaocoder.github.io/2018/12/16/RDB持久化和AOF持久化/&title=《RDB持久化和AOF持久化》 — 张涛的博客&source=记录个人的成长" data-title="QQ">
               <i class="fa fa-qq"></i>
             </a>
           </li>
           <li>
-            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://ztaocoder.github.io/2018/11/19/设计模式在Tomcat中的应用/" data-title="Facebook">
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://ztaocoder.github.io/2018/12/16/RDB持久化和AOF持久化/" data-title="Facebook">
               <i class="fa fa-facebook"></i>
             </a>
           </li>
           <li>
-            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《设计模式在Tomcat中的应用》 — 张涛的博客&url=https://ztaocoder.github.io/2018/11/19/设计模式在Tomcat中的应用/&via=https://ztaocoder.github.io" data-title="Twitter">
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《RDB持久化和AOF持久化》 — 张涛的博客&url=https://ztaocoder.github.io/2018/12/16/RDB持久化和AOF持久化/&via=https://ztaocoder.github.io" data-title="Twitter">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
           <li>
-            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://ztaocoder.github.io/2018/11/19/设计模式在Tomcat中的应用/" data-title="Google+">
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://ztaocoder.github.io/2018/12/16/RDB持久化和AOF持久化/" data-title="Google+">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -236,7 +371,7 @@
 <div class="post-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;" id="wxShare-close">×</a>
     <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://ztaocoder.github.io/2018/11/19/设计模式在Tomcat中的应用/" alt="微信分享二维码">
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://ztaocoder.github.io/2018/12/16/RDB持久化和AOF持久化/" alt="微信分享二维码">
 </div>
 
 <div class="mask"></div>
@@ -248,9 +383,7 @@
   <li class="article-footer-tags">
     <i class="fa fa-tags"></i>
       
-    <a href="/tags/设计模式/" class="color5">设计模式</a>
-      
-    <a href="/tags/Tomcat/" class="color2">Tomcat</a>
+    <a href="/tags/Redis/" class="color1">Redis</a>
       
   </li>
 
@@ -261,22 +394,18 @@
 </article>
 
 
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#一、RDB持久化"><span class="post-toc-text">一、RDB持久化</span></a></li></ol>
+        </nav>
+    </aside>
+    
 
 <nav id="article-nav">
   
-    <a href="/2018/11/19/Mysql高性能（一）/" id="article-nav-newer" class="article-nav-link-wrap">
-
-      <span class="article-nav-title">
-        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
-        
-          Mysql高性能（一）
-        
-      </span>
-    </a>
   
-  
-    <a href="/2018/11/18/比较设计模式/" id="article-nav-older" class="article-nav-link-wrap">
-      <span class="article-nav-title">比较设计模式之间的不同</span>
+    <a href="/2018/12/10/hadoop集群的配置/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">hadoop集群的配置（一台主机、两台从机）</span>
       <i class="fa fa-hand-o-right" aria-hidden="true"></i>
     </a>
   
