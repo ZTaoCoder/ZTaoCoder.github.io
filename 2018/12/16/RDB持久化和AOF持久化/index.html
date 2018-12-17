@@ -16,10 +16,18 @@
 <meta property="og:site_name" content="张涛的博客">
 <meta property="og:description" content="RDB持久化和AOF持久化">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-12-16T03:20:51.217Z">
+<meta property="og:image" content="https://ztaocoder.github.io/2018/12/16/RDB持久化和AOF持久化/RDB.png">
+<meta property="og:image" content="https://ztaocoder.github.io/2018/12/16/RDB持久化和AOF持久化/databases.png">
+<meta property="og:image" content="https://ztaocoder.github.io/2018/12/16/RDB持久化和AOF持久化/database.png">
+<meta property="og:image" content="https://ztaocoder.github.io/2018/12/16/RDB持久化和AOF持久化/key_value_pairs1.png">
+<meta property="og:image" content="https://ztaocoder.github.io/2018/12/16/RDB持久化和AOF持久化/key_value_pairs2.png">
+<meta property="og:image" content="https://ztaocoder.github.io/2018/12/16/RDB持久化和AOF持久化/redisLoding.png">
+<meta property="og:image" content="https://ztaocoder.github.io/2018/12/16/RDB持久化和AOF持久化/client.png">
+<meta property="og:updated_time" content="2018-12-17T12:11:10.401Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RDB持久化和AOF持久化">
 <meta name="twitter:description" content="RDB持久化和AOF持久化">
+<meta name="twitter:image" content="https://ztaocoder.github.io/2018/12/16/RDB持久化和AOF持久化/RDB.png">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -158,103 +166,32 @@ save  60  10000 （服务器在60秒之内，读数据库进行了至少10000次
 
 }
 </code></pre><h4 id="1-3-RDB文件结构"><a href="#1-3-RDB文件结构" class="headerlink" title="1.3 RDB文件结构"></a>1.3 RDB文件结构</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RDB文件结构如下：</p>
-<table>
-<thead>
-<tr>
-<th>REDIS</th>
-<th>db_version</th>
-<th>databases</th>
-<th>EOF</th>
-<th>check_sum</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td></td>
-</tr>
-</tbody>
-</table>
+<p><img src="/2018/12/16/RDB持久化和AOF持久化/RDB.png" alt="RDB"></p>
 <p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;REDIS：</strong>RDB文件的最开头是REDIS部分，保存了”REDIS”五个字符，用于在载入文件时快速检查所载入文化是否为RDB文件。</p>
 <p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;db_version:</strong> 长度为四字节，是一个整数，记录了RGB文件的版本号。</p>
 <p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;databases:</strong> 包含零个或多个数据库，以及每个数据库中的键值对数据。</p>
 <p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EOF:</strong> 标志着RDB文件正文内容介绍，数据库中的所有键值对加载完毕。</p>
 <p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;check_sum:</strong> 是一个8字节长的无符号整数，保存着一个校验和，这个校验和是根据REDIS db_version databases EOF四个部分的内容计算所得的，服务器在载入RDB文件时，会将载入数据所计算出的校验和和check_sum所记录的校验和进行对比，来确定载入数据是否出错或者损坏。</p>
 <h4 id="1-3-1databases部分"><a href="#1-3-1databases部分" class="headerlink" title="1.3.1databases部分"></a>1.3.1databases部分</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;一个databases部分可以保存任意多个非空数据库，结构如下图:</p>
-<table>
-<thead>
-<tr>
-<th>REDIS</th>
-<th>db_version</th>
-<th>databases1</th>
-<th>database2</th>
-<th>EOF</th>
-<th>check_sum</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td></td>
-</tr>
-</tbody>
-</table>
+<p><img src="/2018/12/16/RDB持久化和AOF持久化/databases.png" alt="databases"></p>
 <p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;每个database 由三个部分组成，结构如下图：</p>
-<table>
-<thead>
-<tr>
-<th>SELECTDB</th>
-<th>db_number</th>
-<th>key_value_pairs</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td></td>
-</tr>
-</tbody>
-</table>
+<p><img src="/2018/12/16/RDB持久化和AOF持久化/database.png" alt="database"></p>
 <p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SELECTDB： </strong>为一个字节，告诉程序接下来要读入的将是一个数据库。</p>
 <p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;db_number: </strong> 保存着数据库的一个号码，当程序读入db_number部分之后，服务器会调用select命令，将数据载入到正确的数据库。</p>
 <p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key_value_pairs: </strong> 保存了数据库中的所有键值对，如果带有过期时间也会和键值对保存在一起，根据键值对的类型、数量、内容和过期时间，key_value_pairs的长对会有所不同。</p>
-<h3 id="1-3-2-key-value-pairs部分"><a href="#1-3-2-key-value-pairs部分" class="headerlink" title="#1.3.2 key_value_pairs部分"></a>#1.3.2 key_value_pairs部分</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 不带有过期键的key_value_pairs的结构如下：</p>
-<table>
-<thead>
-<tr>
-<th>TYPE</th>
-<th>key</th>
-<th>value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td></td>
-</tr>
-</tbody>
-</table>
+<h4 id="1-3-2-key-value-pairs部分"><a href="#1-3-2-key-value-pairs部分" class="headerlink" title="1.3.2 key_value_pairs部分"></a>1.3.2 key_value_pairs部分</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 不带有过期键的key_value_pairs的结构如下：</p>
+<p><img src="/2018/12/16/RDB持久化和AOF持久化/key_value_pairs1.png" alt="key_value_pairs1"></p>
 <p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TYPE:</strong>长度为一字节，记录了value的类型。</p>
 <p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key:</strong> 总是一个字符串对象</p>
 <p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value:</strong> 根据类型的不对，长对也会不一样。</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;带有过期键的key_value_pairs的结构如下：</p>
-<table>
-<thead>
-<tr>
-<th>EXPIRETIME_MS</th>
-<th>ms</th>
-<th>TYPE</th>
-<th>keyvalue</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td></td>
-</tr>
-</tbody>
-</table>
+<p><img src="/2018/12/16/RDB持久化和AOF持久化/key_value_pairs2.png" alt="key_value_pairs2"></p>
 <p> <strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EXPIRETIME_MS:</strong> 告诉程序接下来要读入的将是一个已毫秒为单位的过期时间</p>
 <p> <strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ms:</strong> 8字节长的带符号整数，记录一个以毫秒为单位的UNIX时间戳。</p>
 <p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TYPE:</strong>长度为一字节，记录了value的类型。</p>
 <p> <strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key:</strong> 总是一个字符串对象</p>
 <p> <strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value:</strong> 根据类型的不对，长对也会不一样。</p>
-<h3 id="1-4-分析RDB文件"><a href="#1-4-分析RDB文件" class="headerlink" title="1.4 分析RDB文件"></a>1.4 分析RDB文件</h3><p>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我们以一个集合键来分析：</p>
+<h4 id="1-4-分析RDB文件"><a href="#1-4-分析RDB文件" class="headerlink" title="1.4 分析RDB文件"></a>1.4 分析RDB文件</h4><p>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我们以一个集合键来分析：</p>
 <pre><code>执行了SADD LANG &quot;C&quot; &quot;JAVA&quot; &quot;RUBY&quot;命令后使用BGSAVE命令生成的RDB文件如下：
 
 0000000  R E D I S 0 0 6 376 /0 002 004 L A N 
@@ -273,10 +210,24 @@ REDIS : RDB文件标志。
 001 C:集合第三个元素，长度为1
 377：代表EOF常量，表示数据库键值对读取结束。
 202 312 r 352 346 305 * 023:代表校验和。
-</code></pre>
+</code></pre><h3 id="二、AOF持久化"><a href="#二、AOF持久化" class="headerlink" title="二、AOF持久化"></a>二、AOF持久化</h3><p>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AOF持久化是通过保存Redis服务器所执行的命令来记录数据库状态的。</p>
+<p>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;举个例子:SADD fruit “apple” “banana” “cherry” AOF持久化是保存数据库状态的释放则是将服务器执行得SADD保存到AOF中，</p>
+<h4 id="2-1-AOF持久化的实现"><a href="#2-1-AOF持久化的实现" class="headerlink" title="2.1 AOF持久化的实现"></a>2.1 AOF持久化的实现</h4><p>   <strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.1.1命令的追加、写入、同步</strong></p>
+<p>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;当AOF持久化打开的时候，服务器就会执行完一个写命令之后，会以协议格式将被执行的写命令追加到服务器状态aof_buf缓冲器的末尾，Redis服务器进程就是一个事件循环，服务器在处理文件时可能会执行写命令，是的一些内容追加到aof_buf缓冲区里面，所以在服务器每次结束一个事情循环之前，都会调用flushAppendOnlyFile函数。</p>
+<p>   举个例子假设服务器在处理文件事件期间，执行了以下三个写命令:</p>
+<pre><code>1)SADD fruit &quot;apple&quot; &quot;banana&quot; &quot;cherry&quot;
+
+2)SET data &quot;2013-9-5&quot;
+
+3)INCR click_counter 10086
+</code></pre><p>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;那么aof_buf缓冲区将包含这三个命令的协议部分，如果这时flushAppendOnlyFile函数被调用，假设服务器当前appendfsync选值为everysec，并且距离上一次同步AOF文件已经超过一秒，那么服务器会将aof_buf中的内容写入到AOF文件中，然后最对AOF文件进行同步。</p>
+<h4 id="11-2AOF文件的载入和数据还原"><a href="#11-2AOF文件的载入和数据还原" class="headerlink" title="11.2AOF文件的载入和数据还原"></a>11.2AOF文件的载入和数据还原</h4><p>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;因为AOF文件里包含了重建数据库状态所需的所有命令，所以服务器只要读入并执行一遍AOF文件里面保存的命令，就可以还原服务器关闭之前的数据库状态<br>   详细步骤如下:<br>   <img src="/2018/12/16/RDB持久化和AOF持久化/redisLoding.png" alt="redisLoding"></p>
+<h4 id="11-3AOF重写"><a href="#11-3AOF重写" class="headerlink" title="11.3AOF重写"></a>11.3AOF重写</h4><p>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 随着AOF服务器运行,AOF文件中的内容会越来越多，文件的体积也会越来越大，为了解决AOF文件体积膨胀的问题，Redis提供了AOF文件重写功能，通过该功能，可以创建一个新的AOF文件，新AOG文件不包含任何浪费空间的冗余代码，所以比旧的AOF体积小得多。</p>
+<h4 id="11-4AOF后台重写"><a href="#11-4AOF后台重写" class="headerlink" title="11.4AOF后台重写"></a>11.4AOF后台重写</h4><p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在AOF重写程序执行aof_rewrite函数时，如果这个函数进行大量的写入操作，调用这个函数的线程会长期阻塞，所以Redis将AOF重写程序放到子程序里执行，那么子程序在AOF重写期间，服务器进程（父进程）会继续处理命令。但是在子进程执行重写期间，服务器还需要继续处理命令请求，这就可能导致当前数据库和重写数据库不一致的文件，Redis为了解决这个文件，他设置了一个重写缓冲区,如下图，当重写工作完成之后，之后会将重写缓冲区的内容写入到AOF文件中，这是新的AOF文件所保存的数据和服务器数据中将一致，将新的AOF进行改名，覆盖现有的AOF文件<br> <img src="/2018/12/16/RDB持久化和AOF持久化/client.png" alt="client"></p>
+
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2018年12月16日 11:20</p>
+        <p>最后更新： 2018年12月17日 20:11</p>
         <p>原始链接： <a class="post-url" href="/2018/12/16/RDB持久化和AOF持久化/" title="RDB持久化和AOF持久化">https://ztaocoder.github.io/2018/12/16/RDB持久化和AOF持久化/</a></p>
         <footer>
             <a href="https://ztaocoder.github.io">
@@ -394,7 +345,7 @@ REDIS : RDB文件标志。
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#一、RDB持久化"><span class="post-toc-text">一、RDB持久化</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-1RDB文件的创建与载入"><span class="post-toc-text">1.1RDB文件的创建与载入</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-2自动间隔保存"><span class="post-toc-text">1.2自动间隔保存</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-3-RDB文件结构"><span class="post-toc-text">1.3 RDB文件结构</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-3-1databases部分"><span class="post-toc-text">1.3.1databases部分</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-3-2-key-value-pairs部分"><span class="post-toc-text">#1.3.2 key_value_pairs部分</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-4-分析RDB文件"><span class="post-toc-text">1.4 分析RDB文件</span></a></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#一、RDB持久化"><span class="post-toc-text">一、RDB持久化</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-1RDB文件的创建与载入"><span class="post-toc-text">1.1RDB文件的创建与载入</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-2自动间隔保存"><span class="post-toc-text">1.2自动间隔保存</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-3-RDB文件结构"><span class="post-toc-text">1.3 RDB文件结构</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-3-1databases部分"><span class="post-toc-text">1.3.1databases部分</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-3-2-key-value-pairs部分"><span class="post-toc-text">1.3.2 key_value_pairs部分</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-4-分析RDB文件"><span class="post-toc-text">1.4 分析RDB文件</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#二、AOF持久化"><span class="post-toc-text">二、AOF持久化</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-1-AOF持久化的实现"><span class="post-toc-text">2.1 AOF持久化的实现</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#11-2AOF文件的载入和数据还原"><span class="post-toc-text">11.2AOF文件的载入和数据还原</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#11-3AOF重写"><span class="post-toc-text">11.3AOF重写</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#11-4AOF后台重写"><span class="post-toc-text">11.4AOF后台重写</span></a></li></ol></li></ol>
         </nav>
     </aside>
     
