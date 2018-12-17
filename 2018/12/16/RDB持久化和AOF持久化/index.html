@@ -23,7 +23,7 @@
 <meta property="og:image" content="https://ztaocoder.github.io/2018/12/16/RDB持久化和AOF持久化/key_value_pairs2.png">
 <meta property="og:image" content="https://ztaocoder.github.io/2018/12/16/RDB持久化和AOF持久化/redisLoding.png">
 <meta property="og:image" content="https://ztaocoder.github.io/2018/12/16/RDB持久化和AOF持久化/client.png">
-<meta property="og:updated_time" content="2018-12-17T12:11:10.401Z">
+<meta property="og:updated_time" content="2018-12-17T12:17:13.120Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RDB持久化和AOF持久化">
 <meta name="twitter:description" content="RDB持久化和AOF持久化">
@@ -152,10 +152,8 @@
 <h4 id="1-1RDB文件的创建与载入"><a href="#1-1RDB文件的创建与载入" class="headerlink" title="1.1RDB文件的创建与载入"></a>1.1RDB文件的创建与载入</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Redis有两个命令可以用于生成RDB文件<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SAVE：会阻塞Redis服务器进程，知道RDB文件创建完成为止。<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BGSAVE：会派生出一个子进程，然后有子进程负责创建RDB文件，服务器进程继续处理请求。</p>
 <p><strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注意：</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如果服务器开启了AOF持久化功能，那么服务器会优先使用AOF文件来还原数据库，只有在AOF持久化功能关闭的时候，才回使用RDB文件来还原数据库。</p>
 <h4 id="1-2自动间隔保存"><a href="#1-2自动间隔保存" class="headerlink" title="1.2自动间隔保存"></a>1.2自动间隔保存</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;服务器提供以下配置，如果一个条件被满足，服务器就会执行BGSAVE命令</p>
-<pre><code>save  900 1     （服务器在900秒之内，读数据库进行了至少1次修改）
-save  300 10    （服务器在300秒之内，读数据库进行了至少10次修改）
-save  60  10000 （服务器在60秒之内，读数据库进行了至少10000次修改）
-</code></pre><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 这些状态将保存在struct redisServer结构中</p>
+<p>   save  900 1     （服务器在900秒之内，读数据库进行了至少1次修改）<br>    save  300 10    （服务器在300秒之内，读数据库进行了至少10次修改）<br>    save  60  10000 （服务器在60秒之内，读数据库进行了至少10000次修改）</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 这些状态将保存在struct redisServer结构中</p>
 <pre><code>struct redisServer{
 
    struct saveparam *saveparam；//保存了条件的数组
@@ -217,17 +215,17 @@ REDIS : RDB文件标志。
 <p>   举个例子假设服务器在处理文件事件期间，执行了以下三个写命令:</p>
 <pre><code>1)SADD fruit &quot;apple&quot; &quot;banana&quot; &quot;cherry&quot;
 
-2)SET data &quot;2013-9-5&quot;
+ 2)SET data &quot;2013-9-5&quot;
 
-3)INCR click_counter 10086
+ 3)INCR click_counter 10086
 </code></pre><p>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;那么aof_buf缓冲区将包含这三个命令的协议部分，如果这时flushAppendOnlyFile函数被调用，假设服务器当前appendfsync选值为everysec，并且距离上一次同步AOF文件已经超过一秒，那么服务器会将aof_buf中的内容写入到AOF文件中，然后最对AOF文件进行同步。</p>
 <h4 id="11-2AOF文件的载入和数据还原"><a href="#11-2AOF文件的载入和数据还原" class="headerlink" title="11.2AOF文件的载入和数据还原"></a>11.2AOF文件的载入和数据还原</h4><p>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;因为AOF文件里包含了重建数据库状态所需的所有命令，所以服务器只要读入并执行一遍AOF文件里面保存的命令，就可以还原服务器关闭之前的数据库状态<br>   详细步骤如下:<br>   <img src="/2018/12/16/RDB持久化和AOF持久化/redisLoding.png" alt="redisLoding"></p>
 <h4 id="11-3AOF重写"><a href="#11-3AOF重写" class="headerlink" title="11.3AOF重写"></a>11.3AOF重写</h4><p>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 随着AOF服务器运行,AOF文件中的内容会越来越多，文件的体积也会越来越大，为了解决AOF文件体积膨胀的问题，Redis提供了AOF文件重写功能，通过该功能，可以创建一个新的AOF文件，新AOG文件不包含任何浪费空间的冗余代码，所以比旧的AOF体积小得多。</p>
-<h4 id="11-4AOF后台重写"><a href="#11-4AOF后台重写" class="headerlink" title="11.4AOF后台重写"></a>11.4AOF后台重写</h4><p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在AOF重写程序执行aof_rewrite函数时，如果这个函数进行大量的写入操作，调用这个函数的线程会长期阻塞，所以Redis将AOF重写程序放到子程序里执行，那么子程序在AOF重写期间，服务器进程（父进程）会继续处理命令。但是在子进程执行重写期间，服务器还需要继续处理命令请求，这就可能导致当前数据库和重写数据库不一致的文件，Redis为了解决这个文件，他设置了一个重写缓冲区,如下图，当重写工作完成之后，之后会将重写缓冲区的内容写入到AOF文件中，这是新的AOF文件所保存的数据和服务器数据中将一致，将新的AOF进行改名，覆盖现有的AOF文件<br> <img src="/2018/12/16/RDB持久化和AOF持久化/client.png" alt="client"></p>
+<h4 id="11-4AOF后台重写"><a href="#11-4AOF后台重写" class="headerlink" title="11.4AOF后台重写"></a>11.4AOF后台重写</h4><p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在AOF重写程序执行aof_rewrite函数时，如果这个函数进行大量的写入操作，调用这个函数的线程会长期阻塞，所以Redis将AOF重写程序放到子程序里执行，那么子程序在AOF重写期间，服务器进程（父进程）会继续处理命令。但是在子进程执行重写期间，服务器还需要继续处理命令请求，这就可能导致当前数据库和重写数据库不一致的文件，Redis为了解决这个文件，他设置了一个重写缓冲区,如下图，当重写工作完成之后，之后会将重写缓冲区的内容写入到AOF文件中，这时新的AOF文件所保存的数据和服务器数据中将一致，Redis将新的AOF进行改名，覆盖现有的AOF文件。<br> <img src="/2018/12/16/RDB持久化和AOF持久化/client.png" alt="client"></p>
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2018年12月17日 20:11</p>
+        <p>最后更新： 2018年12月17日 20:17</p>
         <p>原始链接： <a class="post-url" href="/2018/12/16/RDB持久化和AOF持久化/" title="RDB持久化和AOF持久化">https://ztaocoder.github.io/2018/12/16/RDB持久化和AOF持久化/</a></p>
         <footer>
             <a href="https://ztaocoder.github.io">
