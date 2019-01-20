@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="张涛的博客">
 <meta property="og:description" content="1. 冒泡排序public static void Bubble_Sort(int []array){     for (int i = 0; i &amp;lt; array.length; i++) {         for (int j = 0; j &amp;lt; array.length-1; j++) {             if (array[j]&amp;gt;array[j+1]){">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-20T11:55:46.965Z">
+<meta property="og:updated_time" content="2019-01-20T11:57:55.127Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="六大排序算法">
 <meta name="twitter:description" content="1. 冒泡排序public static void Bubble_Sort(int []array){     for (int i = 0; i &amp;lt; array.length; i++) {         for (int j = 0; j &amp;lt; array.length-1; j++) {             if (array[j]&amp;gt;array[j+1]){">
@@ -150,8 +150,21 @@
         }
     }
 }
-</code></pre><p>###2.选择排序 ###<br>    public static void Selection_Sort(int []array){<br>        for (int i = 0; i &lt; array.length-1; i++) {<br>            int minindex = i;<br>            for (int j = i + 1; j &lt; array.length; j++) { //7<br>                if (array[j]&lt;array[minindex]){<br>                    minindex = j;<br>                }<br>            }<br>            int tmp = array[minindex];<br>            array[minindex] = array[i];<br>            array[i] = tmp;<br>        }<br>    }</p>
-<h3 id="3-插入排序"><a href="#3-插入排序" class="headerlink" title="3.插入排序"></a>3.插入排序</h3><pre><code> public  static void Solution(int []array){
+</code></pre><p>###2.选择排序 ###</p>
+<pre><code>public static void Selection_Sort(int []array){
+    for (int i = 0; i &lt; array.length-1; i++) {
+        int minindex = i;
+        for (int j = i + 1; j &lt; array.length; j++) { //7
+            if (array[j]&lt;array[minindex]){
+                minindex = j;
+            }
+        }
+        int tmp = array[minindex];
+        array[minindex] = array[i];
+        array[i] = tmp;
+    }
+}
+</code></pre><h3 id="3-插入排序"><a href="#3-插入排序" class="headerlink" title="3.插入排序"></a>3.插入排序</h3><pre><code>public  static void Solution(int []array){
     int currrent;
     for (int i=0;i&lt;array.length-1;i++){
         currrent=array[i+1];
@@ -166,7 +179,7 @@
 </code></pre>
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年01月20日 19:55</p>
+        <p>最后更新： 2019年01月20日 19:57</p>
         <p>原始链接： <a class="post-url" href="/2019/01/20/Sort/" title="六大排序算法">https://ztaocoder.github.io/2019/01/20/Sort/</a></p>
         <footer>
             <a href="https://ztaocoder.github.io">
