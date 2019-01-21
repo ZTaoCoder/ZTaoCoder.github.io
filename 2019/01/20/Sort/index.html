@@ -8,18 +8,18 @@
   
     <meta name="keywords" content="ZhangTao,ZhangTao's Blog">
   
-  <meta name="description" content="1. 冒泡排序public static void Bubble_Sort(int []array){     for (int i = 0; i &amp;lt; array.length; i++) {         for (int j = 0; j &amp;lt; array.length-1; j++) {             if (array[j]&amp;gt;array[j+1]){">
+  <meta name="description" content="一. 冒泡排序   1.算法描述    &amp;nbsp; &amp;nbsp; &amp;nbsp;依次比较两个相邻元素，如果前面一个数比后面一个数大，就交换两者的位置，每次循环以此找出最大的数。重复以上操作。时间复杂度为O(n^2)，空间复杂度O(1)，算法稳定。2.算法实现    public static void Bubble_Sort(int []array){     for (int i = 0; i">
 <meta name="keywords" content="排序算法">
 <meta property="og:type" content="article">
 <meta property="og:title" content="六大排序算法">
 <meta property="og:url" content="https://ztaocoder.github.io/2019/01/20/Sort/index.html">
 <meta property="og:site_name" content="张涛的博客">
-<meta property="og:description" content="1. 冒泡排序public static void Bubble_Sort(int []array){     for (int i = 0; i &amp;lt; array.length; i++) {         for (int j = 0; j &amp;lt; array.length-1; j++) {             if (array[j]&amp;gt;array[j+1]){">
+<meta property="og:description" content="一. 冒泡排序   1.算法描述    &amp;nbsp; &amp;nbsp; &amp;nbsp;依次比较两个相邻元素，如果前面一个数比后面一个数大，就交换两者的位置，每次循环以此找出最大的数。重复以上操作。时间复杂度为O(n^2)，空间复杂度O(1)，算法稳定。2.算法实现    public static void Bubble_Sort(int []array){     for (int i = 0; i">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-20T11:57:55.127Z">
+<meta property="og:updated_time" content="2019-01-21T12:12:56.957Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="六大排序算法">
-<meta name="twitter:description" content="1. 冒泡排序public static void Bubble_Sort(int []array){     for (int i = 0; i &amp;lt; array.length; i++) {         for (int j = 0; j &amp;lt; array.length-1; j++) {             if (array[j]&amp;gt;array[j+1]){">
+<meta name="twitter:description" content="一. 冒泡排序   1.算法描述    &amp;nbsp; &amp;nbsp; &amp;nbsp;依次比较两个相邻元素，如果前面一个数比后面一个数大，就交换两者的位置，每次循环以此找出最大的数。重复以上操作。时间复杂度为O(n^2)，空间复杂度O(1)，算法稳定。2.算法实现    public static void Bubble_Sort(int []array){     for (int i = 0; i">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -139,7 +139,8 @@
     <div class="article-entry post-content" itemprop="articleBody">
       
             
-            <h3 id="1-冒泡排序"><a href="#1-冒泡排序" class="headerlink" title="1. 冒泡排序"></a>1. 冒泡排序</h3><pre><code>public static void Bubble_Sort(int []array){
+            <h3 id="一-冒泡排序"><a href="#一-冒泡排序" class="headerlink" title="一. 冒泡排序"></a>一. 冒泡排序</h3><p>   <strong>1.算法描述</strong><br>    &nbsp; &nbsp; &nbsp;依次比较两个相邻元素，如果前面一个数比后面一个数大，就交换两者的位置，每次循环以此找出最大的数。重复以上操作。时间复杂度为O(n^2)，空间复杂度O(1)，算法稳定。<br><strong>2.算法实现</strong></p>
+<pre><code>   public static void Bubble_Sort(int []array){
     for (int i = 0; i &lt; array.length; i++) {
         for (int j = 0; j &lt; array.length-1; j++) {
             if (array[j]&gt;array[j+1]){
@@ -150,7 +151,7 @@
         }
     }
 }
-</code></pre><p>###2.选择排序 ###</p>
+</code></pre><p>###2.选择排序 ###<br>   <strong>1.算法描述</strong><br>    &nbsp; &nbsp; &nbsp;在未排序序列中找到最小元素，存放到排序序列的起始位置，然后，再从剩余未排序元素中继续寻找最小元素，然后放到已排序序列的末尾。时间复杂度为O(n^2)，空间复杂度O(1)，算法不稳定。<br><strong>2.算法实现</strong></p>
 <pre><code>public static void Selection_Sort(int []array){
     for (int i = 0; i &lt; array.length-1; i++) {
         int minindex = i;
@@ -164,7 +165,8 @@
         array[i] = tmp;
     }
 }
-</code></pre><h3 id="3-插入排序"><a href="#3-插入排序" class="headerlink" title="3.插入排序"></a>3.插入排序</h3><pre><code>public  static void Solution(int []array){
+</code></pre><h3 id="3-插入排序"><a href="#3-插入排序" class="headerlink" title="3.插入排序"></a>3.插入排序</h3><p>   <strong>1.算法描述</strong><br>     &nbsp; &nbsp; &nbsp;对于未排序数据，在已排序序列中从后向前扫描，找到相应位置并插入。时间复杂度为O(n^2)，空间复杂度O(1)，算法稳定。<br><strong>2.算法实现</strong></p>
+<pre><code>public  static void Insert_Sort(int []array){
     int currrent;
     for (int i=0;i&lt;array.length-1;i++){
         currrent=array[i+1];
@@ -176,10 +178,27 @@
         array[preIndex+1]=currrent;
     }
 }
+</code></pre><h3 id="4-希尔排序"><a href="#4-希尔排序" class="headerlink" title="4.希尔排序"></a>4.希尔排序</h3><p>   <strong>1.算法描述</strong><br>     &nbsp; &nbsp; &nbsp;是简单插入排序的改进版。它与插入排序的不同之处在于，它会优先比较距离较远的元素。希尔排序又叫缩小增量排序。时间复杂度为小于O(n^2)，空间复杂度O(1)，算法不稳定。<br><strong>2.算法实现</strong></p>
+<pre><code>public static void Shell_Sort(int[] array){
+    int n = array.length;
+    int gap = n/2;
+    while(gap &gt; 0){
+        for(int j = gap; j &lt; n; j++){
+            int index=j;
+            while(index &gt;= gap &amp;&amp; array[index-gap] &gt; array[index]){
+                int temp = array[index-gap];
+                array[index-gap] = array[index];
+                array[index] = temp;
+                index -= gap;
+            }
+        }
+        gap = gap/2;
+    }
+}
 </code></pre>
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年01月20日 19:57</p>
+        <p>最后更新： 2019年01月21日 20:12</p>
         <p>原始链接： <a class="post-url" href="/2019/01/20/Sort/" title="六大排序算法">https://ztaocoder.github.io/2019/01/20/Sort/</a></p>
         <footer>
             <a href="https://ztaocoder.github.io">
@@ -297,7 +316,7 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-冒泡排序"><span class="post-toc-text">1. 冒泡排序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-插入排序"><span class="post-toc-text">3.插入排序</span></a></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#一-冒泡排序"><span class="post-toc-text">一. 冒泡排序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-插入排序"><span class="post-toc-text">3.插入排序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-希尔排序"><span class="post-toc-text">4.希尔排序</span></a></li></ol>
         </nav>
     </aside>
     
