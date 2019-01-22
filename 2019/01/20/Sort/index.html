@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="张涛的博客">
 <meta property="og:description" content="一. 冒泡排序   1.算法描述    &amp;nbsp; &amp;nbsp; &amp;nbsp;依次比较两个相邻元素，如果前面一个数比后面一个数大，就交换两者的位置，每次循环以此找出最大的数。重复以上操作。时间复杂度为O(n^2)，空间复杂度O(1)，算法稳定。2.算法实现    public static void Bubble_Sort(int []array){     for (int i = 0; i">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-21T12:12:56.957Z">
+<meta property="og:updated_time" content="2019-01-22T12:14:56.628Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="六大排序算法">
 <meta name="twitter:description" content="一. 冒泡排序   1.算法描述    &amp;nbsp; &amp;nbsp; &amp;nbsp;依次比较两个相邻元素，如果前面一个数比后面一个数大，就交换两者的位置，每次循环以此找出最大的数。重复以上操作。时间复杂度为O(n^2)，空间复杂度O(1)，算法稳定。2.算法实现    public static void Bubble_Sort(int []array){     for (int i = 0; i">
@@ -151,7 +151,7 @@
         }
     }
 }
-</code></pre><p>###2.选择排序 ###<br>   <strong>1.算法描述</strong><br>    &nbsp; &nbsp; &nbsp;在未排序序列中找到最小元素，存放到排序序列的起始位置，然后，再从剩余未排序元素中继续寻找最小元素，然后放到已排序序列的末尾。时间复杂度为O(n^2)，空间复杂度O(1)，算法不稳定。<br><strong>2.算法实现</strong></p>
+</code></pre><h3 id="2-选择排序"><a href="#2-选择排序" class="headerlink" title="2.选择排序"></a>2.选择排序</h3><p>   <strong>1.算法描述</strong><br>    &nbsp; &nbsp; &nbsp;在未排序序列中找到最小元素，存放到排序序列的起始位置，然后，再从剩余未排序元素中继续寻找最小元素，然后放到已排序序列的末尾。时间复杂度为O(n^2)，空间复杂度O(1)，算法不稳定。<br><strong>2.算法实现</strong></p>
 <pre><code>public static void Selection_Sort(int []array){
     for (int i = 0; i &lt; array.length-1; i++) {
         int minindex = i;
@@ -195,10 +195,42 @@
         gap = gap/2;
     }
 }
+</code></pre><h3 id="5-归并排序"><a href="#5-归并排序" class="headerlink" title="5.归并排序"></a>5.归并排序</h3><p>   <strong>1.算法描述</strong><br>     &nbsp; &nbsp; &nbsp;归并排序是建立在归并操作上的一种有效的排序算法。该算法是采用分治法（Divide and Conquer）的一个非常典型的应用。将已有序的子序列合并，得到完全有序的序列；即先使每个子序列有序，再使子序列段间有序。若将两个有序表合并成一个有序表。时间复杂度为小于O(n^2)，空间复杂度O(n，算法稳定。<br><strong>2.算法实现</strong></p>
+<pre><code>vate static void sort(int[] arr,int left,int right,int []temp){
+        if(left&lt;right){
+            int mid = (left+right)/2;
+            sort(arr,left,mid,temp);//左边归并排序，使得左子序列有序
+            sort(arr,mid+1,right,temp);//右边归并排序，使得右子序列有序
+            merge(arr,left,mid,right,temp);//将两个有序子数组合并操作
+        }
+    }
+    private static void merge(int[] arr,int left,int mid,int right,int[] temp){
+        int i = left;//左序列指针
+        int j = mid+1;//右序列指针
+        int t = 0;//临时数组指针
+        while (i&lt;=mid &amp;&amp; j&lt;=right){
+            if(arr[i]&lt;=arr[j]){
+                temp[t++] = arr[i++];
+            }else {
+                temp[t++] = arr[j++];
+            }
+        }
+        while(i&lt;=mid){//将左边剩余元素填充进temp中
+            temp[t++] = arr[i++];
+        }
+        while(j&lt;=right){//将右序列剩余元素填充进temp中
+            temp[t++] = arr[j++];
+        }
+        t = 0;
+        //将temp中的元素全部拷贝到原数组中
+        while(left &lt;= right){
+            arr[left++] = temp[t++];
+        }
+    }
 </code></pre>
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年01月21日 20:12</p>
+        <p>最后更新： 2019年01月22日 20:14</p>
         <p>原始链接： <a class="post-url" href="/2019/01/20/Sort/" title="六大排序算法">https://ztaocoder.github.io/2019/01/20/Sort/</a></p>
         <footer>
             <a href="https://ztaocoder.github.io">
@@ -316,12 +348,22 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#一-冒泡排序"><span class="post-toc-text">一. 冒泡排序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-插入排序"><span class="post-toc-text">3.插入排序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-希尔排序"><span class="post-toc-text">4.希尔排序</span></a></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#一-冒泡排序"><span class="post-toc-text">一. 冒泡排序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-选择排序"><span class="post-toc-text">2.选择排序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-插入排序"><span class="post-toc-text">3.插入排序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-希尔排序"><span class="post-toc-text">4.希尔排序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-归并排序"><span class="post-toc-text">5.归并排序</span></a></li></ol>
         </nav>
     </aside>
     
 
 <nav id="article-nav">
+  
+    <a href="/2019/01/21/IO/" id="article-nav-newer" class="article-nav-link-wrap">
+
+      <span class="article-nav-title">
+        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+        
+          IO
+        
+      </span>
+    </a>
   
   
     <a href="/2019/01/01/2018/" id="article-nav-older" class="article-nav-link-wrap">
