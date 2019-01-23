@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="张涛的博客">
 <meta property="og:description" content="一. 冒泡排序   1.算法描述    &amp;nbsp; &amp;nbsp; &amp;nbsp;依次比较两个相邻元素，如果前面一个数比后面一个数大，就交换两者的位置，每次循环以此找出最大的数。重复以上操作。时间复杂度为O(n^2)，空间复杂度O(1)，算法稳定。2.算法实现    public static void Bubble_Sort(int []array){     for (int i = 0; i">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-22T12:14:56.628Z">
+<meta property="og:updated_time" content="2019-01-23T08:37:00.244Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="六大排序算法">
 <meta name="twitter:description" content="一. 冒泡排序   1.算法描述    &amp;nbsp; &amp;nbsp; &amp;nbsp;依次比较两个相邻元素，如果前面一个数比后面一个数大，就交换两者的位置，每次循环以此找出最大的数。重复以上操作。时间复杂度为O(n^2)，空间复杂度O(1)，算法稳定。2.算法实现    public static void Bubble_Sort(int []array){     for (int i = 0; i">
@@ -227,10 +227,37 @@
             arr[left++] = temp[t++];
         }
     }
+</code></pre><h3 id="6-快速排序"><a href="#6-快速排序" class="headerlink" title="6.快速排序"></a>6.快速排序</h3><p>   <strong>1.算法描述</strong><br>     &nbsp; &nbsp; &nbsp;：通过一趟排序将待排记录分隔成独立的两部分，其中一部分记录的关键字均比另一部分的关键字小，则可分别对这两部分记录继续进行排序，以达到整个序列有序。时间复杂度为小于O(n^2)，空间复杂度O(n，算法不稳定，效率最高。<br><strong>2.算法实现</strong></p>
+<pre><code> public static void quickSort1(int[] arr, int low, int high) {//low：0，high:len-1
+    int i,j,index,tmp;
+    if (low &gt; high){
+        return;
+    }
+    i=low;
+    j=high;
+    index = arr[low];
+    while(i&lt;j){
+        while (index&lt;=arr[j] &amp;&amp; i &lt; j){
+            j--;
+        }
+        while (index &gt;= arr[i] &amp;&amp; i&lt;j){
+            i++;
+        }
+        if (i&lt;j){
+            tmp=arr[j];
+            arr[j]=arr[i];
+            arr[i]=tmp;
+        }
+    }
+    arr[low] = arr[i];
+    arr[i] = index;
+    quickSort1(arr,low,j-1);
+    quickSort1(arr,j+1,high);
+}
 </code></pre>
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年01月22日 20:14</p>
+        <p>最后更新： 2019年01月23日 16:37</p>
         <p>原始链接： <a class="post-url" href="/2019/01/20/Sort/" title="六大排序算法">https://ztaocoder.github.io/2019/01/20/Sort/</a></p>
         <footer>
             <a href="https://ztaocoder.github.io">
@@ -348,7 +375,7 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#一-冒泡排序"><span class="post-toc-text">一. 冒泡排序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-选择排序"><span class="post-toc-text">2.选择排序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-插入排序"><span class="post-toc-text">3.插入排序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-希尔排序"><span class="post-toc-text">4.希尔排序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-归并排序"><span class="post-toc-text">5.归并排序</span></a></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#一-冒泡排序"><span class="post-toc-text">一. 冒泡排序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-选择排序"><span class="post-toc-text">2.选择排序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-插入排序"><span class="post-toc-text">3.插入排序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-希尔排序"><span class="post-toc-text">4.希尔排序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-归并排序"><span class="post-toc-text">5.归并排序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#6-快速排序"><span class="post-toc-text">6.快速排序</span></a></li></ol>
         </nav>
     </aside>
     
