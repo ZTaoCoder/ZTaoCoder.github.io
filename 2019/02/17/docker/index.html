@@ -20,7 +20,7 @@
 <meta property="og:image" content="https://ztaocoder.github.io/2019/02/17/docker/1.png">
 <meta property="og:image" content="https://ztaocoder.github.io/2019/02/17/docker/2.png">
 <meta property="og:image" content="https://ztaocoder.github.io/2019/02/17/docker/4.png">
-<meta property="og:updated_time" content="2019-02-17T12:38:22.963Z">
+<meta property="og:updated_time" content="2019-02-17T12:45:19.099Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="docker的入门">
 <meta name="twitter:description" content="docker的基本命令与重要概念">
@@ -175,7 +175,7 @@ docker run -d -P  hub.c.163.com/library/nginx  主机上随机开放一个端口
 MAINTAINER ztaocoder xxx163@.com #个人信息
 copy jpress.war /user/local/tomcat/webapps #将war包复制到tomcat的webapps目录下
 </code></pre><p>   最后执行 docker built -t jpress:latest . 命令</p>
-<p>   <strong>3.安装mysql</strong><br>   &nbsp;&nbsp;&nbsp;&nbsp;  首先从中央仓库（网易云镜像仓库）拉取镜像</p>
+<p>   <strong>3.安装mysql数据库</strong><br>   &nbsp;&nbsp;&nbsp;&nbsp;  首先从中央仓库（网易云镜像仓库）拉取镜像</p>
 <pre><code>docker pull hub.c.163.com/library/mysql:latest
 </code></pre><p> &nbsp;&nbsp;&nbsp;&nbsp; 然后启动镜像，设置相应的登陆密码与数据库名字。</p>
 <pre><code>docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=000000  -e MYSQL_DATABASE=jpess 
@@ -185,7 +185,7 @@ copy jpress.war /user/local/tomcat/webapps #将war包复制到tomcat的webapps�
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年02月17日 20:38</p>
+        <p>最后更新： 2019年02月17日 20:45</p>
         <p>原始链接： <a class="post-url" href="/2019/02/17/docker/" title="docker的入门">https://ztaocoder.github.io/2019/02/17/docker/</a></p>
         <footer>
             <a href="https://ztaocoder.github.io">
