@@ -19,8 +19,8 @@
 <meta property="og:image" content="https://ztaocoder.github.io/2019/02/17/docker/3.png">
 <meta property="og:image" content="https://ztaocoder.github.io/2019/02/17/docker/1.png">
 <meta property="og:image" content="https://ztaocoder.github.io/2019/02/17/docker/2.png">
-<meta property="og:image" content="https://ztaocoder.github.io/2019/02/17/docker/3.png">
-<meta property="og:updated_time" content="2019-02-17T12:31:59.017Z">
+<meta property="og:image" content="https://ztaocoder.github.io/2019/02/17/docker/4.png">
+<meta property="og:updated_time" content="2019-02-17T12:35:11.657Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="docker的入门">
 <meta name="twitter:description" content="docker的基本命令与重要概念">
@@ -144,13 +144,15 @@
     <div class="article-entry post-content" itemprop="articleBody">
       
             
-            <p>###一.Docker的概念的定义 ###<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Docker是一个开源的应用容器引擎，让开发者可以打包他们的应用以及依赖包到一个可移植的容器中，然后发布到任何流行的机器上，通过仓库来集中管理镜像。</p>
+            <p>###一.Docker的概念的定义###</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Docker是一个开源的应用容器引擎，让开发者可以打包他们的应用以及依赖包到一个可移植的容器中，然后发布到任何流行的机器上，通过仓库来集中管理镜像。</p>
 <p>###二.docker中的重要概念###</p>
 <p><img src="/2019/02/17/docker/3.png" alt="SDS"></p>
 <h4 id="nbsp-nbsp-2-1镜像"><a href="#nbsp-nbsp-2-1镜像" class="headerlink" title="&nbsp;&nbsp;2.1镜像"></a>&nbsp;&nbsp;2.1镜像</h4><p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 镜像就相当与一系列文件，可以包括应用程序的文件、配置文件、运行环境的文件。结果如图2-1。最底端是一个文件引导系统，即bootfs。Docker用户不会与引导文件系统有直接的交互。Docker镜像的第二层是root文件系统rootfs，通常是一种或多种操作系统，例如ubuntu等。在Docker中，文件系统永远都是只读的，在每次修改时，都是进行拷贝叠加从而形成最终的文件系统。Docker称这样的文件为镜像。一个镜像可以迭代在另一个镜像的顶部。位于下方的镜像称之为父镜像，最底层的镜像称之为基础镜像。</p>
 <h4 id="nbsp-nbsp-2-2容器"><a href="#nbsp-nbsp-2-2容器" class="headerlink" title="&nbsp;&nbsp;2.2容器"></a>&nbsp;&nbsp;2.2容器</h4><p>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;当从一个镜像启动容器时，Docker会在最顶层加载一个读写文件系统作为容器。当需要进行对可读层进行写的时候，将会将镜像文件复制到容器中进行操作，因此一个镜像可以对应多个容器做到互不影响。</p>
 <h4 id="nbsp-nbsp-2-3仓库"><a href="#nbsp-nbsp-2-3仓库" class="headerlink" title="&nbsp;&nbsp;2.3仓库"></a>&nbsp;&nbsp;2.3仓库</h4><p>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;仓库有两种，分别是中央仓库与本地仓库，中央仓库存储了各种镜像，可以通过命令将镜像拉取到本地仓库中。</p>
-<p>###三.docker中的基本命令###<br>1.拉取镜像 </p>
+<p>###三.docker中的基本命令###</p>
+<p>1.拉取镜像 </p>
 <pre><code>docker pull hello-world
 </code></pre><p>2.查看镜像 </p>
 <pre><code>docker images
@@ -169,7 +171,8 @@
 </code></pre><p>8.docker网络（默认使用bridge模式）</p>
 <pre><code>docker run -d -p 8080:80 hub.c.163.com/library/nginx  指定主机与容器映射端口
 docker run -d -P  hub.c.163.com/library/nginx  主机上随机开放一个端口与容器端口进行映射
-</code></pre><p>####四.docker总体设计####<br><img src="/2019/02/17/docker/3.png" alt="SDS"><br> 以运行run命令举例,当docker客户端启动命令时，将去调用daemoe，先检查本地仓库是否有该镜像，没有的话就从中央仓库拉取该镜像，在从本地仓库中启动镜像生成容器。</p>
+</code></pre><p>####四.docker总体设计####</p>
+<p><img src="/2019/02/17/docker/4.png" alt="SDS"><br> 以运行run命令举例,当docker客户端启动命令时，将去调用daemoe，先检查本地仓库是否有该镜像，没有的话就从中央仓库拉取该镜像，在从本地仓库中启动镜像生成容器。</p>
 <p>####五.使用开源组件JPRESS构建个人博客系统###<br>  <strong>1.从git上下载JPRESS的war包</strong></p>
 <p>  <strong> 2.基于tomcat制作自己的镜像</strong><br>     &nbsp;&nbsp;&nbsp;&nbsp;首先生成一个Dockerfile文件,告诉docker怎么制作镜像，制作镜像得每一步是怎么样的，使用docker built执行dockerfile中描述的事件并构建出来自己的镜像。 如下为dockerfile的代码</p>
 <pre><code>from hub.c.163.com/library/tomcat  #以tomcat镜像为起点的
@@ -186,7 +189,7 @@ copy jpress.war /user/local/tomcat/webapps #将war包复制到tomcat的webapps�
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年02月17日 20:31</p>
+        <p>最后更新： 2019年02月17日 20:35</p>
         <p>原始链接： <a class="post-url" href="/2019/02/17/docker/" title="docker的入门">https://ztaocoder.github.io/2019/02/17/docker/</a></p>
         <footer>
             <a href="https://ztaocoder.github.io">
