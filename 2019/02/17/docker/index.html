@@ -3,23 +3,28 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>Mysql高性能（二） | 张涛的博客</title>
+  <title>docker的入门 | 张涛的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
     <meta name="keywords" content="ZhangTao,ZhangTao's Blog">
   
-  <meta name="description" content="Schema与数据类型优化">
-<meta name="keywords" content="Mysql">
+  <meta name="description" content="docker的基本命令与重要概念">
+<meta name="keywords" content="docker">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Mysql高性能（二）">
-<meta property="og:url" content="https://ztaocoder.github.io/2018/11/19/Mysql高性能（二）/index.html">
+<meta property="og:title" content="docker的入门">
+<meta property="og:url" content="https://ztaocoder.github.io/2019/02/17/docker/index.html">
 <meta property="og:site_name" content="张涛的博客">
-<meta property="og:description" content="Schema与数据类型优化">
+<meta property="og:description" content="docker的基本命令与重要概念">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-11-21T13:26:32.525Z">
+<meta property="og:image" content="https://ztaocoder.github.io/2019/02/17/docker/3.png">
+<meta property="og:image" content="https://ztaocoder.github.io/2019/02/17/docker/1.png">
+<meta property="og:image" content="https://ztaocoder.github.io/2019/02/17/docker/2.png">
+<meta property="og:image" content="https://ztaocoder.github.io/2019/02/17/docker/3.png">
+<meta property="og:updated_time" content="2019-02-17T12:31:59.017Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Mysql高性能（二）">
-<meta name="twitter:description" content="Schema与数据类型优化">
+<meta name="twitter:title" content="docker的入门">
+<meta name="twitter:description" content="docker的基本命令与重要概念">
+<meta name="twitter:image" content="https://ztaocoder.github.io/2019/02/17/docker/3.png">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -110,20 +115,20 @@
     </div>
 </header>
       <div class="outer">
-        <section id="main" class="body-wrap"><article id="post-Mysql高性能（二）" class="article article-type-post" itemscope="" itemprop="blogPost">
+        <section id="main" class="body-wrap"><article id="post-docker" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="post-title" itemprop="name">
-      Mysql高性能（二）
+      docker的入门
     </h1>
     <div class="post-title-bar">
       <ul>
           
         <li>
-          <i class="fa fa-calendar"></i>  2018-11-19
+          <i class="fa fa-calendar"></i>  2019-02-17
         </li>
         <li>
           <i class="fa fa-eye"></i>
@@ -139,31 +144,50 @@
     <div class="article-entry post-content" itemprop="articleBody">
       
             
-            <h2 id="nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-Schema与数据类型优化"><a href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-Schema与数据类型优化" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     Schema与数据类型优化"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     Schema与数据类型优化</h2><h3 id="1、选择优化的数据类型"><a href="#1、选择优化的数据类型" class="headerlink" title="1、选择优化的数据类型"></a>1、选择优化的数据类型</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.更小的通常更好（占用更少的磁盘，内存，CPU）<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2.简单就好（简单数据类型的操作需要更少的CPU）<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3.尽量避免NULL（因为可我NULL的列使得索引、索引统计更复杂、可为NULL的列会占据更多的存储空间）</p>
-<h4 id="nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-1整数类型"><a href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-1整数类型" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.1整数类型"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.1整数类型</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 整数类型：TINYINY、SMALLINT、MEDIUMINT、INT、BIGINT，它们分别需要8,16,24,32,64位存储空间，存储范围是-2^(n-1)到2^(n-1)，其实有符号和无符号类型的存储空间是一样的。除此之外，比如int(11)是没有意义的，只是规定了Mysql的交互工具来显示字符的个数。</p>
-<h4 id="nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-2实数类型"><a href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-2实数类型" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.2实数类型"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.2实数类型</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Float占四个字节，double占八个字节<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 比如DECIMAL只有在进行对小数精确计算的时候才使用，比如：金融数据</p>
-<h4 id="nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-3字符串类型"><a href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-3字符串类型" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.3字符串类型"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.3字符串类型</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VARCHAR会使用额外的空间来存储字符串长度，适用于当最大长度远大于平均长度时，并且很少更新时。而CHAR适用于存储字符串很短或者长度近似相同的，对于经常改变的值。比如MD5的值，对于易变的数据，char不容易产生碎片。所以更少，binary和varbinary同样道理</p>
-<h4 id="nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-4时期和时间类型"><a href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-4时期和时间类型" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.4时期和时间类型"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.4时期和时间类型</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 通常应该使用TIMESTAMP（四个字节）因为比DATETIME（八个字节）更节约空间，timestamp效率也更高，</p>
-<h4 id="nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-5标识符"><a href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-5标识符" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.5标识符"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.5标识符</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;标识符尽量选用整数</p>
-<h4 id="nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-6特殊类型"><a href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-6特殊类型" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.6特殊类型"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.6特殊类型</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IP地址 无符号整数存储</p>
-<h3 id="2、Mysqlschema设计中的陷阱"><a href="#2、Mysqlschema设计中的陷阱" class="headerlink" title="2、Mysqlschema设计中的陷阱"></a>2、Mysqlschema设计中的陷阱</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.太多的列<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2.太多的关联<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3.全能的枚举<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4.使用NULL</p>
-<h3 id="3、范式与反范式"><a href="#3、范式与反范式" class="headerlink" title="3、范式与反范式"></a>3、范式与反范式</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 设计表的规则是设计为一张表更好还是两张表更好<br><strong> &nbsp;&nbsp;&nbsp;&nbsp;范式优点 </strong>：<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 更快。修改更少数据。表更小，执行操作更快<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 缺点：通常需要关联<br><strong> &nbsp;&nbsp;&nbsp;&nbsp;反范式的优点 </strong>：<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.很好地避免关联<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2.当数据比内存大时这可能比关联要快得多，因为避免了随机I/O<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3.单独的表可以进行有效的索引<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;所以一般要结合实际情况进行选择</p>
-<h3 id="4、加快ALTER-TABLE操作速度"><a href="#4、加快ALTER-TABLE操作速度" class="headerlink" title="4、加快ALTER TABLE操作速度"></a>4、加快ALTER TABLE操作速度</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong> 设计数据库简单的原则 </strong></p>
-<ul>
-<li>1.尽量避免过度设计，比如很多列的表</li>
-<li>2.使用小而简单的合适数据类型</li>
-<li>3.尽量使用相同的数据存储相似或相关的值</li>
-<li>4.注意可变长字符串</li>
-<li>5.尽量使用整数定义标识符</li>
-<li>6.避免使用mysql遗弃的特性</li>
-<li>7.小心使用ENUM和SET</li>
-<li>8.不要使用NULL值</li>
-</ul>
+            <p>###一.Docker的概念的定义 ###<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Docker是一个开源的应用容器引擎，让开发者可以打包他们的应用以及依赖包到一个可移植的容器中，然后发布到任何流行的机器上，通过仓库来集中管理镜像。</p>
+<p>###二.docker中的重要概念###</p>
+<p><img src="/2019/02/17/docker/3.png" alt="SDS"></p>
+<h4 id="nbsp-nbsp-2-1镜像"><a href="#nbsp-nbsp-2-1镜像" class="headerlink" title="&nbsp;&nbsp;2.1镜像"></a>&nbsp;&nbsp;2.1镜像</h4><p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 镜像就相当与一系列文件，可以包括应用程序的文件、配置文件、运行环境的文件。结果如图2-1。最底端是一个文件引导系统，即bootfs。Docker用户不会与引导文件系统有直接的交互。Docker镜像的第二层是root文件系统rootfs，通常是一种或多种操作系统，例如ubuntu等。在Docker中，文件系统永远都是只读的，在每次修改时，都是进行拷贝叠加从而形成最终的文件系统。Docker称这样的文件为镜像。一个镜像可以迭代在另一个镜像的顶部。位于下方的镜像称之为父镜像，最底层的镜像称之为基础镜像。</p>
+<h4 id="nbsp-nbsp-2-2容器"><a href="#nbsp-nbsp-2-2容器" class="headerlink" title="&nbsp;&nbsp;2.2容器"></a>&nbsp;&nbsp;2.2容器</h4><p>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;当从一个镜像启动容器时，Docker会在最顶层加载一个读写文件系统作为容器。当需要进行对可读层进行写的时候，将会将镜像文件复制到容器中进行操作，因此一个镜像可以对应多个容器做到互不影响。</p>
+<h4 id="nbsp-nbsp-2-3仓库"><a href="#nbsp-nbsp-2-3仓库" class="headerlink" title="&nbsp;&nbsp;2.3仓库"></a>&nbsp;&nbsp;2.3仓库</h4><p>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;仓库有两种，分别是中央仓库与本地仓库，中央仓库存储了各种镜像，可以通过命令将镜像拉取到本地仓库中。</p>
+<p>###三.docker中的基本命令###<br>1.拉取镜像 </p>
+<pre><code>docker pull hello-world
+</code></pre><p>2.查看镜像 </p>
+<pre><code>docker images
+</code></pre><p><strong>如图下图，可以看到镜像相关的信息</strong><br><img src="/2019/02/17/docker/1.png" alt="SDS"></p>
+<p>3.运行nginx镜像</p>
+<pre><code>docker run -d hub.c.163.com/library/nginx
+</code></pre><p>4.查看容器信息</p>
+<pre><code>docker ps
+</code></pre><p><strong>如下图，可以查看运行镜像生成容器的信息，比如创建时间、唯一的ID、端口映射等信息。</strong><br><img src="/2019/02/17/docker/2.png" alt="SDS"></p>
+<p>5.进入容器（ngnix运行在linux容器上,进入linux界面）</p>
+<pre><code>docker exec -it 69e(容器ID）bash 
+</code></pre><p>6.退出容器 </p>
+<pre><code>exit
+</code></pre><p>7.停止容器 </p>
+<pre><code>docker stop 69e
+</code></pre><p>8.docker网络（默认使用bridge模式）</p>
+<pre><code>docker run -d -p 8080:80 hub.c.163.com/library/nginx  指定主机与容器映射端口
+docker run -d -P  hub.c.163.com/library/nginx  主机上随机开放一个端口与容器端口进行映射
+</code></pre><p>####四.docker总体设计####<br><img src="/2019/02/17/docker/3.png" alt="SDS"><br> 以运行run命令举例,当docker客户端启动命令时，将去调用daemoe，先检查本地仓库是否有该镜像，没有的话就从中央仓库拉取该镜像，在从本地仓库中启动镜像生成容器。</p>
+<p>####五.使用开源组件JPRESS构建个人博客系统###<br>  <strong>1.从git上下载JPRESS的war包</strong></p>
+<p>  <strong> 2.基于tomcat制作自己的镜像</strong><br>     &nbsp;&nbsp;&nbsp;&nbsp;首先生成一个Dockerfile文件,告诉docker怎么制作镜像，制作镜像得每一步是怎么样的，使用docker built执行dockerfile中描述的事件并构建出来自己的镜像。 如下为dockerfile的代码</p>
+<pre><code>from hub.c.163.com/library/tomcat  #以tomcat镜像为起点的
+MAINTAINER ztaocoder xxx163@.com #个人信息
+copy jpress.war /user/local/tomcat/webapps #将war包复制到tomcat的webapps目录下
+</code></pre><p>   最后执行 docker built -t jpress:latest . 命令</p>
+<p>   <strong>3.安装mysql</strong><br>   &nbsp;&nbsp;&nbsp;&nbsp;  首先从中央仓库（网易云镜像仓库）拉取镜像</p>
+<pre><code>docker pull hub.c.163.com/library/mysql:latest
+</code></pre><p> &nbsp;&nbsp;&nbsp;&nbsp; 然后启动镜像，设置相应的登陆密码与数据库名字。</p>
+<pre><code>docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=000000  -e MYSQL_DATABASE=jpess 
+</code></pre><p>   <strong>4.启动jpress镜像</strong></p>
+<pre><code>docker run -d -p 8080:8080 jpress 
+</code></pre><p>   **5.根据jpress的指导连接数据库，建立个人博客</p>
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2018年11月21日 21:26</p>
-        <p>原始链接： <a class="post-url" href="/2018/11/19/Mysql高性能（二）/" title="Mysql高性能（二）">https://ztaocoder.github.io/2018/11/19/Mysql高性能（二）/</a></p>
+        <p>最后更新： 2019年02月17日 20:31</p>
+        <p>原始链接： <a class="post-url" href="/2019/02/17/docker/" title="docker的入门">https://ztaocoder.github.io/2019/02/17/docker/</a></p>
         <footer>
             <a href="https://ztaocoder.github.io">
                 <img src="/images/logo.png" alt="张涛">
@@ -220,7 +244,7 @@
     <div class="post-share-list" id="share-list">
         <ul class="share-icons">
           <li>
-            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://ztaocoder.github.io/2018/11/19/Mysql高性能（二）/&title=《Mysql高性能（二）》 — 张涛的博客&pic=https://ztaocoder.github.ioimages/logo.png" data-title="微博">
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://ztaocoder.github.io/2019/02/17/docker/&title=《docker的入门》 — 张涛的博客&pic=https://ztaocoder.github.ioimages/logo.png" data-title="微博">
               <i class="fa fa-weibo"></i>
             </a>
           </li>
@@ -230,22 +254,22 @@
             </a>
           </li>
           <li>
-            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://ztaocoder.github.io/2018/11/19/Mysql高性能（二）/&title=《Mysql高性能（二）》 — 张涛的博客&source=记录个人的成长" data-title="QQ">
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://ztaocoder.github.io/2019/02/17/docker/&title=《docker的入门》 — 张涛的博客&source=记录个人的成长" data-title="QQ">
               <i class="fa fa-qq"></i>
             </a>
           </li>
           <li>
-            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://ztaocoder.github.io/2018/11/19/Mysql高性能（二）/" data-title="Facebook">
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://ztaocoder.github.io/2019/02/17/docker/" data-title="Facebook">
               <i class="fa fa-facebook"></i>
             </a>
           </li>
           <li>
-            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Mysql高性能（二）》 — 张涛的博客&url=https://ztaocoder.github.io/2018/11/19/Mysql高性能（二）/&via=https://ztaocoder.github.io" data-title="Twitter">
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《docker的入门》 — 张涛的博客&url=https://ztaocoder.github.io/2019/02/17/docker/&via=https://ztaocoder.github.io" data-title="Twitter">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
           <li>
-            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://ztaocoder.github.io/2018/11/19/Mysql高性能（二）/" data-title="Google+">
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://ztaocoder.github.io/2019/02/17/docker/" data-title="Google+">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -255,7 +279,7 @@
 <div class="post-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;" id="wxShare-close">×</a>
     <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://ztaocoder.github.io/2018/11/19/Mysql高性能（二）/" alt="微信分享二维码">
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://ztaocoder.github.io/2019/02/17/docker/" alt="微信分享二维码">
 </div>
 
 <div class="mask"></div>
@@ -267,7 +291,7 @@
   <li class="article-footer-tags">
     <i class="fa fa-tags"></i>
       
-    <a href="/tags/Mysql/" class="color1">Mysql</a>
+    <a href="/tags/docker/" class="color2">docker</a>
       
   </li>
 
@@ -280,26 +304,16 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-Schema与数据类型优化"><span class="post-toc-text">                    Schema与数据类型优化</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1、选择优化的数据类型"><span class="post-toc-text">1、选择优化的数据类型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-1整数类型"><span class="post-toc-text">       1.1整数类型</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-2实数类型"><span class="post-toc-text">      1.2实数类型</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-3字符串类型"><span class="post-toc-text">      1.3字符串类型</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-4时期和时间类型"><span class="post-toc-text">      1.4时期和时间类型</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-5标识符"><span class="post-toc-text">      1.5标识符</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-6特殊类型"><span class="post-toc-text">      1.6特殊类型</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2、Mysqlschema设计中的陷阱"><span class="post-toc-text">2、Mysqlschema设计中的陷阱</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3、范式与反范式"><span class="post-toc-text">3、范式与反范式</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4、加快ALTER-TABLE操作速度"><span class="post-toc-text">4、加快ALTER TABLE操作速度</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#nbsp-nbsp-2-1镜像"><span class="post-toc-text">  2.1镜像</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#nbsp-nbsp-2-2容器"><span class="post-toc-text">  2.2容器</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#nbsp-nbsp-2-3仓库"><span class="post-toc-text">  2.3仓库</span></a></li></ol>
         </nav>
     </aside>
     
 
 <nav id="article-nav">
   
-    <a href="/2018/11/19/Mysql高性能（三）/" id="article-nav-newer" class="article-nav-link-wrap">
-
-      <span class="article-nav-title">
-        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
-        
-          Mysql高性能（三）
-        
-      </span>
-    </a>
   
-  
-    <a href="/2018/11/19/Mysql高性能（一）/" id="article-nav-older" class="article-nav-link-wrap">
-      <span class="article-nav-title">Mysql高性能（一）</span>
+    <a href="/2019/01/20/Sort/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">六大排序算法</span>
       <i class="fa fa-hand-o-right" aria-hidden="true"></i>
     </a>
   
