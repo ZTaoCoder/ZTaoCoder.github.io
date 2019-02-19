@@ -20,7 +20,7 @@
 <meta property="og:image" content="https://ztaocoder.github.io/2019/02/17/docker/1.png">
 <meta property="og:image" content="https://ztaocoder.github.io/2019/02/17/docker/2.png">
 <meta property="og:image" content="https://ztaocoder.github.io/2019/02/17/docker/4.png">
-<meta property="og:updated_time" content="2019-02-17T12:58:04.362Z">
+<meta property="og:updated_time" content="2019-02-19T12:41:17.698Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="docker的入门">
 <meta name="twitter:description" content="docker的基本命令与重要概念">
@@ -168,7 +168,7 @@
 </code></pre><p>8.docker网络（默认使用bridge模式）</p>
 <pre><code>docker run -d -p 8080:80 hub.c.163.com/library/nginx  指定主机与容器映射端口
 docker run -d -P  hub.c.163.com/library/nginx  主机上随机开放一个端口与容器端口进行映射
-</code></pre><h3 id="四-docker总体设计"><a href="#四-docker总体设计" class="headerlink" title="四.docker总体设计"></a>四.docker总体设计</h3><p><img src="/2019/02/17/docker/4.png" alt="SDS"><br> 以运行run命令举例,当docker客户端启动命令时，将去调用daemoe，先检查本地仓库是否有该镜像，没有的话就从中央仓库拉取该镜像，在从本地仓库中启动镜像生成容器。</p>
+</code></pre><h3 id="四-docker总体设计"><a href="#四-docker总体设计" class="headerlink" title="四.docker总体设计"></a>四.docker总体设计</h3><p><img src="/2019/02/17/docker/4.png" alt="SDS"><br>  &nbsp;&nbsp;&nbsp;&nbsp;以运行run命令举例,当docker客户端发送命令时，将调用daemon，daemon先检查本地仓库是否有该镜像，没有的话就从中央仓库拉取该镜像，在从本地仓库中启动镜像生成容器。</p>
 <h3 id="五-使用开源组件JPRESS构建个人博客系统"><a href="#五-使用开源组件JPRESS构建个人博客系统" class="headerlink" title="五.使用开源组件JPRESS构建个人博客系统"></a>五.使用开源组件JPRESS构建个人博客系统</h3><p>  <strong>1.从git上下载JPRESS的war包</strong></p>
 <p>  <strong> 2.基于tomcat制作自己的镜像</strong><br>     &nbsp;&nbsp;&nbsp;&nbsp;首先生成一个Dockerfile文件,告诉docker怎么制作镜像，制作镜像得每一步是怎么样的，使用docker built执行dockerfile中描述的事件并构建出来自己的镜像。 如下为dockerfile的代码</p>
 <pre><code>from hub.c.163.com/library/tomcat  #以tomcat镜像为起点的
@@ -185,7 +185,7 @@ copy jpress.war /user/local/tomcat/webapps #将war包复制到tomcat的webapps�
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年02月17日 20:58</p>
+        <p>最后更新： 2019年02月19日 20:41</p>
         <p>原始链接： <a class="post-url" href="/2019/02/17/docker/" title="docker的入门">https://ztaocoder.github.io/2019/02/17/docker/</a></p>
         <footer>
             <a href="https://ztaocoder.github.io">
