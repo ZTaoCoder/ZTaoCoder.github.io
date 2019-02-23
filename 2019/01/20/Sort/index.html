@@ -3,7 +3,7 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>六大排序算法 | 张涛的博客</title>
+  <title>七大排序算法 | 张涛的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
     <meta name="keywords" content="ZhangTao,ZhangTao's Blog">
@@ -11,14 +11,14 @@
   <meta name="description" content="一. 冒泡排序   1.算法描述    &amp;nbsp; &amp;nbsp; &amp;nbsp;依次比较两个相邻元素，如果前面一个数比后面一个数大，就交换两者的位置，每次循环以此找出最大的数。重复以上操作。时间复杂度为O(n^2)，空间复杂度O(1)，算法稳定。2.算法实现    public static void Bubble_Sort(int []array){     for (int i = 0; i">
 <meta name="keywords" content="排序算法">
 <meta property="og:type" content="article">
-<meta property="og:title" content="六大排序算法">
+<meta property="og:title" content="七大排序算法">
 <meta property="og:url" content="https://ztaocoder.github.io/2019/01/20/Sort/index.html">
 <meta property="og:site_name" content="张涛的博客">
 <meta property="og:description" content="一. 冒泡排序   1.算法描述    &amp;nbsp; &amp;nbsp; &amp;nbsp;依次比较两个相邻元素，如果前面一个数比后面一个数大，就交换两者的位置，每次循环以此找出最大的数。重复以上操作。时间复杂度为O(n^2)，空间复杂度O(1)，算法稳定。2.算法实现    public static void Bubble_Sort(int []array){     for (int i = 0; i">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-23T08:37:00.244Z">
+<meta property="og:updated_time" content="2019-02-23T07:06:45.072Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="六大排序算法">
+<meta name="twitter:title" content="七大排序算法">
 <meta name="twitter:description" content="一. 冒泡排序   1.算法描述    &amp;nbsp; &amp;nbsp; &amp;nbsp;依次比较两个相邻元素，如果前面一个数比后面一个数大，就交换两者的位置，每次循环以此找出最大的数。重复以上操作。时间复杂度为O(n^2)，空间复杂度O(1)，算法稳定。2.算法实现    public static void Bubble_Sort(int []array){     for (int i = 0; i">
   
   
@@ -117,7 +117,7 @@
         
   
     <h1 class="post-title" itemprop="name">
-      六大排序算法
+      七大排序算法
     </h1>
     <div class="post-title-bar">
       <ul>
@@ -227,7 +227,7 @@
             arr[left++] = temp[t++];
         }
     }
-</code></pre><h3 id="6-快速排序"><a href="#6-快速排序" class="headerlink" title="6.快速排序"></a>6.快速排序</h3><p>   <strong>1.算法描述</strong><br>     &nbsp; &nbsp; &nbsp;：通过一趟排序将待排记录分隔成独立的两部分，其中一部分记录的关键字均比另一部分的关键字小，则可分别对这两部分记录继续进行排序，以达到整个序列有序。时间复杂度为小于O(n^2)，空间复杂度O(n，算法不稳定，效率最高。<br><strong>2.算法实现</strong></p>
+</code></pre><h3 id="6-快速排序"><a href="#6-快速排序" class="headerlink" title="6.快速排序"></a>6.快速排序</h3><p>   <strong>1.算法描述</strong><br>     &nbsp; &nbsp; &nbsp;通过一趟排序将待排记录分隔成独立的两部分，其中一部分记录的关键字均比另一部分的关键字小，则可分别对这两部分记录继续进行排序，以达到整个序列有序。时间复杂度为小于O(n^2)，空间复杂度O(n，算法不稳定，效率最高。<br><strong>2.算法实现</strong></p>
 <pre><code> public static void quickSort1(int[] arr, int low, int high) {//low：0，high:len-1
     int i,j,index,tmp;
     if (low &gt; high){
@@ -254,11 +254,27 @@
     quickSort1(arr,low,j-1);
     quickSort1(arr,j+1,high);
 }
+</code></pre><h3 id="七-桶排序"><a href="#七-桶排序" class="headerlink" title="七.桶排序"></a>七.桶排序</h3><p>   <strong>1.算法描述</strong><br>     &nbsp; &nbsp; &nbsp;通过借用一个一维数组记录每个数字出现的次数，按顺序依次输出每个数组变量的个数就达到了排序的目的。算法稳定，时间复杂度（n*k），空间复杂度（n+k。</p>
+<p><strong>2.算法实现</strong></p>
+<pre><code> public static void Bucket_Sort(int []array){ 
+    int []b =new int[10];
+    for (int i = 0; i &lt; 10; i++) {
+        b[i] = 0;
+    }
+    for (int i : array) {
+        b[i] =b[i]+1;
+    }
+    for (int i = 0; i &lt; b.length; i++) {
+        for (int j = 1; j &lt;= b[i]; j++) {
+            System.out.print(i);
+        }
+    }
+}
 </code></pre>
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年01月23日 16:37</p>
-        <p>原始链接： <a class="post-url" href="/2019/01/20/Sort/" title="六大排序算法">https://ztaocoder.github.io/2019/01/20/Sort/</a></p>
+        <p>最后更新： 2019年02月23日 15:06</p>
+        <p>原始链接： <a class="post-url" href="/2019/01/20/Sort/" title="七大排序算法">https://ztaocoder.github.io/2019/01/20/Sort/</a></p>
         <footer>
             <a href="https://ztaocoder.github.io">
                 <img src="/images/logo.png" alt="张涛">
@@ -315,7 +331,7 @@
     <div class="post-share-list" id="share-list">
         <ul class="share-icons">
           <li>
-            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://ztaocoder.github.io/2019/01/20/Sort/&title=《六大排序算法》 — 张涛的博客&pic=https://ztaocoder.github.ioimages/logo.png" data-title="微博">
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://ztaocoder.github.io/2019/01/20/Sort/&title=《七大排序算法》 — 张涛的博客&pic=https://ztaocoder.github.ioimages/logo.png" data-title="微博">
               <i class="fa fa-weibo"></i>
             </a>
           </li>
@@ -325,7 +341,7 @@
             </a>
           </li>
           <li>
-            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://ztaocoder.github.io/2019/01/20/Sort/&title=《六大排序算法》 — 张涛的博客&source=记录个人的成长" data-title="QQ">
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://ztaocoder.github.io/2019/01/20/Sort/&title=《七大排序算法》 — 张涛的博客&source=记录个人的成长" data-title="QQ">
               <i class="fa fa-qq"></i>
             </a>
           </li>
@@ -335,7 +351,7 @@
             </a>
           </li>
           <li>
-            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《六大排序算法》 — 张涛的博客&url=https://ztaocoder.github.io/2019/01/20/Sort/&via=https://ztaocoder.github.io" data-title="Twitter">
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《七大排序算法》 — 张涛的博客&url=https://ztaocoder.github.io/2019/01/20/Sort/&via=https://ztaocoder.github.io" data-title="Twitter">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
@@ -375,7 +391,7 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#一-冒泡排序"><span class="post-toc-text">一. 冒泡排序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-选择排序"><span class="post-toc-text">2.选择排序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-插入排序"><span class="post-toc-text">3.插入排序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-希尔排序"><span class="post-toc-text">4.希尔排序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-归并排序"><span class="post-toc-text">5.归并排序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#6-快速排序"><span class="post-toc-text">6.快速排序</span></a></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#一-冒泡排序"><span class="post-toc-text">一. 冒泡排序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-选择排序"><span class="post-toc-text">2.选择排序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-插入排序"><span class="post-toc-text">3.插入排序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-希尔排序"><span class="post-toc-text">4.希尔排序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-归并排序"><span class="post-toc-text">5.归并排序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#6-快速排序"><span class="post-toc-text">6.快速排序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#七-桶排序"><span class="post-toc-text">七.桶排序</span></a></li></ol>
         </nav>
     </aside>
     
