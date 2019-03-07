@@ -3,23 +3,23 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>Mysql高性能（二） | 张涛的博客</title>
+  <title>多线程 | 张涛的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
     <meta name="keywords" content="ZhangTao,ZhangTao's Blog">
   
-  <meta name="description" content="Schema与数据类型优化">
-<meta name="keywords" content="Mysql">
+  <meta name="description" content="###1、线程与进程的区别？###&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;进程是操作系统分配资源的最小单元，线程是操作系统调度的最小单元。一个程序至少有一个进程,一个进程至少有一个线程。 ###2、什么是多线程中的上下文切换？###&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;多线程会共同使用一组计算机上的CPU，而线程数大于给程序分配的C">
+<meta name="keywords" content="多线程">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Mysql高性能（二）">
-<meta property="og:url" content="https://ztaocoder.github.io/2018/11/19/Mysql高性能（二）/index.html">
+<meta property="og:title" content="多线程">
+<meta property="og:url" content="https://ztaocoder.github.io/2019/03/07/多线程/index.html">
 <meta property="og:site_name" content="张涛的博客">
-<meta property="og:description" content="Schema与数据类型优化">
+<meta property="og:description" content="###1、线程与进程的区别？###&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;进程是操作系统分配资源的最小单元，线程是操作系统调度的最小单元。一个程序至少有一个进程,一个进程至少有一个线程。 ###2、什么是多线程中的上下文切换？###&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;多线程会共同使用一组计算机上的CPU，而线程数大于给程序分配的C">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-11-21T13:26:32.525Z">
+<meta property="og:updated_time" content="2019-03-07T07:49:03.096Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Mysql高性能（二）">
-<meta name="twitter:description" content="Schema与数据类型优化">
+<meta name="twitter:title" content="多线程">
+<meta name="twitter:description" content="###1、线程与进程的区别？###&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;进程是操作系统分配资源的最小单元，线程是操作系统调度的最小单元。一个程序至少有一个进程,一个进程至少有一个线程。 ###2、什么是多线程中的上下文切换？###&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;多线程会共同使用一组计算机上的CPU，而线程数大于给程序分配的C">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -110,20 +110,20 @@
     </div>
 </header>
       <div class="outer">
-        <section id="main" class="body-wrap"><article id="post-Mysql高性能（二）" class="article article-type-post" itemscope="" itemprop="blogPost">
+        <section id="main" class="body-wrap"><article id="post-多线程" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="post-title" itemprop="name">
-      Mysql高性能（二）
+      多线程
     </h1>
     <div class="post-title-bar">
       <ul>
           
         <li>
-          <i class="fa fa-calendar"></i>  2018-11-19
+          <i class="fa fa-calendar"></i>  2019-03-07
         </li>
         <li>
           <i class="fa fa-eye"></i>
@@ -139,31 +139,49 @@
     <div class="article-entry post-content" itemprop="articleBody">
       
             
-            <h2 id="nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-Schema与数据类型优化"><a href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-Schema与数据类型优化" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     Schema与数据类型优化"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     Schema与数据类型优化</h2><h3 id="1、选择优化的数据类型"><a href="#1、选择优化的数据类型" class="headerlink" title="1、选择优化的数据类型"></a>1、选择优化的数据类型</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.更小的通常更好（占用更少的磁盘，内存，CPU）<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2.简单就好（简单数据类型的操作需要更少的CPU）<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3.尽量避免NULL（因为可我NULL的列使得索引、索引统计更复杂、可为NULL的列会占据更多的存储空间）</p>
-<h4 id="nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-1整数类型"><a href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-1整数类型" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.1整数类型"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.1整数类型</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 整数类型：TINYINY、SMALLINT、MEDIUMINT、INT、BIGINT，它们分别需要8,16,24,32,64位存储空间，存储范围是-2^(n-1)到2^(n-1)，其实有符号和无符号类型的存储空间是一样的。除此之外，比如int(11)是没有意义的，只是规定了Mysql的交互工具来显示字符的个数。</p>
-<h4 id="nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-2实数类型"><a href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-2实数类型" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.2实数类型"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.2实数类型</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Float占四个字节，double占八个字节<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 比如DECIMAL只有在进行对小数精确计算的时候才使用，比如：金融数据</p>
-<h4 id="nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-3字符串类型"><a href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-3字符串类型" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.3字符串类型"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.3字符串类型</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VARCHAR会使用额外的空间来存储字符串长度，适用于当最大长度远大于平均长度时，并且很少更新时。而CHAR适用于存储字符串很短或者长度近似相同的，对于经常改变的值。比如MD5的值，对于易变的数据，char不容易产生碎片。所以更少，binary和varbinary同样道理</p>
-<h4 id="nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-4时期和时间类型"><a href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-4时期和时间类型" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.4时期和时间类型"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.4时期和时间类型</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 通常应该使用TIMESTAMP（四个字节）因为比DATETIME（八个字节）更节约空间，timestamp效率也更高，</p>
-<h4 id="nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-5标识符"><a href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-5标识符" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.5标识符"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.5标识符</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;标识符尽量选用整数</p>
-<h4 id="nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-6特殊类型"><a href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-6特殊类型" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.6特殊类型"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.6特殊类型</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IP地址 无符号整数存储</p>
-<h3 id="2、Mysqlschema设计中的陷阱"><a href="#2、Mysqlschema设计中的陷阱" class="headerlink" title="2、Mysqlschema设计中的陷阱"></a>2、Mysqlschema设计中的陷阱</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.太多的列<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2.太多的关联<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3.全能的枚举<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4.使用NULL</p>
-<h3 id="3、范式与反范式"><a href="#3、范式与反范式" class="headerlink" title="3、范式与反范式"></a>3、范式与反范式</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 设计表的规则是设计为一张表更好还是两张表更好<br><strong> &nbsp;&nbsp;&nbsp;&nbsp;范式优点 </strong>：<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 更快。修改更少数据。表更小，执行操作更快<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 缺点：通常需要关联<br><strong> &nbsp;&nbsp;&nbsp;&nbsp;反范式的优点 </strong>：<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.很好地避免关联<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2.当数据比内存大时这可能比关联要快得多，因为避免了随机I/O<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3.单独的表可以进行有效的索引<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;所以一般要结合实际情况进行选择</p>
-<h3 id="4、加快ALTER-TABLE操作速度"><a href="#4、加快ALTER-TABLE操作速度" class="headerlink" title="4、加快ALTER TABLE操作速度"></a>4、加快ALTER TABLE操作速度</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong> 设计数据库简单的原则 </strong></p>
+            <p>###1、线程与进程的区别？###<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;进程是操作系统分配资源的最小单元，线程是操作系统调度的最小单元。一个程序至少有一个进程,一个进程至少有一个线程。</p>
+<p>###2、什么是多线程中的上下文切换？###<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;多线程会共同使用一组计算机上的CPU，而线程数大于给程序分配的CPU数量时，为了让各个线程都有执行的机会，就需要轮转使用CPU。不同的线程切换使用CPU发生的切换数据等就是上下文切换。</p>
+<p>###3、什么是死锁###<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;死锁是指两个或两个以上的进程（或线程）在执行过程中，因争夺资源而造成的一种互相等待的现象，若无外力作用，它们都将无法推进下去。</p>
+<p><strong>产生死锁的必要条件：</strong></p>
+<p>互斥条件：所谓互斥就是进程在某一时间内独占资源。<br>请求与保持条件：一个进程因请求资源而阻塞时，对已获得的资源保持不放。<br>不剥夺条件:进程已获得资源，在末使用完之前，不能强行剥夺。<br>循环等待条件:若干进程之间形成一种头尾相接的循环等待资源关系。</p>
+<p>###4、现在有T1、T2、T3三个线程，你怎样保证T2在T1执行完后执行，T3在T2执行完后执行？###</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;可以用join方法实现。T3调用T2的join（）方法，T2调用T1的join方法，这样就可以保证，T1执行完毕后执行T2，T2执行完毕后执行T3。</p>
+<p>###5、Java中用到的线程调度算法是什么？###</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;采用时间片轮转的方式。可以设置线程的优先级，会映射到下层的系统上面的优先级上，如非特别需要，尽量不要用，防止线程饥饿。</p>
+<p>###6、在java中守护线程和本地线程区别？###<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;守护线程时一类比较特殊的线程，一般用于处理一些后台工作，比如JDK的垃圾回收线程，当所有线程已经撤离，不再产生垃圾，守护线程自然就没事可干了，当垃圾回收线程是Java虚拟机上仅剩的线程时，Java虚拟机会自动离开。守护线程可以使用Thread.setDaemon(true)进行设置，必须在hread.start()之前调用，否则运行时会抛出异常。</p>
+<p>###7、notify()和notifyAll()有什么区别？###<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;当一个线程调用wait（）方法后会进入与对象相关额一个wait set集合中，线程就必须等其他线程notify/notifyall,使用notifyall,可以唤醒所有处于wait状态的线程，使其重新进入锁的争夺队列中，而notify只能唤醒一个。</p>
+<p>###8、wait和sleep的相同点与区别###</p>
+<p> <strong>相同点：</strong></p>
 <ul>
-<li>1.尽量避免过度设计，比如很多列的表</li>
-<li>2.使用小而简单的合适数据类型</li>
-<li>3.尽量使用相同的数据存储相似或相关的值</li>
-<li>4.注意可变长字符串</li>
-<li>5.尽量使用整数定义标识符</li>
-<li>6.避免使用mysql遗弃的特性</li>
-<li>7.小心使用ENUM和SET</li>
-<li>8.不要使用NULL值</li>
+<li>1.都可以使线程进入阻塞状态</li>
+<li>2.都是可中断方法，被中断后都会受到异常</li>
 </ul>
-
+<p><strong>不同点:</strong></p>
+<ul>
+<li>1.wait是Object的方法，而sleep是Thread持有的方法</li>
+<li>2.wait方法必须在同步方法中执行，而sleep不需要</li>
+<li>3.在等待时wait会释放锁，而sleep一直持有锁。</li>
+<li>4.sleep方法在短暂之后会主动退出阻塞，而wait方法则需要被其他线程中断后才能退出阻塞。</li>
+</ul>
+<p>###9、为什么我们调用start()方法时会执行run()方法，为什么我们不能直接调用run()方法？###</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;这里采用了模板设计模式，当你调用start()方法时调用了run（）方法，你将创建新的线程，并且执行在run()方法里的代码。但是如果你直接调用run()方法，它不会创建新的线程也不会执行调用线程的代码。</p>
+<h3 id="10-并发编程的三大特性"><a href="#10-并发编程的三大特性" class="headerlink" title="10.并发编程的三大特性"></a>10.并发编程的三大特性</h3><pre><code>原子性。是指在一次的操作或多次操作中，要么所有操作全部得到执行并不会收到任何因素的干扰而中断，要么全部不执行。
+可见性。当一个线程对共享内存变量进行了修改，那么另外的线程可以立即看到修改后的最新值。
+有序性。是指程序代码在执行过程中的先后顺序，由于Java在编译以及运行器的优化，导致了代码的执行顺序未必就是开发者编写的代码顺序。
+</code></pre><p>###11.volatile和synchronized关键字###</p>
+<p>   （1）使用上的区别</p>
+<pre><code>volatile只能用于修饰实例变量和类变量。synchronized用于修饰方法和代码块。
+</code></pre><p>   （2）对原子性的保证</p>
+<pre><code>volatile无法保证原子性，用于synchronized关键字修饰的同步代码是无法被中途打断的，因此其保证代码的原子性
+</code></pre><p>（3）对可见性的保证</p>
+<pre><code>synchronized借助于JVM指令的monitor enter和moniter exit 对通过排他的方式使得同步代码串行化，在执行monitor enter将从主内存中获取共享资源。在执行monitor exit 的时候会将所有共享资源刷新到主内存中而volatile使用机器指令“lock”的方式迫使其他线程的工作内存中的数据失效，不得到内存中进行再次加载
+</code></pre><p>（4）对有序性的保证</p>
+<pre><code>volatile关键字进制JVM编译器以及处理器对其进行重排序，所以它能保证有序性。而sychronized是保证程序的串行化换来的。
+</code></pre>
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2018年11月21日 21:26</p>
-        <p>原始链接： <a class="post-url" href="/2018/11/19/Mysql高性能（二）/" title="Mysql高性能（二）">https://ztaocoder.github.io/2018/11/19/Mysql高性能（二）/</a></p>
+        <p>最后更新： 2019年03月07日 15:49</p>
+        <p>原始链接： <a class="post-url" href="/2019/03/07/多线程/" title="多线程">https://ztaocoder.github.io/2019/03/07/多线程/</a></p>
         <footer>
             <a href="https://ztaocoder.github.io">
                 <img src="/images/logo.png" alt="张涛">
@@ -220,7 +238,7 @@
     <div class="post-share-list" id="share-list">
         <ul class="share-icons">
           <li>
-            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://ztaocoder.github.io/2018/11/19/Mysql高性能（二）/&title=《Mysql高性能（二）》 — 张涛的博客&pic=https://ztaocoder.github.ioimages/logo.png" data-title="微博">
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://ztaocoder.github.io/2019/03/07/多线程/&title=《多线程》 — 张涛的博客&pic=https://ztaocoder.github.ioimages/logo.png" data-title="微博">
               <i class="fa fa-weibo"></i>
             </a>
           </li>
@@ -230,22 +248,22 @@
             </a>
           </li>
           <li>
-            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://ztaocoder.github.io/2018/11/19/Mysql高性能（二）/&title=《Mysql高性能（二）》 — 张涛的博客&source=记录个人的成长" data-title="QQ">
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://ztaocoder.github.io/2019/03/07/多线程/&title=《多线程》 — 张涛的博客&source=记录个人的成长" data-title="QQ">
               <i class="fa fa-qq"></i>
             </a>
           </li>
           <li>
-            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://ztaocoder.github.io/2018/11/19/Mysql高性能（二）/" data-title="Facebook">
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://ztaocoder.github.io/2019/03/07/多线程/" data-title="Facebook">
               <i class="fa fa-facebook"></i>
             </a>
           </li>
           <li>
-            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Mysql高性能（二）》 — 张涛的博客&url=https://ztaocoder.github.io/2018/11/19/Mysql高性能（二）/&via=https://ztaocoder.github.io" data-title="Twitter">
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《多线程》 — 张涛的博客&url=https://ztaocoder.github.io/2019/03/07/多线程/&via=https://ztaocoder.github.io" data-title="Twitter">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
           <li>
-            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://ztaocoder.github.io/2018/11/19/Mysql高性能（二）/" data-title="Google+">
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://ztaocoder.github.io/2019/03/07/多线程/" data-title="Google+">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -255,7 +273,7 @@
 <div class="post-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;" id="wxShare-close">×</a>
     <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://ztaocoder.github.io/2018/11/19/Mysql高性能（二）/" alt="微信分享二维码">
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://ztaocoder.github.io/2019/03/07/多线程/" alt="微信分享二维码">
 </div>
 
 <div class="mask"></div>
@@ -267,7 +285,7 @@
   <li class="article-footer-tags">
     <i class="fa fa-tags"></i>
       
-    <a href="/tags/Mysql/" class="color1">Mysql</a>
+    <a href="/tags/多线程/" class="color4">多线程</a>
       
   </li>
 
@@ -280,26 +298,16 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-Schema与数据类型优化"><span class="post-toc-text">                    Schema与数据类型优化</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1、选择优化的数据类型"><span class="post-toc-text">1、选择优化的数据类型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-1整数类型"><span class="post-toc-text">       1.1整数类型</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-2实数类型"><span class="post-toc-text">      1.2实数类型</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-3字符串类型"><span class="post-toc-text">      1.3字符串类型</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-4时期和时间类型"><span class="post-toc-text">      1.4时期和时间类型</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-5标识符"><span class="post-toc-text">      1.5标识符</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#nbsp-nbsp-nbsp-nbsp-nbsp-nbsp-1-6特殊类型"><span class="post-toc-text">      1.6特殊类型</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2、Mysqlschema设计中的陷阱"><span class="post-toc-text">2、Mysqlschema设计中的陷阱</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3、范式与反范式"><span class="post-toc-text">3、范式与反范式</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4、加快ALTER-TABLE操作速度"><span class="post-toc-text">4、加快ALTER TABLE操作速度</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#10-并发编程的三大特性"><span class="post-toc-text">10.并发编程的三大特性</span></a></li></ol>
         </nav>
     </aside>
     
 
 <nav id="article-nav">
   
-    <a href="/2018/11/19/Mysql高性能（三）/" id="article-nav-newer" class="article-nav-link-wrap">
-
-      <span class="article-nav-title">
-        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
-        
-          Mysql高性能（三）
-        
-      </span>
-    </a>
   
-  
-    <a href="/2018/11/19/Mysql高性能（一）/" id="article-nav-older" class="article-nav-link-wrap">
-      <span class="article-nav-title">Mysql高性能（一）</span>
+    <a href="/2019/02/17/docker/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">docker的入门</span>
       <i class="fa fa-hand-o-right" aria-hidden="true"></i>
     </a>
   
