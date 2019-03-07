@@ -8,18 +8,18 @@
   
     <meta name="keywords" content="ZhangTao,ZhangTao's Blog">
   
-  <meta name="description" content="###1、线程与进程的区别？###&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;进程是操作系统分配资源的最小单元，线程是操作系统调度的最小单元。一个程序至少有一个进程,一个进程至少有一个线程。 ###2、什么是多线程中的上下文切换？###&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;多线程会共同使用一组计算机上的CPU，而线程数大于给程序分配的C">
+  <meta name="description" content="1、线程与进程的区别？&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;进程是操作系统分配资源的最小单元，线程是操作系统调度的最小单元。一个程序至少有一个进程,一个进程至少有一个线程。 2、什么是多线程中的上下文切换？&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;多线程会共同使用一组计算机上的CPU，而线程数大于给程序分配的CPU数量时，为了让各个线">
 <meta name="keywords" content="多线程">
 <meta property="og:type" content="article">
 <meta property="og:title" content="多线程">
 <meta property="og:url" content="https://ztaocoder.github.io/2019/03/07/多线程/index.html">
 <meta property="og:site_name" content="张涛的博客">
-<meta property="og:description" content="###1、线程与进程的区别？###&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;进程是操作系统分配资源的最小单元，线程是操作系统调度的最小单元。一个程序至少有一个进程,一个进程至少有一个线程。 ###2、什么是多线程中的上下文切换？###&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;多线程会共同使用一组计算机上的CPU，而线程数大于给程序分配的C">
+<meta property="og:description" content="1、线程与进程的区别？&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;进程是操作系统分配资源的最小单元，线程是操作系统调度的最小单元。一个程序至少有一个进程,一个进程至少有一个线程。 2、什么是多线程中的上下文切换？&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;多线程会共同使用一组计算机上的CPU，而线程数大于给程序分配的CPU数量时，为了让各个线">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-07T07:49:03.096Z">
+<meta property="og:updated_time" content="2019-03-07T07:51:18.239Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="多线程">
-<meta name="twitter:description" content="###1、线程与进程的区别？###&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;进程是操作系统分配资源的最小单元，线程是操作系统调度的最小单元。一个程序至少有一个进程,一个进程至少有一个线程。 ###2、什么是多线程中的上下文切换？###&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;多线程会共同使用一组计算机上的CPU，而线程数大于给程序分配的C">
+<meta name="twitter:description" content="1、线程与进程的区别？&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;进程是操作系统分配资源的最小单元，线程是操作系统调度的最小单元。一个程序至少有一个进程,一个进程至少有一个线程。 2、什么是多线程中的上下文切换？&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;多线程会共同使用一组计算机上的CPU，而线程数大于给程序分配的CPU数量时，为了让各个线">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -139,19 +139,16 @@
     <div class="article-entry post-content" itemprop="articleBody">
       
             
-            <p>###1、线程与进程的区别？###<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;进程是操作系统分配资源的最小单元，线程是操作系统调度的最小单元。一个程序至少有一个进程,一个进程至少有一个线程。</p>
-<p>###2、什么是多线程中的上下文切换？###<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;多线程会共同使用一组计算机上的CPU，而线程数大于给程序分配的CPU数量时，为了让各个线程都有执行的机会，就需要轮转使用CPU。不同的线程切换使用CPU发生的切换数据等就是上下文切换。</p>
-<p>###3、什么是死锁###<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;死锁是指两个或两个以上的进程（或线程）在执行过程中，因争夺资源而造成的一种互相等待的现象，若无外力作用，它们都将无法推进下去。</p>
+            <h3 id="1、线程与进程的区别？"><a href="#1、线程与进程的区别？" class="headerlink" title="1、线程与进程的区别？"></a>1、线程与进程的区别？</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;进程是操作系统分配资源的最小单元，线程是操作系统调度的最小单元。一个程序至少有一个进程,一个进程至少有一个线程。</p>
+<h3 id="2、什么是多线程中的上下文切换？"><a href="#2、什么是多线程中的上下文切换？" class="headerlink" title="2、什么是多线程中的上下文切换？"></a>2、什么是多线程中的上下文切换？</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;多线程会共同使用一组计算机上的CPU，而线程数大于给程序分配的CPU数量时，为了让各个线程都有执行的机会，就需要轮转使用CPU。不同的线程切换使用CPU发生的切换数据等就是上下文切换。</p>
+<h3 id="3、什么是死锁"><a href="#3、什么是死锁" class="headerlink" title="3、什么是死锁"></a>3、什么是死锁</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;死锁是指两个或两个以上的进程（或线程）在执行过程中，因争夺资源而造成的一种互相等待的现象，若无外力作用，它们都将无法推进下去。</p>
 <p><strong>产生死锁的必要条件：</strong></p>
 <p>互斥条件：所谓互斥就是进程在某一时间内独占资源。<br>请求与保持条件：一个进程因请求资源而阻塞时，对已获得的资源保持不放。<br>不剥夺条件:进程已获得资源，在末使用完之前，不能强行剥夺。<br>循环等待条件:若干进程之间形成一种头尾相接的循环等待资源关系。</p>
-<p>###4、现在有T1、T2、T3三个线程，你怎样保证T2在T1执行完后执行，T3在T2执行完后执行？###</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;可以用join方法实现。T3调用T2的join（）方法，T2调用T1的join方法，这样就可以保证，T1执行完毕后执行T2，T2执行完毕后执行T3。</p>
-<p>###5、Java中用到的线程调度算法是什么？###</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;采用时间片轮转的方式。可以设置线程的优先级，会映射到下层的系统上面的优先级上，如非特别需要，尽量不要用，防止线程饥饿。</p>
-<p>###6、在java中守护线程和本地线程区别？###<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;守护线程时一类比较特殊的线程，一般用于处理一些后台工作，比如JDK的垃圾回收线程，当所有线程已经撤离，不再产生垃圾，守护线程自然就没事可干了，当垃圾回收线程是Java虚拟机上仅剩的线程时，Java虚拟机会自动离开。守护线程可以使用Thread.setDaemon(true)进行设置，必须在hread.start()之前调用，否则运行时会抛出异常。</p>
-<p>###7、notify()和notifyAll()有什么区别？###<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;当一个线程调用wait（）方法后会进入与对象相关额一个wait set集合中，线程就必须等其他线程notify/notifyall,使用notifyall,可以唤醒所有处于wait状态的线程，使其重新进入锁的争夺队列中，而notify只能唤醒一个。</p>
-<p>###8、wait和sleep的相同点与区别###</p>
-<p> <strong>相同点：</strong></p>
+<h3 id="4、现在有T1、T2、T3三个线程，你怎样保证T2在T1执行完后执行，T3在T2执行完后执行？"><a href="#4、现在有T1、T2、T3三个线程，你怎样保证T2在T1执行完后执行，T3在T2执行完后执行？" class="headerlink" title="4、现在有T1、T2、T3三个线程，你怎样保证T2在T1执行完后执行，T3在T2执行完后执行？"></a>4、现在有T1、T2、T3三个线程，你怎样保证T2在T1执行完后执行，T3在T2执行完后执行？</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;可以用join方法实现。T3调用T2的join（）方法，T2调用T1的join方法，这样就可以保证，T1执行完毕后执行T2，T2执行完毕后执行T3。</p>
+<h3 id="5、Java中用到的线程调度算法是什么？"><a href="#5、Java中用到的线程调度算法是什么？" class="headerlink" title="5、Java中用到的线程调度算法是什么？"></a>5、Java中用到的线程调度算法是什么？</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;采用时间片轮转的方式。可以设置线程的优先级，会映射到下层的系统上面的优先级上，如非特别需要，尽量不要用，防止线程饥饿。</p>
+<h3 id="6、在java中守护线程和本地线程区别？"><a href="#6、在java中守护线程和本地线程区别？" class="headerlink" title="6、在java中守护线程和本地线程区别？"></a>6、在java中守护线程和本地线程区别？</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;守护线程时一类比较特殊的线程，一般用于处理一些后台工作，比如JDK的垃圾回收线程，当所有线程已经撤离，不再产生垃圾，守护线程自然就没事可干了，当垃圾回收线程是Java虚拟机上仅剩的线程时，Java虚拟机会自动离开。守护线程可以使用Thread.setDaemon(true)进行设置，必须在hread.start()之前调用，否则运行时会抛出异常。</p>
+<h3 id="7、notify-和notifyAll-有什么区别？"><a href="#7、notify-和notifyAll-有什么区别？" class="headerlink" title="7、notify()和notifyAll()有什么区别？"></a>7、notify()和notifyAll()有什么区别？</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;当一个线程调用wait（）方法后会进入与对象相关额一个wait set集合中，线程就必须等其他线程notify/notifyall,使用notifyall,可以唤醒所有处于wait状态的线程，使其重新进入锁的争夺队列中，而notify只能唤醒一个。</p>
+<h3 id="8、wait和sleep的相同点与区别"><a href="#8、wait和sleep的相同点与区别" class="headerlink" title="8、wait和sleep的相同点与区别"></a>8、wait和sleep的相同点与区别</h3><p> <strong>相同点：</strong></p>
 <ul>
 <li>1.都可以使线程进入阻塞状态</li>
 <li>2.都是可中断方法，被中断后都会受到异常</li>
@@ -163,8 +160,7 @@
 <li>3.在等待时wait会释放锁，而sleep一直持有锁。</li>
 <li>4.sleep方法在短暂之后会主动退出阻塞，而wait方法则需要被其他线程中断后才能退出阻塞。</li>
 </ul>
-<p>###9、为什么我们调用start()方法时会执行run()方法，为什么我们不能直接调用run()方法？###</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;这里采用了模板设计模式，当你调用start()方法时调用了run（）方法，你将创建新的线程，并且执行在run()方法里的代码。但是如果你直接调用run()方法，它不会创建新的线程也不会执行调用线程的代码。</p>
+<h3 id="9、为什么我们调用start-方法时会执行run-方法，为什么我们不能直接调用run-方法？"><a href="#9、为什么我们调用start-方法时会执行run-方法，为什么我们不能直接调用run-方法？" class="headerlink" title="9、为什么我们调用start()方法时会执行run()方法，为什么我们不能直接调用run()方法？"></a>9、为什么我们调用start()方法时会执行run()方法，为什么我们不能直接调用run()方法？</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;这里采用了模板设计模式，当你调用start()方法时调用了run（）方法，你将创建新的线程，并且执行在run()方法里的代码。但是如果你直接调用run()方法，它不会创建新的线程也不会执行调用线程的代码。</p>
 <h3 id="10-并发编程的三大特性"><a href="#10-并发编程的三大特性" class="headerlink" title="10.并发编程的三大特性"></a>10.并发编程的三大特性</h3><pre><code>原子性。是指在一次的操作或多次操作中，要么所有操作全部得到执行并不会收到任何因素的干扰而中断，要么全部不执行。
 可见性。当一个线程对共享内存变量进行了修改，那么另外的线程可以立即看到修改后的最新值。
 有序性。是指程序代码在执行过程中的先后顺序，由于Java在编译以及运行器的优化，导致了代码的执行顺序未必就是开发者编写的代码顺序。
@@ -180,7 +176,7 @@
 </code></pre>
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年03月07日 15:49</p>
+        <p>最后更新： 2019年03月07日 15:51</p>
         <p>原始链接： <a class="post-url" href="/2019/03/07/多线程/" title="多线程">https://ztaocoder.github.io/2019/03/07/多线程/</a></p>
         <footer>
             <a href="https://ztaocoder.github.io">
@@ -298,7 +294,7 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#10-并发编程的三大特性"><span class="post-toc-text">10.并发编程的三大特性</span></a></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1、线程与进程的区别？"><span class="post-toc-text">1、线程与进程的区别？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2、什么是多线程中的上下文切换？"><span class="post-toc-text">2、什么是多线程中的上下文切换？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3、什么是死锁"><span class="post-toc-text">3、什么是死锁</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4、现在有T1、T2、T3三个线程，你怎样保证T2在T1执行完后执行，T3在T2执行完后执行？"><span class="post-toc-text">4、现在有T1、T2、T3三个线程，你怎样保证T2在T1执行完后执行，T3在T2执行完后执行？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5、Java中用到的线程调度算法是什么？"><span class="post-toc-text">5、Java中用到的线程调度算法是什么？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#6、在java中守护线程和本地线程区别？"><span class="post-toc-text">6、在java中守护线程和本地线程区别？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#7、notify-和notifyAll-有什么区别？"><span class="post-toc-text">7、notify()和notifyAll()有什么区别？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#8、wait和sleep的相同点与区别"><span class="post-toc-text">8、wait和sleep的相同点与区别</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#9、为什么我们调用start-方法时会执行run-方法，为什么我们不能直接调用run-方法？"><span class="post-toc-text">9、为什么我们调用start()方法时会执行run()方法，为什么我们不能直接调用run()方法？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#10-并发编程的三大特性"><span class="post-toc-text">10.并发编程的三大特性</span></a></li></ol>
         </nav>
     </aside>
     
