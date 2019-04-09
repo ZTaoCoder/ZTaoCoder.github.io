@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="张涛的博客">
 <meta property="og:description" content="一、Cookie   &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; cookie是保存在本地终端的数据。cookie由服务器生成，发送给浏览器，下一次请求同一网站时会把该cookie发送给服务器。由于cookie是存在客户端上的，所以浏览器加入了一些限制确保cookie不会被恶意使用，同时不会占据太多磁盘空间，所以每个域的cookie数量是有限的。 二、Session  &amp;nbsp; &amp;">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-04-09T12:53:02.905Z">
+<meta property="og:updated_time" content="2019-04-09T12:55:11.175Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Cookie Session Token">
 <meta name="twitter:description" content="一、Cookie   &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; cookie是保存在本地终端的数据。cookie由服务器生成，发送给浏览器，下一次请求同一网站时会把该cookie发送给服务器。由于cookie是存在客户端上的，所以浏览器加入了一些限制确保cookie不会被恶意使用，同时不会占据太多磁盘空间，所以每个域的cookie数量是有限的。 二、Session  &amp;nbsp; &amp;">
@@ -145,10 +145,10 @@
 <p>  <strong> 2、cookie不是很安全，别人可以分析存放在本地的COOKIE并进行COOKIE欺骗<br>   考虑到安全应当使用session。</strong></p>
 <p><strong> 3、session会在一定时间内保存在服务器上。当访问增多，会比较占用你服务器的性能<br>   考虑到减轻服务器性能方面，应当使用COOKIE。</strong></p>
 <p><strong> 4、单个cookie保存的数据不能超过4K，很多浏览器都限制一个站点最多保存20个cookie。</strong></p>
-<h3 id="四-Session的弊端"><a href="#四-Session的弊端" class="headerlink" title="四.Session的弊端"></a>四.Session的弊端</h3><p> 1、服务器压力增大。通常session是存储在内存中的，每个用户通过认证之后都会将session数据保存在服务器的内存中，而当用户量增大时，服务器的压力增大。</p>
+<h3 id="四、Session的弊端"><a href="#四、Session的弊端" class="headerlink" title="四、Session的弊端"></a>四、Session的弊端</h3><p> 1、服务器压力增大。通常session是存储在内存中的，每个用户通过认证之后都会将session数据保存在服务器的内存中，而当用户量增大时，服务器的压力增大。</p>
 <p>2、CSRF跨站伪造请求攻击。session是基于cookie进行用户识别的, cookie如果被截获，用户就会很容易受到跨站请求伪造的攻击。</p>
 <p>3、扩展性不强。如果将来搭建了多个服务器，虽然每个服务器都执行的是同样的业务逻辑，但是session数据是保存在内存中的（不是共享的），用户第一次访问的是服务器1，当用户再次请求时可能访问的是另外一台服务器2，服务器2获取不到session信息，就判定用户没有登陆过。</p>
-<h3 id="五-token的整个流程"><a href="#五-token的整个流程" class="headerlink" title="五.token的整个流程"></a>五.token的整个流程</h3><ul>
+<h3 id="五、token的整个流程"><a href="#五、token的整个流程" class="headerlink" title="五、token的整个流程"></a>五、token的整个流程</h3><ul>
 <li>1.客户端使用用户名跟密码请求登录</li>
 <li>2.服务端收到请求，去验证用户名与密码</li>
 <li>3.验证成功后，服务端会签发一个 Token，再把这个 Token 发送给客户端</li>
@@ -165,7 +165,7 @@
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年04月09日 20:53</p>
+        <p>最后更新： 2019年04月09日 20:55</p>
         <p>原始链接： <a class="post-url" href="/2019/04/09/Cookie Session Token/" title="Cookie Session Token">https://ztaocoder.github.io/2019/04/09/Cookie Session Token/</a></p>
         <footer>
             <a href="https://ztaocoder.github.io">
@@ -287,7 +287,7 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#一、Cookie"><span class="post-toc-text">一、Cookie</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#二、Session"><span class="post-toc-text">二、Session</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#三、cookie-和session的区别"><span class="post-toc-text">三、cookie 和session的区别</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#四-Session的弊端"><span class="post-toc-text">四.Session的弊端</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#五-token的整个流程"><span class="post-toc-text">五.token的整个流程</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#六-Token认证的好处和坏处"><span class="post-toc-text">六.Token认证的好处和坏处</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#优点"><span class="post-toc-text">优点:</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#缺陷"><span class="post-toc-text">缺陷</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#一、Cookie"><span class="post-toc-text">一、Cookie</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#二、Session"><span class="post-toc-text">二、Session</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#三、cookie-和session的区别"><span class="post-toc-text">三、cookie 和session的区别</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#四、Session的弊端"><span class="post-toc-text">四、Session的弊端</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#五、token的整个流程"><span class="post-toc-text">五、token的整个流程</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#六-Token认证的好处和坏处"><span class="post-toc-text">六.Token认证的好处和坏处</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#优点"><span class="post-toc-text">优点:</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#缺陷"><span class="post-toc-text">缺陷</span></a></li></ol></li></ol>
         </nav>
     </aside>
     
