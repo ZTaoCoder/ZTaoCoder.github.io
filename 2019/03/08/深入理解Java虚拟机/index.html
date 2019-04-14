@@ -22,7 +22,7 @@
 <meta property="og:image" content="https://ztaocoder.github.io/2019/03/08/深入理解Java虚拟机/分区.png">
 <meta property="og:image" content="https://ztaocoder.github.io/2019/03/08/深入理解Java虚拟机/类加载过程.png">
 <meta property="og:image" content="https://ztaocoder.github.io/2019/03/08/深入理解Java虚拟机/双亲委派.png">
-<meta property="og:updated_time" content="2019-03-09T08:31:39.918Z">
+<meta property="og:updated_time" content="2019-04-12T06:08:36.370Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解Java虚拟机">
 <meta name="twitter:description" content="一、Java内存区域与内存溢出异常1.程序计数器 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 数据计数器是一块较小的内存空间，可以看做是当前线程所执行的字节码的行号指示器，字节码解释器工作时就是通过改变这个计数器的值来选取下一条指令，每条线程都有一个独立的程序计数器，各条线程之间计数互不影响，独立存储。   异常：没有规定任何OutOfMomoryError情况的区域">
@@ -204,16 +204,16 @@ class Person {
     }
 } 
 </code></pre><h3 id="二、对象的创建"><a href="#二、对象的创建" class="headerlink" title="二、对象的创建"></a>二、对象的创建</h3><ul>
-<li>1、在JAVA中，对象的分配一般使用new关键字。当虚拟机遇到new指令时，会先检查该指令所包含的参数在常量池中能否找到一个符号引用，并检查该符号引用所代表的类是否被加载、解析和初始化。如果没有，则会先执行类的加载过程。</li>
+<li>1、在JAVA中，对象的分配一般使用new关键字。当虚拟机遇到new指令时，会先检查该指令所包含的参数能否在常量池中定位到一个符号引用，并检查该符号引用所代表的类是否被加载、解析和初始化。如果没有，则会先执行类的加载过程。</li>
 </ul>
 <ul>
 <li><p>2、类加载完成后，会为该对象分配内存空间。一个对象需要多大的内存空间在类加载完成后就确定了。</p>
 </li>
 <li><p>3、在多线程环境下怎么保证分配内存的动作是线程安全的。一种方法是对分配内存的动作进行同步；另一种方法是使用“本地线程分配缓存（TLAB）”，每个线程会预先分配到一块内存，申请内存会在各自的TLAB上进行，只有当TLAB不够是，才需要同步分配新的TLAB；</p>
 </li>
-<li><p>4、分配好内存后，虚拟机会将除对象头以外的空间初始化为0。这就是为什么JAVA代码中的全局变量可以不用初始化也可以使用的原因。此外，虚拟机还会对对象头进行必要的设置，比如对象所属的类，对象的哈希码，对象的GC分代年龄等信息。</p>
+<li><p>4、分配好内存后，虚拟机会将除对象头以外的内存空间初始化为零值。这就是为什么JAVA代码中的全局变量可以不用初始化也可以使用的原因。此外，虚拟机还会对对象头进行必要的设置，比如对象所属的类，对象的哈希码，对象的GC分代年龄等信息。这些信息都存在对象的对象头之中，</p>
 </li>
-<li><p>5、上述过程完成或，虚拟机认为一个对象已经创建完毕，但是从程序来看，对象还没有初始化，因此需要根据代码初始化各个变量。这一步完成后，一个可用的对象就创建好了。</p>
+<li><p>5、上述过程完成后，虚拟机认为一个对象已经创建完毕，但是从程序来看，对象还没有初始化，因此需要根据代码初始化各个变量。这一步完成后，一个可用的对象就创建好了。</p>
 </li>
 </ul>
 <h3 id="三、分配内存有两种方法"><a href="#三、分配内存有两种方法" class="headerlink" title="三、分配内存有两种方法"></a>三、分配内存有两种方法</h3><p>　如果被内存空间是规整的，只要把空闲指针向空闲内存方向挪动即可，这种方法称为“指针碰撞”；</p>
@@ -256,7 +256,7 @@ class Person {
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年03月09日 16:31</p>
+        <p>最后更新： 2019年04月12日 14:08</p>
         <p>原始链接： <a class="post-url" href="/2019/03/08/深入理解Java虚拟机/" title="深入理解Java虚拟机">https://ztaocoder.github.io/2019/03/08/深入理解Java虚拟机/</a></p>
         <footer>
             <a href="https://ztaocoder.github.io">

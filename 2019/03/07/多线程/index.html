@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="张涛的博客">
 <meta property="og:description" content="1、线程与进程的区别？&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;进程是操作系统分配资源的最小单元，线程是操作系统调度的最小单元。一个程序至少有一个进程,一个进程至少有一个线程。 2、什么是多线程中的上下文切换？&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;多线程会共同使用一组计算机上的CPU，而线程数大于给程序分配的CPU数量时，为了让各个线">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-07T07:51:18.239Z">
+<meta property="og:updated_time" content="2019-04-12T06:44:08.259Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="多线程">
 <meta name="twitter:description" content="1、线程与进程的区别？&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;进程是操作系统分配资源的最小单元，线程是操作系统调度的最小单元。一个程序至少有一个进程,一个进程至少有一个线程。 2、什么是多线程中的上下文切换？&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;多线程会共同使用一组计算机上的CPU，而线程数大于给程序分配的CPU数量时，为了让各个线">
@@ -164,8 +164,7 @@
 <h3 id="10-并发编程的三大特性"><a href="#10-并发编程的三大特性" class="headerlink" title="10.并发编程的三大特性"></a>10.并发编程的三大特性</h3><pre><code>原子性。是指在一次的操作或多次操作中，要么所有操作全部得到执行并不会收到任何因素的干扰而中断，要么全部不执行。
 可见性。当一个线程对共享内存变量进行了修改，那么另外的线程可以立即看到修改后的最新值。
 有序性。是指程序代码在执行过程中的先后顺序，由于Java在编译以及运行器的优化，导致了代码的执行顺序未必就是开发者编写的代码顺序。
-</code></pre><p>###11.volatile和synchronized关键字###</p>
-<p>   （1）使用上的区别</p>
+</code></pre><h3 id="11-volatile和synchronized关键字"><a href="#11-volatile和synchronized关键字" class="headerlink" title="11.volatile和synchronized关键字"></a>11.volatile和synchronized关键字</h3><p>   （1）使用上的区别</p>
 <pre><code>volatile只能用于修饰实例变量和类变量。synchronized用于修饰方法和代码块。
 </code></pre><p>   （2）对原子性的保证</p>
 <pre><code>volatile无法保证原子性，用于synchronized关键字修饰的同步代码是无法被中途打断的，因此其保证代码的原子性
@@ -176,7 +175,7 @@
 </code></pre>
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年03月07日 15:51</p>
+        <p>最后更新： 2019年04月12日 14:44</p>
         <p>原始链接： <a class="post-url" href="/2019/03/07/多线程/" title="多线程">https://ztaocoder.github.io/2019/03/07/多线程/</a></p>
         <footer>
             <a href="https://ztaocoder.github.io">
@@ -294,7 +293,7 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1、线程与进程的区别？"><span class="post-toc-text">1、线程与进程的区别？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2、什么是多线程中的上下文切换？"><span class="post-toc-text">2、什么是多线程中的上下文切换？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3、什么是死锁"><span class="post-toc-text">3、什么是死锁</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4、现在有T1、T2、T3三个线程，你怎样保证T2在T1执行完后执行，T3在T2执行完后执行？"><span class="post-toc-text">4、现在有T1、T2、T3三个线程，你怎样保证T2在T1执行完后执行，T3在T2执行完后执行？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5、Java中用到的线程调度算法是什么？"><span class="post-toc-text">5、Java中用到的线程调度算法是什么？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#6、在java中守护线程和本地线程区别？"><span class="post-toc-text">6、在java中守护线程和本地线程区别？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#7、notify-和notifyAll-有什么区别？"><span class="post-toc-text">7、notify()和notifyAll()有什么区别？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#8、wait和sleep的相同点与区别"><span class="post-toc-text">8、wait和sleep的相同点与区别</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#9、为什么我们调用start-方法时会执行run-方法，为什么我们不能直接调用run-方法？"><span class="post-toc-text">9、为什么我们调用start()方法时会执行run()方法，为什么我们不能直接调用run()方法？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#10-并发编程的三大特性"><span class="post-toc-text">10.并发编程的三大特性</span></a></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1、线程与进程的区别？"><span class="post-toc-text">1、线程与进程的区别？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2、什么是多线程中的上下文切换？"><span class="post-toc-text">2、什么是多线程中的上下文切换？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3、什么是死锁"><span class="post-toc-text">3、什么是死锁</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4、现在有T1、T2、T3三个线程，你怎样保证T2在T1执行完后执行，T3在T2执行完后执行？"><span class="post-toc-text">4、现在有T1、T2、T3三个线程，你怎样保证T2在T1执行完后执行，T3在T2执行完后执行？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5、Java中用到的线程调度算法是什么？"><span class="post-toc-text">5、Java中用到的线程调度算法是什么？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#6、在java中守护线程和本地线程区别？"><span class="post-toc-text">6、在java中守护线程和本地线程区别？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#7、notify-和notifyAll-有什么区别？"><span class="post-toc-text">7、notify()和notifyAll()有什么区别？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#8、wait和sleep的相同点与区别"><span class="post-toc-text">8、wait和sleep的相同点与区别</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#9、为什么我们调用start-方法时会执行run-方法，为什么我们不能直接调用run-方法？"><span class="post-toc-text">9、为什么我们调用start()方法时会执行run()方法，为什么我们不能直接调用run()方法？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#10-并发编程的三大特性"><span class="post-toc-text">10.并发编程的三大特性</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#11-volatile和synchronized关键字"><span class="post-toc-text">11.volatile和synchronized关键字</span></a></li></ol>
         </nav>
     </aside>
     
