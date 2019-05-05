@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="张涛的博客">
 <meta property="og:description" content="一.项目介绍&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;基于SpringBoot、Mybatis框架、Redis数据库、RabbitMQ等技术对秒杀系统进行开发，实现了用户登陆、查看商品列表、查看商品的详情、对商品进行秒杀整个流程。经测试发现系统的QPS不高，主要瓶颈存在于Mysql数据库。因此使用Redis对商品和库存进行缓存、使用RabbitMQ队列异步下单减少数据">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-05-05T11:27:52.248Z">
+<meta property="og:updated_time" content="2019-05-05T11:30:14.373Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="秒杀系统">
 <meta name="twitter:description" content="一.项目介绍&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;基于SpringBoot、Mybatis框架、Redis数据库、RabbitMQ等技术对秒杀系统进行开发，实现了用户登陆、查看商品列表、查看商品的详情、对商品进行秒杀整个流程。经测试发现系统的QPS不高，主要瓶颈存在于Mysql数据库。因此使用Redis对商品和库存进行缓存、使用RabbitMQ队列异步下单减少数据">
@@ -154,13 +154,13 @@
 </li>
 </ul>
 <h3 id="六-图形验证码是怎样设计的"><a href="#六-图形验证码是怎样设计的" class="headerlink" title="六.图形验证码是怎样设计的?"></a>六.图形验证码是怎样设计的?</h3><p>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 加载页面的时候，访问接口，将生成的验证码存入Redis中，key为:前缀+userid+商品id,value为验证码，生成1到10的三个数字，随机的进行加减乘。</p>
-<h3 id="7-如何进行限流防刷"><a href="#7-如何进行限流防刷" class="headerlink" title="7.如何进行限流防刷?"></a>7.如何进行限流防刷?</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;采用令牌桶算法，以一定速率生成令牌放入桶中，当请求来之后只有获得令牌的桶的请求才继续执行，没有获得令牌桶的请求判断在一秒钟之内是否能获取请求，如果不能则直接返回。能的话就进行阻塞。采用的是谷歌的RateLimter这个工具类。秒杀最好是使用多账户来提高秒杀的成功率。</p>
-<h3 id="8-如何接口地址隐藏"><a href="#8-如何接口地址隐藏" class="headerlink" title="8.如何接口地址隐藏?"></a>8.如何接口地址隐藏?</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;进行秒杀的时候，判断验证码是否正确，生成一个UUID使用md5进行加密后生成path，保存到Redis数据库中，key：前缀加用户id。才将地址进行暴露。在进行秒杀的时候将地址一起传送过来进行验证。</p>
-<h3 id="9买超的问题"><a href="#9买超的问题" class="headerlink" title="9买超的问题"></a>9买超的问题</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 通过数据库的行锁来解决买超的问题，当更新数据库的时候将获得行锁。利用数据库的唯一索引  用户id和商品id建立唯一索引。</p>
+<h3 id="七-如何进行限流防刷"><a href="#七-如何进行限流防刷" class="headerlink" title="七.如何进行限流防刷?"></a>七.如何进行限流防刷?</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;采用令牌桶算法，以一定速率生成令牌放入桶中，当请求来之后只有获得令牌的桶的请求才继续执行，没有获得令牌桶的请求判断在一秒钟之内是否能获取请求，如果不能则直接返回。能的话就进行阻塞。采用的是谷歌的RateLimter这个工具类。秒杀最好是使用多账户来提高秒杀的成功率。</p>
+<h3 id="八-如何接口地址隐藏"><a href="#八-如何接口地址隐藏" class="headerlink" title="八.如何接口地址隐藏?"></a>八.如何接口地址隐藏?</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;进行秒杀的时候，判断验证码是否正确，生成一个UUID使用md5进行加密后生成path，保存到Redis数据库中，key：前缀加用户id。才将地址进行暴露。在进行秒杀的时候将地址一起传送过来进行验证。</p>
+<h3 id="九-买超的问题"><a href="#九-买超的问题" class="headerlink" title="九.买超的问题"></a>九.买超的问题</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 通过数据库的行锁来解决买超的问题，当更新数据库的时候将获得行锁。利用数据库的唯一索引  用户id和商品id建立唯一索引。</p>
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年05月05日 19:27</p>
+        <p>最后更新： 2019年05月05日 19:30</p>
         <p>原始链接： <a class="post-url" href="/2019/05/05/秒杀系统/" title="秒杀系统">https://ztaocoder.github.io/2019/05/05/秒杀系统/</a></p>
         <footer>
             <a href="https://ztaocoder.github.io">
@@ -286,7 +286,7 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#一-项目介绍"><span class="post-toc-text">一.项目介绍</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#二-如何对商品和库存进行缓存"><span class="post-toc-text">二.如何对商品和库存进行缓存</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#三-使用RabbitMQ队列异步下单的整合流程"><span class="post-toc-text">三.使用RabbitMQ队列异步下单的整合流程?</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#四-如何保证消息百分百投递。"><span class="post-toc-text">四.如何保证消息百分百投递。</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#五-如何保证消息消费的幂等性。"><span class="post-toc-text">五.如何保证消息消费的幂等性。</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#六-图形验证码是怎样设计的"><span class="post-toc-text">六.图形验证码是怎样设计的?</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#7-如何进行限流防刷"><span class="post-toc-text">7.如何进行限流防刷?</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#8-如何接口地址隐藏"><span class="post-toc-text">8.如何接口地址隐藏?</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#9买超的问题"><span class="post-toc-text">9买超的问题</span></a></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#一-项目介绍"><span class="post-toc-text">一.项目介绍</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#二-如何对商品和库存进行缓存"><span class="post-toc-text">二.如何对商品和库存进行缓存</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#三-使用RabbitMQ队列异步下单的整合流程"><span class="post-toc-text">三.使用RabbitMQ队列异步下单的整合流程?</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#四-如何保证消息百分百投递。"><span class="post-toc-text">四.如何保证消息百分百投递。</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#五-如何保证消息消费的幂等性。"><span class="post-toc-text">五.如何保证消息消费的幂等性。</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#六-图形验证码是怎样设计的"><span class="post-toc-text">六.图形验证码是怎样设计的?</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#七-如何进行限流防刷"><span class="post-toc-text">七.如何进行限流防刷?</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#八-如何接口地址隐藏"><span class="post-toc-text">八.如何接口地址隐藏?</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#九-买超的问题"><span class="post-toc-text">九.买超的问题</span></a></li></ol>
         </nav>
     </aside>
     
