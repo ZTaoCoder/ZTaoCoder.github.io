@@ -110,6 +110,70 @@
       <div class="outer">
         <section id="main" class="body-wrap">
   
+    <article id="post-hadoop集群的配置" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/12/10/hadoop集群的配置/">hadoop集群的配置（一台主机、两台从机）</a>
+    </h1>
+  
+
+          
+      </header>
+    
+    <div class="article-entry " itemprop="articleBody">
+      
+        <div class="article-img">
+            <a href="/2018/12/10/hadoop集群的配置/">
+                
+                <img src="https://ztaocoder.github.io/images/banner.jpg" alt="hadoop集群的配置（一台主机、两台从机）" title="hadoop集群的配置（一台主机、两台从机）">
+                
+            </a>
+        </div>
+        <div class="article-feed">
+            <p>
+                一、 改修主机名vi /etc/sysconfig/network
+
+将三台虚拟机分别命名为 master slave1 slave2
+二、修改hosts文件vi /etc/sysconfig/network
+
+分别向master、slave1、slave2的network中添加（根据本地的ip地址进行设置）
+
+192.168.244.128 master
+
+192.16...
+            </p>
+        </div>
+      
+        
+    </div>
+    <footer class="article-footer">
+        
+        <ul class="article-footer-menu">
+            
+                <li><i class="fa fa-calendar"></i>2018-12-10</li>
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/hadoop/" class="color2">hadoop</a>
+      
+  </li>
+
+        </ul>
+        
+            <a href="/2018/12/10/hadoop集群的配置/#more" class="article-more-link">more&gt;&gt;</a>
+        
+    </footer>
+  </div>
+</article>
+
+
+  
     <article id="post-Redis中的数据库" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
@@ -614,61 +678,6 @@ redisDb *db; //一个数据保存...
 
 
   
-    <article id="post-Mysql高性能（一）" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/11/19/Mysql高性能（一）/">Mysql高性能（一）</a>
-    </h1>
-  
-
-          
-      </header>
-    
-    <div class="article-entry " itemprop="articleBody">
-      
-        <div class="article-img">
-            <a href="/2018/11/19/Mysql高性能（一）/">
-                
-                <img src="https://ztaocoder.github.io/images/banner.jpg" alt="Mysql高性能（一）" title="Mysql高性能（一）">
-                
-            </a>
-        </div>
-        <div class="article-feed">
-            <p>
-                1.1Mysql逻辑架构&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.1.2执行与优化&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Mysql会解析查询，并创建内部数据结构（解析树），然后对其进行各种优化，包括重写查询，决定表的读取顺序，以及选择合适的索引等，优化器并不关心表使用的什么存储引擎，如果你能够在解析查...
-            </p>
-        </div>
-      
-        
-    </div>
-    <footer class="article-footer">
-        
-        <ul class="article-footer-menu">
-            
-                <li><i class="fa fa-calendar"></i>2018-11-19</li>
-            
-            
-  <li class="article-footer-tags">
-    <i class="fa fa-tags"></i>
-      
-    <a href="/tags/Mysql/" class="color1">Mysql</a>
-      
-  </li>
-
-        </ul>
-        
-            <a href="/2018/11/19/Mysql高性能（一）/#more" class="article-more-link">more&gt;&gt;</a>
-        
-    </footer>
-  </div>
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -730,7 +739,7 @@ redisDb *db; //一个数据保存...
             
         </div>
         <div id="sidebar-menu-box-tags">
-            <a href="/tags/2018/" style="font-size: 10px;">2018</a> <a href="/tags/2019/" style="font-size: 10px;">2019</a> <a href="/tags/Cookie/" style="font-size: 10px;">Cookie</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/Mybatis/" style="font-size: 10px;">Mybatis</a> <a href="/tags/Mysql/" style="font-size: 20px;">Mysql</a> <a href="/tags/RabbitMQ/" style="font-size: 10px;">RabbitMQ</a> <a href="/tags/Redis/" style="font-size: 16.67px;">Redis</a> <a href="/tags/SSM/" style="font-size: 10px;">SSM</a> <a href="/tags/Session/" style="font-size: 10px;">Session</a> <a href="/tags/Spring-Boot/" style="font-size: 10px;">Spring Boot</a> <a href="/tags/Token/" style="font-size: 10px;">Token</a> <a href="/tags/Tomcat/" style="font-size: 10px;">Tomcat</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/hadoop/" style="font-size: 10px;">hadoop</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a> <a href="/tags/排序算法/" style="font-size: 10px;">排序算法</a> <a href="/tags/网站架构/" style="font-size: 10px;">网站架构</a> <a href="/tags/设计模式/" style="font-size: 13.33px;">设计模式</a>
+            <a href="/tags/2018/" style="font-size: 10px;">2018</a> <a href="/tags/2019/" style="font-size: 10px;">2019</a> <a href="/tags/Cookie/" style="font-size: 10px;">Cookie</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/Mybatis/" style="font-size: 10px;">Mybatis</a> <a href="/tags/Mysql/" style="font-size: 20px;">Mysql</a> <a href="/tags/RabbitMQ/" style="font-size: 10px;">RabbitMQ</a> <a href="/tags/Rabbitmq/" style="font-size: 10px;">Rabbitmq</a> <a href="/tags/Redis/" style="font-size: 16.67px;">Redis</a> <a href="/tags/SSM/" style="font-size: 10px;">SSM</a> <a href="/tags/Session/" style="font-size: 10px;">Session</a> <a href="/tags/Spring-Boot/" style="font-size: 10px;">Spring Boot</a> <a href="/tags/Token/" style="font-size: 10px;">Token</a> <a href="/tags/Tomcat/" style="font-size: 10px;">Tomcat</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/hadoop/" style="font-size: 10px;">hadoop</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a> <a href="/tags/排序算法/" style="font-size: 10px;">排序算法</a> <a href="/tags/网站架构/" style="font-size: 10px;">网站架构</a> <a href="/tags/设计模式/" style="font-size: 13.33px;">设计模式</a>
         </div>
     </div>
     <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
@@ -763,7 +772,7 @@ redisDb *db; //一个数据保存...
     <div class="mobile-header-tag-container">
         <span class="title">Tags</span>
         <div id="mobile-header-container-tags">
-            <a href="/tags/2018/" style="font-size: 10px;">2018</a> <a href="/tags/2019/" style="font-size: 10px;">2019</a> <a href="/tags/Cookie/" style="font-size: 10px;">Cookie</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/Mybatis/" style="font-size: 10px;">Mybatis</a> <a href="/tags/Mysql/" style="font-size: 20px;">Mysql</a> <a href="/tags/RabbitMQ/" style="font-size: 10px;">RabbitMQ</a> <a href="/tags/Redis/" style="font-size: 16.67px;">Redis</a> <a href="/tags/SSM/" style="font-size: 10px;">SSM</a> <a href="/tags/Session/" style="font-size: 10px;">Session</a> <a href="/tags/Spring-Boot/" style="font-size: 10px;">Spring Boot</a> <a href="/tags/Token/" style="font-size: 10px;">Token</a> <a href="/tags/Tomcat/" style="font-size: 10px;">Tomcat</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/hadoop/" style="font-size: 10px;">hadoop</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a> <a href="/tags/排序算法/" style="font-size: 10px;">排序算法</a> <a href="/tags/网站架构/" style="font-size: 10px;">网站架构</a> <a href="/tags/设计模式/" style="font-size: 13.33px;">设计模式</a>
+            <a href="/tags/2018/" style="font-size: 10px;">2018</a> <a href="/tags/2019/" style="font-size: 10px;">2019</a> <a href="/tags/Cookie/" style="font-size: 10px;">Cookie</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/Mybatis/" style="font-size: 10px;">Mybatis</a> <a href="/tags/Mysql/" style="font-size: 20px;">Mysql</a> <a href="/tags/RabbitMQ/" style="font-size: 10px;">RabbitMQ</a> <a href="/tags/Rabbitmq/" style="font-size: 10px;">Rabbitmq</a> <a href="/tags/Redis/" style="font-size: 16.67px;">Redis</a> <a href="/tags/SSM/" style="font-size: 10px;">SSM</a> <a href="/tags/Session/" style="font-size: 10px;">Session</a> <a href="/tags/Spring-Boot/" style="font-size: 10px;">Spring Boot</a> <a href="/tags/Token/" style="font-size: 10px;">Token</a> <a href="/tags/Tomcat/" style="font-size: 10px;">Tomcat</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/hadoop/" style="font-size: 10px;">hadoop</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a> <a href="/tags/排序算法/" style="font-size: 10px;">排序算法</a> <a href="/tags/网站架构/" style="font-size: 10px;">网站架构</a> <a href="/tags/设计模式/" style="font-size: 13.33px;">设计模式</a>
         </div>
     </div>
 </div>
